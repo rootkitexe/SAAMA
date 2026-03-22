@@ -1,68 +1,83 @@
 export default function Home() {
   return (
-    <div className="flex flex-col items-center">
-      {/* Hero Section */}
-      <section className="relative w-full overflow-hidden bg-gradient-to-br from-primary via-black to-black py-24 sm:py-32">
-        <div className="absolute inset-0 bg-[url('/pattern.png')] opacity-10 mix-blend-overlay"></div>
-        <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8 relative z-10">
-          <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-6xl">
-            SAAMA <span className="text-primary font-serif italic text-gold-400">Seattle</span> Festival
-          </h1>
-          <p className="mt-6 text-lg leading-8 text-gray-300 max-w-2xl mx-auto">
-            Celebrating the rich tradition of Indian Classical Music & Dance.
-            Join us for the 2026 Season from <strong>April 1st to April 12th</strong>.
-          </p>
-          <div className="mt-10 flex items-center justify-center gap-x-6">
-            <a
-              href="/competitions"
-              className="rounded-md bg-secondary px-3.5 py-2.5 text-sm font-semibold text-black shadow-sm hover:bg-yellow-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-500"
-            >
-              View Competitions
-            </a>
-            <a href="#about" className="text-sm font-semibold leading-6 text-white group">
-              Learn more <span aria-hidden="true" className="group-hover:translate-x-1 inline-block transition-transform">→</span>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* Info Grid */}
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+    <>
+      <div className="bg-[#4a0418] pt-10 pb-24 px-10 w-full rounded-b-lg shadow-inner border-x border-b border-white/5">
+        <div className="grid grid-cols-3 gap-14 text-white">
+          
           {/* Announcements */}
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-8 transition-colors hover:bg-white/10">
-            <h3 className="text-xl font-bold text-white">Announcements</h3>
-            <p className="mt-4 text-gray-400">
-              Music and Dance competition results from 2025 are now available.
+          <div>
+            <div className="float-left mr-4 mb-2 mt-1">
+              <div className="w-[85px] h-[85px] rounded-[42px] overflow-hidden border-[3px] border-[#990033] shadow-lg">
+                <img src="/hero-banner.png" alt="Announcement" className="w-full h-full object-cover" />
+              </div>
+            </div>
+            <h3 className="font-bold text-[18px] mb-3 font-serif leading-none pt-1">Announcements</h3>
+            <p className="text-[13px] leading-relaxed text-[#d4d4d4] clear-none font-sans">
+              Results for the <span className="font-bold text-white">music</span> and <span className="font-bold text-white">dance</span> competitions are online. Congrats to all the participants and winners!
             </p>
-            <a href="#" className="mt-4 inline-block text-sm font-medium text-primary hover:text-red-400">
-              View Results &rarr;
-            </a>
           </div>
 
           {/* Accommodations */}
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-8 transition-colors hover:bg-white/10">
-            <h3 className="text-xl font-bold text-white">Accommodations</h3>
-            <p className="mt-4 text-gray-400">
-              Special rates available at partner hotels for festival attendees.
+          <div>
+            <div className="mb-4">
+              <div className="w-full h-[110px] border border-white/20 overflow-hidden shadow-lg bg-black">
+                <img src="/accommodation.png" alt="Accommodation" className="w-full h-full object-cover object-center" />
+              </div>
+            </div>
+            <h3 className="font-bold text-[18px] mb-3 font-serif leading-none">Accommodations</h3>
+            <p className="text-[13px] leading-relaxed text-[#d4d4d4] font-sans">
+              Book soon with our <span className="font-bold text-white border-b border-dotted cursor-pointer">partner hotels</span> close to the venue, for a convenient festival experience.
             </p>
-            <a href="#" className="mt-4 inline-block text-sm font-medium text-primary hover:text-red-400">
-              Book Hotel &rarr;
+            <a href="/festival/accommodations" className="block mt-4 text-[12px] font-bold text-white hover:underline truncate">
+              Accommodation Info »
             </a>
           </div>
 
           {/* Visitor Guide */}
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-8 transition-colors hover:bg-white/10">
-            <h3 className="text-xl font-bold text-white">Visitor Guide</h3>
-            <p className="mt-4 text-gray-400">
-              First time? Download our comprehensive guide to navigating the festival.
+          <div>
+            <div className="float-left mr-4 mb-2 mt-1">
+              <div className="w-[65px] h-[65px] rounded-full overflow-hidden border-[2px] border-[#990033] bg-[#e2be93] flex items-center justify-center shadow-lg">
+                <img src="/logo.png" alt="Guide icon" className="w-[80%] h-[80%] object-contain mix-blend-multiply drop-shadow-sm" />
+              </div>
+            </div>
+            <h3 className="font-bold text-[18px] mb-3 font-serif leading-none pt-1">Visitor Guide</h3>
+            <p className="text-[13px] leading-relaxed text-[#d4d4d4] clear-none font-sans">
+              For first-time visitors to the Festival, we have put together a guide to help you find your way around, know what to expect, and to answer any questions.
             </p>
-            <a href="#" className="mt-4 inline-block text-sm font-medium text-primary hover:text-red-400">
-              Download PDF &rarr;
+            <a href="#" className="block mt-4 text-[12px] font-bold text-white hover:underline truncate">
+              Download Visitor's Guide »
             </a>
           </div>
+
         </div>
-      </section>
-    </div>
+      </div>
+      
+      {/* Sponsors */}
+      <div className="bg-black w-full py-8 text-left">
+        <p className="text-[#555555] text-[13px] mb-4 font-sans">Thanks to our sponsors:</p>
+        <div className="flex gap-4">
+           {/* Sponsor logo mockup matching reference style */}
+           <div className="text-[#00aadd] font-sans font-bold text-[22px] flex flex-col items-start leading-[1.1] tracking-tight">
+             <div className="flex items-center gap-[6px] mb-2 ml-4">
+                 {/* Little dots cluster */}
+                 <div className="flex gap-1 relative bottom-[4px]">
+                     <div className="w-[4px] h-[4px] rounded-full bg-[#00aadd] animate-pulse"></div>
+                     <div className="w-[6px] h-[6px] rounded-full bg-[#00aadd]"></div>
+                     <div className="w-[5px] h-[5px] rounded-full bg-[#00aadd]"></div>
+                 </div>
+                 <div className="flex flex-col gap-[2px]">
+                   <div className="w-[4px] h-[4px] rounded-full bg-[#00aadd]"></div>
+                   <div className="w-[3px] h-[3px] rounded-full bg-[#00aadd]"></div>
+                 </div>
+             </div>
+             <div className="pl-2">
+               <span className="text-[14px] tracking-normal font-normal mr-1 lowercase">seattle</span><br/>
+               <span className="lowercase">arts & culture</span>
+             </div>
+             <div className="text-[9px] text-[#cca53f] font-normal tracking-wide mt-1 pl-2 lowercase">strengthening community</div>
+           </div>
+        </div>
+      </div>
+    </>
   );
 }

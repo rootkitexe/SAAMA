@@ -1,63 +1,48 @@
-import { MapPin, Clock } from 'lucide-react';
-
-const SCHEDULE = [
-    { day: "April 1, 2026", event: "Inaugural Concert", time: "6:00 PM", artist: "Vidwan T.M. Krishna" },
-    { day: "April 2, 2026", event: "Pancharatna Group Singing", time: "9:00 AM", artist: "Community Event" },
-    { day: "April 3-5, 2026", event: "Music Competitions", time: "All Day", artist: "Various Venues" },
-    { day: "April 6-9, 2026", event: "Dance Competitions", time: "All Day", artist: "Main Auditorium" },
-    { day: "April 10, 2026", event: "Special Dance Drama", time: "7:00 PM", artist: "Kalakshetra Troupe" },
-    { day: "April 11, 2026", event: "Grand Finale Concert", time: "5:00 PM", artist: "Ranjani & Gayathri" },
-    { day: "April 12, 2026", event: "Prize Distribution", time: "4:00 PM", artist: "Chief Guest" },
-];
+import { MapPin } from 'lucide-react';
 
 export default function FestivalPage() {
     return (
-        <div className="bg-background min-h-screen">
-            <div className="bg-primary/10 py-16 text-center border-b border-white/10">
-                <h1 className="text-4xl font-serif font-bold text-white">The Festival</h1>
-                <p className="mt-4 text-gray-400">Join us for 12 days of divine music and dance.</p>
+        <div className="bg-[#faf5eb] min-h-screen">
+            <div className="bg-[#8b0a30] py-16 text-center border-b-4 border-[#5c3a1e]">
+                <h1 className="text-4xl font-serif font-bold text-white">Aaroha Carnatic Music Festival</h1>
+                <p className="mt-3 text-[#ffd700] text-lg font-serif italic">2026</p>
             </div>
 
-            <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8 text-[#5c3a1e]">
+
+                {/* Description */}
+                <div className="mb-12">
+                    <p className="text-[17px] leading-relaxed">
+                        SaaMa presents the <strong>2026 Aaroha Carnatic Music Festival</strong>, to be held on 
+                        <strong> June 20 and 21</strong> at <strong>Kane Hall, University of Washington, Seattle</strong>, 
+                        featuring outstanding local artists and young, emerging talents from across the United States.
+                        The full schedule will be announced soon.
+                    </p>
+                </div>
 
                 {/* Venue Info */}
-                <div className="mb-12 rounded-xl bg-white/5 p-6 flex flex-col sm:flex-row items-center justify-between gap-4 border border-white/10">
+                <div className="mb-12 rounded-xl bg-white/80 p-6 flex flex-col sm:flex-row items-center justify-between gap-4 border border-[#d4c4a8] shadow-sm">
                     <div className="flex items-center gap-4">
-                        <div className="p-3 bg-primary/20 rounded-full text-primary">
+                        <div className="p-3 bg-[#8b0a30]/10 rounded-full text-[#8b0a30]">
                             <MapPin className="h-6 w-6" />
                         </div>
                         <div>
-                            <h3 className="text-lg font-semibold text-white">Main Venue</h3>
-                            <p className="text-gray-400">Seattle Center, Fisher Pavilion</p>
+                            <h3 className="text-lg font-semibold text-[#5c3a1e]">Venue</h3>
+                            <p className="text-[#7a5c3a]">Kane Hall, University of Washington, Seattle</p>
                         </div>
                     </div>
-                    <a href="#" className="text-sm font-medium text-primary hover:text-white transition-colors">
-                        Get Directions &rarr;
-                    </a>
+                    <div className="text-right text-[#8b0a30] font-bold">
+                        <div className="text-2xl">June 20–21</div>
+                        <div className="text-sm text-[#7a5c3a]">2026</div>
+                    </div>
                 </div>
 
-                {/* Schedule List */}
-                <div className="space-y-4">
-                    <h2 className="text-2xl font-bold text-white mb-6">2026 Schedule Highlights</h2>
-                    {SCHEDULE.map((item, idx) => (
-                        <div key={idx} className="group flex flex-col sm:flex-row sm:items-center justify-between rounded-lg border border-white/10 bg-black/50 p-6 hover:bg-white/5 transition-all">
-                            <div className="flex-1">
-                                <div className="flex items-center gap-3 mb-2">
-                                    <span className="inline-flex items-center rounded-md bg-secondary/10 px-2 py-1 text-xs font-medium text-secondary ring-1 ring-inset ring-secondary/20">
-                                        {item.day}
-                                    </span>
-                                    <div className="flex items-center text-xs text-gray-500">
-                                        <Clock className="mr-1 h-3 w-3" />
-                                        {item.time}
-                                    </div>
-                                </div>
-                                <h3 className="text-lg font-semibold text-white group-hover:text-primary transition-colors">
-                                    {item.event}
-                                </h3>
-                                <p className="text-sm text-gray-400 mt-1">{item.artist}</p>
-                            </div>
-                        </div>
-                    ))}
+                {/* Schedule Placeholder */}
+                <div className="rounded-xl bg-white/80 border border-[#d4c4a8] p-8 text-center shadow-sm">
+                    <h2 className="text-2xl font-bold text-[#5c3a1e] mb-4">Schedule</h2>
+                    <p className="text-[#7a5c3a] text-lg">
+                        The full schedule of events and performances will be announced soon. Stay tuned!
+                    </p>
                 </div>
             </div>
         </div>

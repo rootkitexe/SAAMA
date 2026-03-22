@@ -1,61 +1,70 @@
-import { Heart, CreditCard, Building, Mail } from 'lucide-react';
+import { Heart, Building, Mail } from 'lucide-react';
 
 export default function SupportPage() {
     return (
-        <div className="bg-background min-h-screen py-16 px-4 sm:px-6 lg:px-8">
+        <div className="bg-[#faf5eb] min-h-screen py-16 px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-4xl text-center">
-                <h1 className="text-4xl font-serif font-bold text-white mb-6">Support the Festival</h1>
-                <p className="text-xl text-gray-400 mb-12">
-                    Your generosity helps us keep the rich tradition of Indian Classical Arts alive in Seattle.
+                <h1 className="text-4xl font-serif font-bold text-[#5c3a1e] mb-6">Support Us</h1>
+                <p className="text-xl text-[#7a5c3a] mb-12">
+                    Your generosity helps us keep the rich tradition of Indian classical arts alive in the Pacific Northwest.
                 </p>
             </div>
 
-            <div className="mx-auto max-w-6xl grid gap-8 md:grid-cols-2">
-                {/* Online Donation */}
-                <div className="bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-colors text-center">
-                    <div className="mx-auto h-16 w-16 bg-primary/20 rounded-full flex items-center justify-center text-primary mb-6">
+            <div className="mx-auto max-w-5xl grid gap-8 md:grid-cols-3">
+                {/* Donations */}
+                <div className="bg-white/80 border border-[#d4c4a8] rounded-xl p-8 text-center shadow-sm hover:shadow-md transition-shadow">
+                    <div className="mx-auto h-16 w-16 bg-[#8b0a30]/10 rounded-full flex items-center justify-center text-[#8b0a30] mb-6">
                         <Heart className="h-8 w-8" />
                     </div>
-                    <h2 className="text-2xl font-bold text-white mb-4">Make a Donation</h2>
-                    <p className="text-gray-400 mb-8">
-                        The simplest way to support us. We accept all major credit cards via our secure payment partner.
+                    <h2 className="text-2xl font-bold text-[#5c3a1e] mb-4">Donations</h2>
+                    <p className="text-[#7a5c3a] mb-6">
+                        Support SaaMa's mission by making a tax-deductible donation. We are a 501(c)(3) non-profit organization.
                     </p>
                     <a
-                        href="https://square.link"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center rounded-md bg-primary px-6 py-3 text-base font-bold text-white shadow-sm hover:bg-red-700 transition-colors"
+                        href="mailto:saama.seattle@gmail.com"
+                        className="inline-flex items-center rounded-md bg-[#8b0a30] px-6 py-3 text-base font-bold text-white shadow-sm hover:bg-[#6a0822] transition-colors"
                     >
-                        <CreditCard className="mr-2 h-5 w-5" />
-                        Donate via Square
+                        <Heart className="mr-2 h-5 w-5" />
+                        Donate
                     </a>
                 </div>
 
-                {/* Corporate Matching */}
-                <div className="bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-colors text-center">
-                    <div className="mx-auto h-16 w-16 bg-secondary/10 rounded-full flex items-center justify-center text-secondary mb-6">
+                {/* Prize Sponsorships */}
+                <div className="bg-white/80 border border-[#d4c4a8] rounded-xl p-8 text-center shadow-sm hover:shadow-md transition-shadow">
+                    <div className="mx-auto h-16 w-16 bg-[#c8a03e]/10 rounded-full flex items-center justify-center text-[#c8a03e] mb-6">
+                        <span className="text-3xl">🏆</span>
+                    </div>
+                    <h2 className="text-2xl font-bold text-[#5c3a1e] mb-4">Prize Sponsorships</h2>
+                    <p className="text-[#7a5c3a]">
+                        Sponsors will be recognized during the event and will have the opportunity to come on stage
+                        and present the prize to the award recipient.
+                    </p>
+                </div>
+
+                {/* Business Sponsorship */}
+                <div className="bg-white/80 border border-[#d4c4a8] rounded-xl p-8 text-center shadow-sm hover:shadow-md transition-shadow">
+                    <div className="mx-auto h-16 w-16 bg-[#8b0a30]/10 rounded-full flex items-center justify-center text-[#8b0a30] mb-6">
                         <Building className="h-8 w-8" />
                     </div>
-                    <h2 className="text-2xl font-bold text-white mb-4">Employer Matching</h2>
-                    <p className="text-gray-400 mb-8">
-                        Many companies (Microsoft, Amazon, Google) match employee donations. Double your impact by submitting a match request.
+                    <h2 className="text-2xl font-bold text-[#5c3a1e] mb-4">Business Sponsorship</h2>
+                    <p className="text-[#7a5c3a]">
+                        Local businesses such as realtors, restaurants, and other community enterprises are invited to
+                        support the festival through sponsorship. This is a wonderful opportunity to showcase your
+                        business to a vibrant community of artists, families, and rasikas who attend the event.
+                        Sponsors will be recognized during the festival and provided visibility through our event materials.
                     </p>
-                    <div className="text-sm text-gray-500 bg-black/30 p-4 rounded-lg inline-block">
-                        <p>Search for: <strong>SAAMA Seattle Festival</strong></p>
-                        <p>EIN: <strong>12-3456789</strong></p>
-                    </div>
                 </div>
             </div>
 
             <div className="mx-auto max-w-3xl mt-16 text-center">
-                <h3 className="text-xl font-bold text-white mb-4">Prefer to pay by Check?</h3>
-                <div className="flex flex-col items-center justify-center p-6 bg-black/50 border border-white/10 rounded-xl">
-                    <Mail className="h-6 w-6 text-gray-400 mb-2" />
-                    <p className="text-gray-300">Make checks payable to <strong>"SAAMA Seattle"</strong></p>
-                    <address className="not-italic text-gray-500 mt-2">
-                        1234 Festival Way<br />
-                        Seattle, WA 98000
-                    </address>
+                <div className="flex flex-col items-center justify-center p-6 bg-white/80 border border-[#d4c4a8] rounded-xl shadow-sm">
+                    <Mail className="h-6 w-6 text-[#8b0a30] mb-2" />
+                    <p className="text-[#5c3a1e] text-lg">
+                        For more information about sponsorship opportunities, please email
+                    </p>
+                    <a href="mailto:saama.seattle@gmail.com" className="text-[#8b0a30] font-bold text-lg mt-1 hover:underline">
+                        saama.seattle@gmail.com
+                    </a>
                 </div>
             </div>
         </div>

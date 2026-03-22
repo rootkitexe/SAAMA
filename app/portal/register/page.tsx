@@ -1,296 +1,463 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { User, Music, Mic2, MapPin, CheckCircle, ChevronRight, ChevronLeft, Loader2 } from 'lucide-react';
-import { createRegistration } from './actions';
+import { useState, useEffect, useCallback } from 'react';
+import { createBrowserClient } from '@supabase/ssr';
+import { CheckCircle, ChevronRight, ChevronLeft, Loader2, Music, CreditCard } from 'lucide-react';
+
+const CATEGORIES = ['Geetham', 'Varnam', 'Krithi', 'Thillana', 'Viruttham', 'Alapana'] as const;
+type Category = typeof CATEGORIES[number];
+
+const ENTRY_FEE = 35; // USD per category
+
+function calculateAgeAsOfMay1(birthday: string): number | null {
+    if (!birthday) return null;
+    const bday = new Date(birthday);
+    const may1 = new Date(2026, 4, 1);
+    let age = may1.getFullYear() - bday.getFullYear();
+    const m = may1.getMonth() - bday.getMonth();
+    if (m < 0 || (m === 0 && may1.getDate() < bday.getDate())) age--;
+    return age;
+}
+
+function getAgeGroup(age: number | null): string {
+    if (age === null) return '—';
+    if (age >= 6 && age <= 9) return 'Sub-Junior';
+    if (age >= 10 && age <= 14) return 'Junior';
+    if (age >= 15 && age <= 18) return 'Senior';
+    return 'Not Eligible';
+}
+
+function getRequiredSongCount(ageGroup: string): number {
+    if (ageGroup === 'Senior') return 4;
+    if (ageGroup === 'Junior') return 3;
+    if (ageGroup === 'Sub-Junior') return 1;
+    return 1;
+}
+
+type SongEntry = { song: string; raga: string; tala: string; composer: string };
+type AlapanaEntry = { raga1: string; raga2: string; raga3: string };
+type VirutthamEntry = { sahityam: string; raga1: string; raga2: string; raga3: string; raga4: string };
+
+type CategoryData = {
+    songs?: SongEntry[];
+    alapana?: AlapanaEntry;
+    viruttham?: VirutthamEntry;
+};
+
+declare global {
+    interface Window {
+        Razorpay: any;
+    }
+}
 
 export default function RegisterPage() {
-    const router = useRouter();
+    const supabase = createBrowserClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+
     const [step, setStep] = useState(1);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [formData, setFormData] = useState({
-        // Profile
-        fullName: '',
-        dob: '',
-        phone: '',
-        address: '',
-        city: '',
-        state: '',
-        zip: '',
-        // Competition
-        category: 'Music', // Music or Dance
-        item: 'Carnatic Vocal',
-        // Details
-        guruName: '',
-        songs: [{ raga: '', tala: '', composer: '', song: '' }] // Default 1 song
-    });
+    const [loading, setLoading] = useState(true);
+    const [submitting, setSubmitting] = useState(false);
+    const [profile, setProfile] = useState<any>(null);
+    const [userId, setUserId] = useState('');
+    const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
+    const [categoryData, setCategoryData] = useState<Record<string, CategoryData>>({});
+    const [errorMsg, setErrorMsg] = useState('');
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+    const age = profile?.birthday ? calculateAgeAsOfMay1(profile.birthday) : null;
+    const ageGroup = getAgeGroup(age);
+    const songCount = getRequiredSongCount(ageGroup);
+    const totalFee = selectedCategories.length * ENTRY_FEE;
+
+    useEffect(() => {
+        async function load() {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) { window.location.href = '/login'; return; }
+            setUserId(user.id);
+
+            const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+            setProfile(data);
+            setLoading(false);
+        }
+        load();
+    }, []);
+
+    // Initialize category data when categories change
+    const initCategoryData = useCallback((cats: Category[]) => {
+        const newData: Record<string, CategoryData> = {};
+        cats.forEach(cat => {
+            if (cat === 'Alapana') {
+                newData[cat] = categoryData[cat] || { alapana: { raga1: '', raga2: '', raga3: '' } };
+            } else if (cat === 'Viruttham') {
+                newData[cat] = categoryData[cat] || { viruttham: { sahityam: '', raga1: '', raga2: '', raga3: '', raga4: '' } };
+            } else {
+                const existing = categoryData[cat]?.songs;
+                const songs: SongEntry[] = [];
+                for (let i = 0; i < songCount; i++) {
+                    songs.push(existing?.[i] || { song: '', raga: '', tala: '', composer: '' });
+                }
+                newData[cat] = { songs };
+            }
+        });
+        setCategoryData(newData);
+    }, [categoryData, songCount]);
+
+    const toggleCategory = (cat: Category) => {
+        setSelectedCategories(prev => {
+            const next = prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat];
+            return next;
+        });
     };
 
-    const handleSongChange = (index: number, field: string, value: string) => {
-        const newSongs: any = [...formData.songs];
-        newSongs[index][field] = value;
-        setFormData(prev => ({ ...prev, songs: newSongs }));
+    const updateSong = (cat: string, idx: number, field: keyof SongEntry, value: string) => {
+        setCategoryData(prev => {
+            const updated = { ...prev };
+            const songs = [...(updated[cat]?.songs || [])];
+            songs[idx] = { ...songs[idx], [field]: value };
+            updated[cat] = { ...updated[cat], songs };
+            return updated;
+        });
     };
 
-    const addSong = () => {
-        setFormData(prev => ({
+    const updateAlapana = (field: string, value: string) => {
+        setCategoryData(prev => ({
             ...prev,
-            songs: [...prev.songs, { raga: '', tala: '', composer: '', song: '' }]
+            Alapana: { alapana: { ...(prev.Alapana?.alapana as AlapanaEntry), [field]: value } }
         }));
     };
 
-    const nextStep = () => setStep(prev => prev + 1);
-    const prevStep = () => setStep(prev => prev - 1);
+    const updateViruttham = (field: string, value: string) => {
+        setCategoryData(prev => ({
+            ...prev,
+            Viruttham: { viruttham: { ...(prev.Viruttham?.viruttham as VirutthamEntry), [field]: value } }
+        }));
+    };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setIsSubmitting(true);
+    const goToStep2 = () => {
+        if (selectedCategories.length === 0) {
+            setErrorMsg('Please select at least one category.');
+            return;
+        }
+        if (ageGroup === 'Not Eligible' || ageGroup === '—') {
+            setErrorMsg('Your age is not eligible for any group. Please update your profile.');
+            return;
+        }
+        setErrorMsg('');
+        initCategoryData(selectedCategories);
+        setStep(2);
+    };
+
+    const loadRazorpayScript = (): Promise<boolean> => {
+        return new Promise(resolve => {
+            if (window.Razorpay) { resolve(true); return; }
+            const script = document.createElement('script');
+            script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+            script.onload = () => resolve(true);
+            script.onerror = () => resolve(false);
+            document.body.appendChild(script);
+        });
+    };
+
+    const handlePayment = async () => {
+        setSubmitting(true);
+        setErrorMsg('');
 
         try {
-            await createRegistration(formData);
-        } catch (error) {
-            if ((error as Error).message.includes('NEXT_REDIRECT')) {
-                return;
-            }
-            alert("Registration failed: " + (error as Error).message);
-            setIsSubmitting(false);
+            // 1. Create Razorpay order
+            const res = await fetch('/api/razorpay', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    amount: totalFee,
+                    categories: selectedCategories,
+                    userId,
+                }),
+            });
+            const orderData = await res.json();
+            if (!res.ok) throw new Error(orderData.error);
+
+            // 2. Load Razorpay script
+            const loaded = await loadRazorpayScript();
+            if (!loaded) throw new Error('Failed to load Razorpay');
+
+            // 3. Open Razorpay checkout
+            const options = {
+                key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+                amount: orderData.amount,
+                currency: orderData.currency,
+                name: 'SaaMa',
+                description: `Competition Registration (${selectedCategories.length} categories)`,
+                order_id: orderData.orderId,
+                handler: async function (response: any) {
+                    // Payment successful — save registrations
+                    try {
+                        const entries = selectedCategories.map(cat => ({
+                            user_id: userId,
+                            competition_item: cat,
+                            category: 'Music',
+                            student_name: profile?.full_name || '',
+                            dob: profile?.birthday || null,
+                            songs: categoryData[cat] || {},
+                            status: 'confirmed',
+                            payment_id: response.razorpay_payment_id,
+                        }));
+
+                        const { error } = await supabase.from('registrations').insert(entries);
+                        if (error) throw error;
+
+                        window.location.href = '/portal';
+                    } catch (err: any) {
+                        setErrorMsg('Payment received but registration save failed: ' + err.message);
+                        setSubmitting(false);
+                    }
+                },
+                prefill: {
+                    email: profile?.email || '',
+                    contact: profile?.mobile || profile?.phone || '',
+                },
+                theme: {
+                    color: '#8b0a30',
+                },
+                modal: {
+                    ondismiss: function () {
+                        setSubmitting(false);
+                    },
+                },
+            };
+
+            const rzp = new window.Razorpay(options);
+            rzp.open();
+        } catch (err: any) {
+            setErrorMsg(err.message || 'Payment failed');
+            setSubmitting(false);
         }
     };
 
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-[#faf5eb] flex items-center justify-center">
+                <Loader2 className="h-8 w-8 animate-spin text-[#8b0a30]" />
+            </div>
+        );
+    }
+
+    if (!profile?.full_name || !profile?.birthday) {
+        return (
+            <div className="min-h-screen bg-[#faf5eb] flex items-center justify-center px-4">
+                <div className="bg-white/80 border border-[#d4c4a8] rounded-xl p-8 max-w-md text-center shadow-sm">
+                    <h2 className="text-2xl font-bold text-[#5c3a1e] mb-4">Complete Your Profile First</h2>
+                    <p className="text-[#7a5c3a] mb-6">You need to fill in your profile (name, birthday, etc.) before registering for competitions.</p>
+                    <a href="/portal/profile" className="inline-block bg-[#8b0a30] text-white font-bold py-3 px-8 rounded-md hover:bg-[#6a0822] transition-colors">
+                        Go to Profile →
+                    </a>
+                </div>
+            </div>
+        );
+    }
+
     return (
-        <div className="min-h-screen bg-black py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-[#faf5eb] py-12 px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-3xl">
-                {/* Progress Steps */}
-                <div className="mb-12">
+
+                {/* Progress */}
+                <div className="mb-10">
                     <div className="flex items-center justify-between relative">
-                        <div className="absolute left-0 top-1/2 w-full h-0.5 bg-white/10 -z-10" />
-                        {[1, 2, 3, 4].map((s) => (
-                            <div key={s} className={`flex h-10 w-10 items-center justify-center rounded-full border-2 text-sm font-bold transition-colors ${step >= s ? 'border-primary bg-primary text-white' : 'border-white/20 bg-black text-gray-500'}`}>
+                        <div className="absolute left-0 top-1/2 w-full h-0.5 bg-[#d4c4a8] -z-10" />
+                        {[1, 2, 3].map(s => (
+                            <div key={s} className={`flex h-10 w-10 items-center justify-center rounded-full border-2 text-sm font-bold transition-colors ${step >= s ? 'border-[#8b0a30] bg-[#8b0a30] text-white' : 'border-[#d4c4a8] bg-[#faf5eb] text-[#7a5c3a]'}`}>
                                 {step > s ? <CheckCircle className="h-5 w-5" /> : s}
                             </div>
                         ))}
                     </div>
-                    <div className="mt-4 flex justify-between text-xs font-medium text-gray-400 px-1">
-                        <span>Profile</span>
-                        <span>Selection</span>
-                        <span>Details</span>
-                        <span>Review</span>
+                    <div className="mt-3 flex justify-between text-xs font-bold text-[#7a5c3a] px-1">
+                        <span>Select Categories</span>
+                        <span>Repertoire Details</span>
+                        <span>Review & Pay</span>
                     </div>
                 </div>
 
-                <form
-                    onSubmit={handleSubmit}
-                    onKeyDown={(e) => {
-                        if (e.key === 'Enter' && e.target instanceof HTMLInputElement) {
-                            e.preventDefault();
-                        }
-                    }}
-                    className="bg-white/5 border border-white/10 rounded-2xl p-8 shadow-xl"
-                >
+                {/* Profile Info Banner */}
+                <div className="bg-white/80 border border-[#d4c4a8] rounded-lg p-4 mb-6 flex items-center justify-between shadow-sm">
+                    <div className="text-sm text-[#5c3a1e]">
+                        <span className="font-bold">{profile.full_name}</span> · Age: <span className="font-bold">{age}</span>
+                    </div>
+                    <span className={`text-xs font-bold px-3 py-1 rounded-full ${ageGroup === 'Sub-Junior' ? 'bg-green-100 text-green-800' : ageGroup === 'Junior' ? 'bg-blue-100 text-blue-800' : ageGroup === 'Senior' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-600'}`}>
+                        {ageGroup}
+                    </span>
+                </div>
 
-                    {/* Step 1: Participant Profile */}
+                <div className="bg-white/80 border border-[#d4c4a8] rounded-xl p-8 shadow-sm">
+
+                    {/* STEP 1: Category Selection */}
                     {step === 1 && (
                         <div className="space-y-6">
-                            <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-                                <User className="h-6 w-6 text-primary" /> Participant Profile
+                            <h2 className="text-2xl font-bold text-[#5c3a1e] flex items-center gap-2">
+                                <Music className="h-6 w-6 text-[#8b0a30]" /> Select Categories
                             </h2>
-                            <div className="grid gap-6 sm:grid-cols-2">
-                                <div className="col-span-2">
-                                    <label className="block text-sm font-medium text-gray-400 mb-1">Full Name</label>
-                                    <input type="text" name="fullName" value={formData.fullName} onChange={handleInputChange} className="w-full rounded-md bg-white/10 border-white/10 text-white focus:ring-primary focus:border-primary p-2.5" placeholder="As it should appear on certificates" />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-400 mb-1">Date of Birth</label>
-                                    <input type="date" name="dob" value={formData.dob} onChange={handleInputChange} className="w-full rounded-md bg-white/10 border-white/10 text-white focus:ring-primary focus:border-primary p-2.5" />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-400 mb-1">Phone Number</label>
-                                    <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} className="w-full rounded-md bg-white/10 border-white/10 text-white focus:ring-primary focus:border-primary p-2.5" placeholder="(555) 123-4567" />
-                                </div>
-                                <div className="col-span-2">
-                                    <label className="block text-sm font-medium text-gray-400 mb-1">Mailing Address</label>
-                                    <input type="text" name="address" value={formData.address} onChange={handleInputChange} className="w-full rounded-md bg-white/10 border-white/10 text-white focus:ring-primary focus:border-primary p-2.5" placeholder="1234 Music Lane" />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-400 mb-1">City</label>
-                                    <input type="text" name="city" value={formData.city} onChange={handleInputChange} className="w-full rounded-md bg-white/10 border-white/10 text-white focus:ring-primary focus:border-primary p-2.5" />
-                                </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-400 mb-1">State</label>
-                                        <input type="text" name="state" value={formData.state} onChange={handleInputChange} className="w-full rounded-md bg-white/10 border-white/10 text-white focus:ring-primary focus:border-primary p-2.5" maxLength={2} placeholder="WA" />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-400 mb-1">Zip</label>
-                                        <input type="text" name="zip" value={formData.zip} onChange={handleInputChange} className="w-full rounded-md bg-white/10 border-white/10 text-white focus:ring-primary focus:border-primary p-2.5" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )}
+                            <p className="text-[#7a5c3a] text-sm">Select all the categories you wish to register for. Each category costs <strong className="text-[#8b0a30]">US $35</strong>.</p>
 
-                    {/* Step 2: Competition Selection */}
-                    {step === 2 && (
-                        <div className="space-y-6">
-                            <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-                                <Music className="h-6 w-6 text-primary" /> Competition Selection
-                            </h2>
-                            <div className="space-y-6">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-400 mb-3">Category</label>
-                                    <div className="flex gap-4">
-                                        {['Music', 'Dance'].map((cat) => (
-                                            <button
-                                                key={cat}
-                                                type="button"
-                                                onClick={() => setFormData(prev => ({ ...prev, category: cat }))}
-                                                className={`flex-1 py-3 px-4 rounded-xl border-2 font-bold transition-all ${formData.category === cat ? 'border-primary bg-primary/10 text-white' : 'border-white/10 bg-black text-gray-500 hover:border-gray-500'}`}
-                                            >
-                                                {cat}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-400 mb-1">Competition Item</label>
-                                    <select name="item" value={formData.item} onChange={handleInputChange} className="w-full rounded-md bg-white/10 border-white/10 text-white focus:ring-primary focus:border-primary p-2.5">
-                                        <option value="Carnatic Vocal">Carnatic Vocal</option>
-                                        <option value="Violin Solo">Violin Solo</option>
-                                        <option value="Mridangam">Mridangam</option>
-                                        <option value="Veena">Veena</option>
-                                        <option value="Flute">Flute</option>
-                                    </select>
-                                </div>
-
-                                <div className="bg-blue-900/20 border border-blue-500/30 p-4 rounded-lg">
-                                    <p className="text-blue-400 text-sm">
-                                        <strong>Note:</strong> Your Age Group (Junior/Senior) will be automatically calculated based on your Date of Birth provided in the profile step.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Step 3: Song & Guru Details */}
-                    {step === 3 && (
-                        <div className="space-y-6">
-                            <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-                                <Mic2 className="h-6 w-6 text-primary" /> Song Details
-                            </h2>
-
-                            <div>
-                                <label className="block text-sm font-medium text-gray-400 mb-1">Guru / Music School</label>
-                                <input type="text" name="guruName" value={formData.guruName} onChange={handleInputChange} className="w-full rounded-md bg-white/10 border-white/10 text-white focus:ring-primary focus:border-primary p-2.5" placeholder="e.g. Smt. Teacher Name" />
-                            </div>
-
-                            <div className="space-y-4">
-                                <div className="flex items-center justify-between">
-                                    <label className="block text-sm font-medium text-gray-400">Songs / Compositions</label>
-                                    <button type="button" onClick={addSong} className="text-xs text-primary hover:text-white underline">+ Add Another Song</button>
-                                </div>
-
-                                {formData.songs.map((song, idx) => (
-                                    <div key={idx} className="p-4 bg-white/5 rounded-lg border border-white/10 space-y-3">
-                                        <p className="text-xs font-bold text-gray-500 uppercase">Song {idx + 1}</p>
-                                        <div className="grid grid-cols-2 gap-3">
-                                            <input type="text" placeholder="Raga" value={song.raga} onChange={(e) => handleSongChange(idx, 'raga', e.target.value)} className="bg-black/30 border-white/10 rounded px-2 py-1.5 text-sm text-white" />
-                                            <input type="text" placeholder="Tala" value={song.tala} onChange={(e) => handleSongChange(idx, 'tala', e.target.value)} className="bg-black/30 border-white/10 rounded px-2 py-1.5 text-sm text-white" />
-                                            <input type="text" placeholder="Composer" value={song.composer} onChange={(e) => handleSongChange(idx, 'composer', e.target.value)} className="bg-black/30 border-white/10 rounded px-2 py-1.5 text-sm text-white" />
-                                            <input type="text" placeholder="Song Name (Start)" value={song.song} onChange={(e) => handleSongChange(idx, 'song', e.target.value)} className="bg-black/30 border-white/10 rounded px-2 py-1.5 text-sm text-white" />
-                                        </div>
-                                    </div>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                {CATEGORIES.map(cat => (
+                                    <button
+                                        key={cat}
+                                        type="button"
+                                        onClick={() => toggleCategory(cat)}
+                                        className={`py-4 px-4 rounded-lg border-2 font-bold text-center transition-all ${selectedCategories.includes(cat) ? 'border-[#8b0a30] bg-[#8b0a30]/10 text-[#8b0a30]' : 'border-[#d4c4a8] bg-white text-[#7a5c3a] hover:border-[#8b0a30]/50'}`}
+                                    >
+                                        {selectedCategories.includes(cat) && <CheckCircle className="h-4 w-4 inline mr-1" />}
+                                        {cat}
+                                    </button>
                                 ))}
                             </div>
+
+                            {selectedCategories.length > 0 && (
+                                <div className="bg-[#8b0a30]/5 border border-[#8b0a30]/20 rounded-lg p-4 text-sm">
+                                    <span className="text-[#5c3a1e]">Selected: <strong>{selectedCategories.length}</strong> categories</span>
+                                    <span className="float-right text-[#8b0a30] font-bold text-lg">${totalFee}</span>
+                                </div>
+                            )}
                         </div>
                     )}
 
-                    {/* Step 4: Review */}
-                    {step === 4 && (
+                    {/* STEP 2: Repertoire Details */}
+                    {step === 2 && (
+                        <div className="space-y-8">
+                            <h2 className="text-2xl font-bold text-[#5c3a1e]">Repertoire Details</h2>
+
+                            {selectedCategories.map(cat => (
+                                <div key={cat} className="border border-[#d4c4a8] rounded-lg p-6 bg-[#faf5eb]">
+                                    <h3 className="font-bold text-lg text-[#8b0a30] mb-4">{cat}</h3>
+
+                                    {/* Geetham / Varnam / Krithi / Thillana — Song inputs */}
+                                    {['Geetham', 'Varnam', 'Krithi', 'Thillana'].includes(cat) && (
+                                        <div className="space-y-4">
+                                            <p className="text-xs text-[#7a5c3a]">
+                                                {ageGroup} category: submit <strong>{songCount}</strong> {songCount === 1 ? 'composition' : 'compositions'}
+                                            </p>
+                                            {categoryData[cat]?.songs?.map((song, idx) => (
+                                                <div key={idx} className="bg-white rounded-md border border-[#d4c4a8] p-4">
+                                                    <p className="text-xs font-bold text-[#7a5c3a] uppercase mb-3">Composition {idx + 1}</p>
+                                                    <div className="grid grid-cols-2 gap-3">
+                                                        <input placeholder="Song" value={song.song} onChange={e => updateSong(cat, idx, 'song', e.target.value)} className="bg-[#faf5eb] border border-[#d4c4a8] rounded px-3 py-2 text-sm text-[#5c3a1e]" />
+                                                        <input placeholder="Raga" value={song.raga} onChange={e => updateSong(cat, idx, 'raga', e.target.value)} className="bg-[#faf5eb] border border-[#d4c4a8] rounded px-3 py-2 text-sm text-[#5c3a1e]" />
+                                                        <input placeholder="Tala" value={song.tala} onChange={e => updateSong(cat, idx, 'tala', e.target.value)} className="bg-[#faf5eb] border border-[#d4c4a8] rounded px-3 py-2 text-sm text-[#5c3a1e]" />
+                                                        <input placeholder="Composer" value={song.composer} onChange={e => updateSong(cat, idx, 'composer', e.target.value)} className="bg-[#faf5eb] border border-[#d4c4a8] rounded px-3 py-2 text-sm text-[#5c3a1e]" />
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {/* Alapana — 3 Ragas */}
+                                    {cat === 'Alapana' && (
+                                        <div className="space-y-3">
+                                            <p className="text-xs text-[#7a5c3a]">Submit 3 ragas. The judges will select one for you to present.</p>
+                                            {(['raga1', 'raga2', 'raga3'] as const).map((field, i) => (
+                                                <div key={field}>
+                                                    <label className="text-xs font-bold text-[#7a5c3a] uppercase">Raga {i + 1}</label>
+                                                    <input placeholder={`Raga ${i + 1}`} value={(categoryData.Alapana?.alapana as any)?.[field] || ''} onChange={e => updateAlapana(field, e.target.value)} className="w-full bg-white border border-[#d4c4a8] rounded px-3 py-2 text-sm text-[#5c3a1e] mt-1" />
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {/* Viruttham — Sahityam + 4 Ragas */}
+                                    {cat === 'Viruttham' && (
+                                        <div className="space-y-3">
+                                            <p className="text-xs text-[#7a5c3a]">Submit 1 viruttham with up to 4 ragas.</p>
+                                            <div>
+                                                <label className="text-xs font-bold text-[#7a5c3a] uppercase">Sahityam</label>
+                                                <input placeholder="Sahityam" value={(categoryData.Viruttham?.viruttham as any)?.sahityam || ''} onChange={e => updateViruttham('sahityam', e.target.value)} className="w-full bg-white border border-[#d4c4a8] rounded px-3 py-2 text-sm text-[#5c3a1e] mt-1" />
+                                            </div>
+                                            {(['raga1', 'raga2', 'raga3', 'raga4'] as const).map((field, i) => (
+                                                <div key={field}>
+                                                    <label className="text-xs font-bold text-[#7a5c3a] uppercase">Raga {i + 1}</label>
+                                                    <input placeholder={`Raga ${i + 1}`} value={(categoryData.Viruttham?.viruttham as any)?.[field] || ''} onChange={e => updateViruttham(field, e.target.value)} className="w-full bg-white border border-[#d4c4a8] rounded px-3 py-2 text-sm text-[#5c3a1e] mt-1" />
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    {/* STEP 3: Review & Pay */}
+                    {step === 3 && (
                         <div className="space-y-6">
-                            <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-                                <CheckCircle className="h-6 w-6 text-primary" /> Review & Submit
+                            <h2 className="text-2xl font-bold text-[#5c3a1e] flex items-center gap-2">
+                                <CreditCard className="h-6 w-6 text-[#8b0a30]" /> Review & Pay
                             </h2>
 
-                            <div className="space-y-4 text-sm text-gray-300">
-                                <div className="grid grid-cols-2 gap-4 border-b border-white/10 pb-4">
-                                    <div>
-                                        <span className="block text-gray-500 text-xs">Participant</span>
-                                        <span className="font-bold text-white">{formData.fullName}</span>
-                                    </div>
-                                    <div>
-                                        <span className="block text-gray-500 text-xs">DOB</span>
-                                        <span className="font-bold text-white">{formData.dob}</span>
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-2 gap-4 border-b border-white/10 pb-4">
-                                    <div>
-                                        <span className="block text-gray-500 text-xs">Competition</span>
-                                        <span className="font-bold text-white">{formData.item} ({formData.category})</span>
-                                    </div>
-                                    <div>
-                                        <span className="block text-gray-500 text-xs">Guru</span>
-                                        <span className="font-bold text-white">{formData.guruName}</span>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <span className="block text-gray-500 text-xs mb-2">Songs</span>
-                                    <ul className="space-y-1">
-                                        {formData.songs.map((s, i) => (
-                                            <li key={i} className="bg-white/5 px-2 py-1 rounded border border-white/5">
-                                                {s.song} <span className="text-gray-500">in</span> {s.raga}
-                                            </li>
-                                        ))}
-                                    </ul>
+                            <div className="space-y-4">
+                                <div className="border border-[#d4c4a8] rounded-lg overflow-hidden">
+                                    <table className="w-full text-sm">
+                                        <thead className="bg-[#8b0a30] text-white">
+                                            <tr>
+                                                <th className="text-left px-4 py-2">Category</th>
+                                                <th className="text-right px-4 py-2">Fee</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {selectedCategories.map(cat => (
+                                                <tr key={cat} className="border-t border-[#d4c4a8]">
+                                                    <td className="px-4 py-3 font-medium text-[#5c3a1e]">{cat}</td>
+                                                    <td className="px-4 py-3 text-right text-[#5c3a1e]">$35.00</td>
+                                                </tr>
+                                            ))}
+                                            <tr className="border-t-2 border-[#8b0a30] bg-[#8b0a30]/5">
+                                                <td className="px-4 py-3 font-bold text-[#8b0a30]">Total</td>
+                                                <td className="px-4 py-3 text-right font-bold text-[#8b0a30] text-lg">${totalFee}.00</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
 
-                                <div className="bg-yellow-900/20 border border-yellow-500/20 p-3 rounded text-yellow-500 text-xs">
-                                    By submitting, you confirm that all details are accurate and you agree to the festival rules.
+                                <div className="bg-[#faf5eb] border border-[#d4c4a8] rounded-lg p-4 text-sm text-[#7a5c3a]">
+                                    <strong>Participant:</strong> {profile.full_name} · <strong>Age Group:</strong> {ageGroup} · <strong>Birthday:</strong> {profile.birthday}
+                                </div>
+
+                                <div className="bg-yellow-50 border border-yellow-200 p-3 rounded-lg text-yellow-800 text-xs">
+                                    By proceeding, you confirm that all details are accurate and agree to the competition rules. No changes allowed after <strong>May 14, 2026</strong>.
                                 </div>
                             </div>
                         </div>
                     )}
 
-                    {/* Navigation Buttons */}
-                    <div className="mt-8 flex items-center justify-between pt-6 border-t border-white/10">
+                    {/* Error */}
+                    {errorMsg && (
+                        <div className="mt-4 p-3 rounded-md bg-red-100 text-red-800 text-sm font-medium">
+                            {errorMsg}
+                        </div>
+                    )}
+
+                    {/* Navigation */}
+                    <div className="mt-8 flex items-center justify-between pt-6 border-t border-[#d4c4a8]">
                         {step > 1 ? (
-                            <button type="button" onClick={prevStep} className="flex items-center text-sm font-medium text-gray-400 hover:text-white">
+                            <button type="button" onClick={() => setStep(s => s - 1)} className="flex items-center text-sm font-medium text-[#7a5c3a] hover:text-[#5c3a1e]">
                                 <ChevronLeft className="h-4 w-4 mr-1" /> Back
                             </button>
-                        ) : <div />} {/* Spacer */}
+                        ) : <div />}
 
-                        {step < 4 ? (
-                            <button type="button" onClick={nextStep} className="flex items-center rounded-md bg-white px-6 py-2 text-sm font-bold text-black hover:bg-gray-200">
-                                Next Step <ChevronRight className="h-4 w-4 ml-1" />
+                        {step === 1 && (
+                            <button type="button" onClick={goToStep2} className="flex items-center bg-[#8b0a30] text-white font-bold py-2.5 px-6 rounded-md hover:bg-[#6a0822] transition-colors">
+                                Next <ChevronRight className="h-4 w-4 ml-1" />
                             </button>
-                        ) : (
-                            <button
-                                type="button"
-                                disabled={isSubmitting}
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    if (!isSubmitting) handleSubmit(e as any);
-                                }}
-                                className="flex items-center rounded-md bg-primary px-6 py-2 text-sm font-bold text-white hover:bg-red-700 shadow-lg shadow-primary/25 disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                {isSubmitting ? (
-                                    <>
-                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...
-                                    </>
-                                ) : (
-                                    "Submit Registration"
-                                )}
+                        )}
+                        {step === 2 && (
+                            <button type="button" onClick={() => setStep(3)} className="flex items-center bg-[#8b0a30] text-white font-bold py-2.5 px-6 rounded-md hover:bg-[#6a0822] transition-colors">
+                                Review & Pay <ChevronRight className="h-4 w-4 ml-1" />
+                            </button>
+                        )}
+                        {step === 3 && (
+                            <button type="button" onClick={handlePayment} disabled={submitting} className="flex items-center bg-[#8b0a30] text-white font-bold py-3 px-8 rounded-md hover:bg-[#6a0822] transition-colors disabled:opacity-50 shadow-lg">
+                                {submitting ? <Loader2 className="h-5 w-5 animate-spin mr-2" /> : <CreditCard className="h-5 w-5 mr-2" />}
+                                {submitting ? 'Processing...' : `Pay $${totalFee} with Razorpay`}
                             </button>
                         )}
                     </div>
-
-                </form>
+                </div>
             </div>
         </div>
     );

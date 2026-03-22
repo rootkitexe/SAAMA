@@ -1,164 +1,120 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useState } from 'react';
-import { Menu, X, ChevronDown } from 'lucide-react';
-
-type NavItem = {
-    label: string;
-    href: string;
-    children?: { label: string; href: string }[];
-};
-
-const NAV_ITEMS: NavItem[] = [
-    {
-        label: 'About',
-        href: '/about',
-        children: [
-            { label: 'The Committee', href: '/about/committee' },
-            { label: 'Titles & Awards', href: '/about/awards' },
-            { label: 'Blog', href: '/about/blog' },
-            { label: 'Code of Conduct', href: '/about/code-of-conduct' }
-        ]
-    },
-    {
-        label: 'The Festival',
-        href: '/festival',
-        children: [
-            { label: 'Schedule', href: '/festival' },
-            { label: 'Tickets', href: '/festival/tickets' },
-            { label: 'Pancharathnam', href: '/festival/pancharathnam' },
-            { label: 'Directions', href: '/festival/directions' },
-            { label: 'Accommodations', href: '/festival/accommodations' }
-        ]
-    },
-    { label: 'Competitions', href: '/competitions' },
-    { label: 'Support Us', href: '/support' },
-    { label: 'Contact', href: '/contact' },
-];
+import { createBrowserClient } from '@supabase/ssr';
 
 export default function Navbar() {
-    const [isOpen, setIsOpen] = useState(false);
-    const [mobileSubmenuOpen, setMobileSubmenuOpen] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
 
-    const toggleMobileSubmenu = (label: string) => {
-        setMobileSubmenuOpen(mobileSubmenuOpen === label ? null : label);
-    };
-
-    return (
-        <nav className="sticky top-0 z-50 w-full border-b border-white/10 bg-black/80 backdrop-blur-md">
-            <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-                {/* Logo / Brand */}
-                <Link href="/" className="flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-full bg-primary" /> {/* Placeholder for Logo */}
-                    <span className="text-xl font-bold tracking-tight text-white">
-                        SAAMA <span className="text-primary font-normal">Seattle</span>
-                    </span>
-                </Link>
-
-                {/* Desktop Nav */}
-                <div className="hidden md:flex md:items-center md:gap-8">
-                    {NAV_ITEMS.map((item) => (
-                        <div key={item.label} className="relative group">
-                            <Link
-                                href={item.href}
-                                className="flex items-center gap-1 text-sm font-medium text-gray-300 transition-colors hover:text-white"
-                            >
-                                {item.label}
-                                {item.children && <ChevronDown className="h-4 w-4 text-gray-500 group-hover:text-white" />}
-                            </Link>
-
-                            {/* Desktop Dropdown */}
-                            {item.children && (
-                                <div className="absolute left-0 top-full pt-2 hidden group-hover:block w-48">
-                                    <div className="rounded-md border border-white/10 bg-black shadow-xl ring-1 ring-black ring-opacity-5 py-1">
-                                        {item.children.map((child) => (
-                                            <Link
-                                                key={child.label}
-                                                href={child.href}
-                                                className="block px-4 py-2 text-sm text-gray-300 hover:bg-white/10 hover:text-white"
-                                            >
-                                                {child.label}
-                                            </Link>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    ))}
-                    <Link
-                        href="/login"
-                        className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white transition-transform hover:scale-105 active:scale-95"
-                    >
-                        Portal Login
-                    </Link>
-                </div>
-
-                {/* Mobile Menu Button */}
-                <button
-                    onClick={() => setIsOpen(!isOpen)}
-                    className="rounded-md p-2 text-gray-300 hover:bg-white/10 hover:text-white md:hidden"
-                >
-                    {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-                </button>
-            </div>
-
-            {/* Mobile Nav */}
-            {isOpen && (
-                <div className="border-t border-white/10 bg-black md:hidden max-h-[85vh] overflow-y-auto">
-                    <div className="flex flex-col space-y-1 px-4 py-4">
-                        {NAV_ITEMS.map((item) => (
-                            <div key={item.label}>
-                                {item.children ? (
-                                    <>
-                                        <button
-                                            onClick={() => toggleMobileSubmenu(item.label)}
-                                            className="flex w-full items-center justify-between rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-white/10 hover:text-white"
-                                        >
-                                            {item.label}
-                                            <ChevronDown
-                                                className={`h-4 w-4 transition-transform ${mobileSubmenuOpen === item.label ? 'rotate-180' : ''
-                                                    }`}
-                                            />
-                                        </button>
-                                        {mobileSubmenuOpen === item.label && (
-                                            <div className="ml-4 flex flex-col space-y-1 border-l border-white/10 pl-4">
-                                                {item.children.map((child) => (
-                                                    <Link
-                                                        key={child.label}
-                                                        href={child.href}
-                                                        onClick={() => setIsOpen(false)}
-                                                        className="block rounded-md px-3 py-2 text-sm font-medium text-gray-400 hover:text-white"
-                                                    >
-                                                        {child.label}
-                                                    </Link>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </>
-                                ) : (
-                                    <Link
-                                        href={item.href}
-                                        onClick={() => setIsOpen(false)}
-                                        className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-white/10 hover:text-white"
-                                    >
-                                        {item.label}
-                                    </Link>
-                                )}
-                            </div>
-                        ))}
-                        <div className="pt-4">
-                            <Link
-                                href="/portal"
-                                onClick={() => setIsOpen(false)}
-                                className="block w-full rounded-md bg-primary px-3 py-2 text-center text-base font-semibold text-white"
-                            >
-                                Portal Login
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-            )}
-        </nav>
+  useEffect(() => {
+    const supabase = createBrowserClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     );
+    
+    // Check initial state
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsAuthenticated(!!session);
+      setUserEmail(session?.user?.email || null);
+    });
+
+    // Listen for auth changes (login/logout)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(!!session);
+      setUserEmail(session?.user?.email || null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  return (
+    <header className="flex flex-col w-full rounded-t-lg overflow-visible shrink-0 relative z-[100]">
+      {/* Banner Section */}
+      <div className="flex bg-[#e2be93] h-[340px] items-stretch">
+        {/* Left: Info */}
+        <div className="w-[35%] p-6 flex flex-col justify-start text-black">
+          <div className="mb-2 w-full flex justify-center h-[130px]">
+              <img src="/logo.png" alt="Logo" className="h-full object-contain mix-blend-multiply drop-shadow-sm" />
+          </div>
+          <h1 className="text-[26px] font-serif tracking-tight leading-none mb-1 text-center">
+            SaaMa
+          </h1>
+          <p className="text-[11px] text-center text-black/70 mb-2 font-sans">
+            Sadhana Academy for Musical Arts
+          </p>
+          <p className="text-[11px] text-center text-[#8b0000] italic mb-3 font-serif">
+            Celebrating Sādhana, Tradition, and the Next Generation.
+          </p>
+          <p className="text-[11px] leading-[1.4] text-justify text-black/80 font-serif">
+            SaaMa — Sadhana Academy for Musical Arts is a 501(c)(3) non-profit organization
+            dedicated to nurturing and sustaining the living tradition of Indian classical music.
+            Through concerts, workshops, mentorship, and community initiatives, we seek to inspire
+            young musicians and cultivate a vibrant cultural space.
+          </p>
+        </div>
+        
+        {/* Right: Images (5 vertical slices using CSS object-position trick) */}
+        <div className="w-[65%] shrink-0 border-l-[4px] border-black flex items-stretch">
+          <div className="w-1/5 border-r border-black/30"><img src="/musicians.png" className="w-full h-full object-cover object-[10%]" /></div>
+          <div className="w-1/5 border-r border-black/30"><img src="/musicians.png" className="w-full h-full object-cover object-[30%]" /></div>
+          <div className="w-1/5 border-r border-black/30"><img src="/musicians.png" className="w-full h-full object-cover object-[50%]" /></div>
+          <div className="w-1/5 border-r border-black/30"><img src="/musicians.png" className="w-full h-full object-cover object-[70%]" /></div>
+          <div className="w-1/5"><img src="/musicians.png" className="w-full h-full object-cover object-[90%]" /></div>
+        </div>
+      </div>
+
+      {/* Nav Strip */}
+      <nav className="bg-[#8b0a30] text-white flex justify-center text-[13px] font-bold border-y-2 border-black/40 relative z-50">
+          
+          <div className="group relative">
+            <Link href="/about" className="block px-6 py-[8px] hover:underline">About us</Link>
+            <div className="absolute top-[100%] left-1/2 -translate-x-1/2 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200 z-[60]">
+              <div className="w-48 bg-[#630018] border border-white/20 shadow-2xl rounded-b-md overflow-hidden flex flex-col pt-1">
+                <Link href="/about/committee" className="block px-4 py-2 hover:bg-[#8b0a30] transition-colors border-b border-white/10">The Committee</Link>
+                <Link href="/about/awards" className="block px-4 py-2 hover:bg-[#8b0a30] transition-colors border-b border-white/10">Titles & Awards</Link>
+                <Link href="/about/blog" className="block px-4 py-2 hover:bg-[#8b0a30] transition-colors border-b border-white/10">Blog</Link>
+                <Link href="/about/code-of-conduct" className="block px-4 py-2 hover:bg-[#8b0a30] transition-colors">Code of Conduct</Link>
+              </div>
+            </div>
+          </div>
+
+          <div className="group relative">
+            <Link href="/festival" className="block px-4 py-[8px] hover:underline text-[12px]">Aaroha Carnatic Music Festival</Link>
+            <div className="absolute top-[100%] left-1/2 -translate-x-1/2 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200 z-[60]">
+               <div className="w-48 bg-[#630018] border border-white/20 shadow-2xl rounded-b-md overflow-hidden flex flex-col pt-1">
+                <Link href="/festival" className="block px-4 py-2 hover:bg-[#8b0a30] transition-colors border-b border-white/10">2026 Festival</Link>
+                <Link href="/festival/tickets" className="block px-4 py-2 hover:bg-[#8b0a30] transition-colors border-b border-white/10">Tickets</Link>
+                <Link href="/festival/directions" className="block px-4 py-2 hover:bg-[#8b0a30] transition-colors border-b border-white/10">Directions</Link>
+                <Link href="/festival/accommodations" className="block px-4 py-2 hover:bg-[#8b0a30] transition-colors">Accommodations</Link>
+              </div>
+            </div>
+          </div>
+
+          <div><Link href="/competitions" className="block px-6 py-[8px] hover:underline">Competitions</Link></div>
+          <div><Link href="/support" className="block px-6 py-[8px] hover:underline">Support us</Link></div>
+          <div><Link href="/contact" className="block px-6 py-[8px] hover:underline">Contact us</Link></div>
+          
+          {userEmail && ['saama.seattle@gmail.com', 'testuser@example.com'].includes(userEmail) && (
+            <>
+              <div className="w-[1px] h-4 bg-white/30 self-center mx-2"></div>
+              <div>
+                <Link href="/admin" className="block px-4 py-[8px] text-yellow-400 hover:text-white transition-colors">Admin Area</Link>
+              </div>
+            </>
+          )}
+
+          <div className="w-[1px] h-4 bg-white/30 self-center mx-4"></div>
+          <div>
+            <Link 
+              href={isAuthenticated ? "/portal" : "/login"} 
+              className="block px-6 py-[8px] hover:text-yellow-400 transition-colors"
+            >
+              {isAuthenticated ? "Dashboard" : "Portal Login"}
+            </Link>
+          </div>
+      </nav>
+    </header>
+  );
 }

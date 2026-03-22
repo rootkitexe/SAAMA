@@ -123,16 +123,21 @@ export default async function PortalPage() {
                         </div>
 
                         <div className="rounded-xl bg-white/5 border border-white/10 p-6">
-                            <h3 className="text-md font-bold text-white mb-4">Need Help?</h3>
+                            <h3 className="text-md font-bold text-white mb-4">Quick Links</h3>
                             <ul className="space-y-3 text-sm text-gray-400">
                                 <li>
-                                    <a href="/contact" className="hover:text-primary transition-colors flex items-center justify-between">
-                                        Contact Support <span>&rarr;</span>
+                                    <a href="/portal/profile" className="hover:text-primary transition-colors flex items-center justify-between">
+                                        Edit Profile <span>&rarr;</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="/festival/pancharathnam" className="hover:text-primary transition-colors flex items-center justify-between">
-                                        Pancharathnam Info <span>&rarr;</span>
+                                    <a href="/competitions" className="hover:text-primary transition-colors flex items-center justify-between">
+                                        Competition Rules <span>&rarr;</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/contact" className="hover:text-primary transition-colors flex items-center justify-between">
+                                        Contact Support <span>&rarr;</span>
                                     </a>
                                 </li>
                             </ul>

@@ -3,7 +3,7 @@ import { MapPin } from 'lucide-react';
 export default function FestivalPage() {
     return (
         <div className="bg-[#faf5eb] min-h-screen">
-            <div className="bg-[#8b0a30] py-16 text-center border-b-4 border-[#5c3a1e]">
+            <div className="bg-[#3d230d] py-16 text-center border-b-4 border-[#5c3a1e]">
                 <h1 className="text-4xl font-serif font-bold text-white">Aaroha Carnatic Music Festival</h1>
                 <p className="mt-3 text-[#ffd700] text-lg font-serif italic">2026</p>
             </div>
@@ -23,7 +23,7 @@ export default function FestivalPage() {
                 {/* Venue Info */}
                 <div className="mb-12 rounded-xl bg-white/80 p-6 flex flex-col sm:flex-row items-center justify-between gap-4 border border-[#d4c4a8] shadow-sm">
                     <div className="flex items-center gap-4">
-                        <div className="p-3 bg-[#8b0a30]/10 rounded-full text-[#8b0a30]">
+                        <div className="p-3 bg-[#3d230d]/10 rounded-full text-[#3d230d]">
                             <MapPin className="h-6 w-6" />
                         </div>
                         <div>
@@ -31,7 +31,7 @@ export default function FestivalPage() {
                             <p className="text-[#7a5c3a]">Kane Hall, University of Washington, Seattle</p>
                         </div>
                     </div>
-                    <div className="text-right text-[#8b0a30] font-bold">
+                    <div className="text-right text-[#3d230d] font-bold">
                         <div className="text-2xl">June 20–21</div>
                         <div className="text-sm text-[#7a5c3a]">2026</div>
                     </div>
@@ -48,3 +48,4 @@ export default function FestivalPage() {
         </div>
     );
 }
+

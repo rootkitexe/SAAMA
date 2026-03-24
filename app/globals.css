@@ -2,15 +2,17 @@
 
 :root {
   /* Brand Colors */
-  --primary: #800000; /* Maroon */
+  --primary: #3d230d;
+  /* Dark Walnut Brown */
   --primary-foreground: #ffffff;
-  --secondary: #D4AF37; /* Gold */
+  --secondary: #D4AF37;
+  /* Gold */
   --secondary-foreground: #000000;
-  
+
   /* Base Colors (Dark Theme Default) */
   --background: #0a0a0a;
   --foreground: #ededed;
-  
+
   /* UI Colors */
   --muted: #262626;
   --muted-foreground: #a3a3a3;
@@ -27,7 +29,7 @@
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
-  
+
   --font-sans: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   --font-mono: var(--font-geist-mono), monospace;
 }

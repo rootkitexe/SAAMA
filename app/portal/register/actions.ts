@@ -65,3 +65,4 @@ export async function createRegistration(formData: any) {
     revalidatePath('/portal')
     redirect('/portal')
 }
+

@@ -27,9 +27,9 @@ export default function ContactPage() {
                     </p>
 
                     <div className="pt-4 border-t border-[#d4c4a8] flex flex-col items-center text-center">
-                        <Mail className="h-8 w-8 text-[#8b0a30] mb-3" />
+                        <Mail className="h-8 w-8 text-[#3d230d] mb-3" />
                         <p className="text-lg font-semibold mb-1">For all inquiries, please contact us at:</p>
-                        <a href="mailto:saama.seattle@gmail.com" className="text-[#8b0a30] font-bold text-xl hover:underline">
+                        <a href="mailto:saama.seattle@gmail.com" className="text-[#3d230d] font-bold text-xl hover:underline">
                             saama.seattle@gmail.com
                         </a>
                     </div>
@@ -39,3 +39,4 @@ export default function ContactPage() {
         </div>
     );
 }
+

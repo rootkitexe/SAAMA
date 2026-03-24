@@ -29,9 +29,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-black flex flex-col items-center pt-8`}
       >
-        <div className="w-full max-w-[1024px] flex flex-col mb-16">
+        <div className="w-full max-w-[1024px] flex flex-col mb-16 rounded-2xl overflow-hidden shadow-2xl border border-[#faf5eb]/10">
           <Navbar />
-          <main className="flex-1 w-full bg-black">
+          <main className="flex-1 w-full bg-transparent">
             {children}
           </main>
         </div>
@@ -39,3 +39,4 @@ export default function RootLayout({
     </html>
   );
 }
+

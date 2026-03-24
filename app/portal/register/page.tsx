@@ -217,7 +217,7 @@ export default function RegisterPage() {
                     contact: profile?.mobile || profile?.phone || '',
                 },
                 theme: {
-                    color: '#8b0a30',
+                    color: '#3d230d',
                 },
                 modal: {
                     ondismiss: function () {
@@ -237,7 +237,7 @@ export default function RegisterPage() {
     if (loading) {
         return (
             <div className="min-h-screen bg-[#faf5eb] flex items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin text-[#8b0a30]" />
+                <Loader2 className="h-8 w-8 animate-spin text-[#3d230d]" />
             </div>
         );
     }
@@ -248,7 +248,7 @@ export default function RegisterPage() {
                 <div className="bg-white/80 border border-[#d4c4a8] rounded-xl p-8 max-w-md text-center shadow-sm">
                     <h2 className="text-2xl font-bold text-[#5c3a1e] mb-4">Complete Your Profile First</h2>
                     <p className="text-[#7a5c3a] mb-6">You need to fill in your profile (name, birthday, etc.) before registering for competitions.</p>
-                    <a href="/portal/profile" className="inline-block bg-[#8b0a30] text-white font-bold py-3 px-8 rounded-md hover:bg-[#6a0822] transition-colors">
+                    <a href="/portal/profile" className="inline-block bg-[#3d230d] text-white font-bold py-3 px-8 rounded-lg hover:bg-[#2a1809] transition-colors">
                         Go to Profile →
                     </a>
                 </div>
@@ -265,7 +265,7 @@ export default function RegisterPage() {
                     <div className="flex items-center justify-between relative">
                         <div className="absolute left-0 top-1/2 w-full h-0.5 bg-[#d4c4a8] -z-10" />
                         {[1, 2, 3].map(s => (
-                            <div key={s} className={`flex h-10 w-10 items-center justify-center rounded-full border-2 text-sm font-bold transition-colors ${step >= s ? 'border-[#8b0a30] bg-[#8b0a30] text-white' : 'border-[#d4c4a8] bg-[#faf5eb] text-[#7a5c3a]'}`}>
+                            <div key={s} className={`flex h-10 w-10 items-center justify-center rounded-full border-2 text-sm font-bold transition-colors ${step >= s ? 'border-[#3d230d] bg-[#3d230d] text-white' : 'border-[#d4c4a8] bg-[#faf5eb] text-[#7a5c3a]'}`}>
                                 {step > s ? <CheckCircle className="h-5 w-5" /> : s}
                             </div>
                         ))}
@@ -293,9 +293,9 @@ export default function RegisterPage() {
                     {step === 1 && (
                         <div className="space-y-6">
                             <h2 className="text-2xl font-bold text-[#5c3a1e] flex items-center gap-2">
-                                <Music className="h-6 w-6 text-[#8b0a30]" /> Select Categories
+                                <Music className="h-6 w-6 text-[#3d230d]" /> Select Categories
                             </h2>
-                            <p className="text-[#7a5c3a] text-sm">Select all the categories you wish to register for. Each category costs <strong className="text-[#8b0a30]">US $35</strong>.</p>
+                            <p className="text-[#7a5c3a] text-sm">Select all the categories you wish to register for. Each category costs <strong className="text-[#3d230d]">US $35</strong>.</p>
 
                             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                                 {CATEGORIES.map(cat => (
@@ -303,7 +303,7 @@ export default function RegisterPage() {
                                         key={cat}
                                         type="button"
                                         onClick={() => toggleCategory(cat)}
-                                        className={`py-4 px-4 rounded-lg border-2 font-bold text-center transition-all ${selectedCategories.includes(cat) ? 'border-[#8b0a30] bg-[#8b0a30]/10 text-[#8b0a30]' : 'border-[#d4c4a8] bg-white text-[#7a5c3a] hover:border-[#8b0a30]/50'}`}
+                                        className={`py-4 px-4 rounded-lg border-2 font-bold text-center transition-all ${selectedCategories.includes(cat) ? 'border-[#3d230d] bg-[#3d230d]/10 text-[#3d230d]' : 'border-[#d4c4a8] bg-white text-[#7a5c3a] hover:border-[#3d230d]/50'}`}
                                     >
                                         {selectedCategories.includes(cat) && <CheckCircle className="h-4 w-4 inline mr-1" />}
                                         {cat}
@@ -312,9 +312,9 @@ export default function RegisterPage() {
                             </div>
 
                             {selectedCategories.length > 0 && (
-                                <div className="bg-[#8b0a30]/5 border border-[#8b0a30]/20 rounded-lg p-4 text-sm">
+                                <div className="bg-[#3d230d]/5 border border-[#3d230d]/20 rounded-lg p-4 text-sm">
                                     <span className="text-[#5c3a1e]">Selected: <strong>{selectedCategories.length}</strong> categories</span>
-                                    <span className="float-right text-[#8b0a30] font-bold text-lg">${totalFee}</span>
+                                    <span className="float-right text-[#3d230d] font-bold text-lg">${totalFee}</span>
                                 </div>
                             )}
                         </div>
@@ -327,7 +327,7 @@ export default function RegisterPage() {
 
                             {selectedCategories.map(cat => (
                                 <div key={cat} className="border border-[#d4c4a8] rounded-lg p-6 bg-[#faf5eb]">
-                                    <h3 className="font-bold text-lg text-[#8b0a30] mb-4">{cat}</h3>
+                                    <h3 className="font-bold text-lg text-[#3d230d] mb-4">{cat}</h3>
 
                                     {/* Geetham / Varnam / Krithi / Thillana — Song inputs */}
                                     {['Geetham', 'Varnam', 'Krithi', 'Thillana'].includes(cat) && (
@@ -336,13 +336,13 @@ export default function RegisterPage() {
                                                 {ageGroup} category: submit <strong>{songCount}</strong> {songCount === 1 ? 'composition' : 'compositions'}
                                             </p>
                                             {categoryData[cat]?.songs?.map((song, idx) => (
-                                                <div key={idx} className="bg-white rounded-md border border-[#d4c4a8] p-4">
+                                                <div key={idx} className="bg-white rounded-lg border border-[#d4c4a8] p-4">
                                                     <p className="text-xs font-bold text-[#7a5c3a] uppercase mb-3">Composition {idx + 1}</p>
                                                     <div className="grid grid-cols-2 gap-3">
-                                                        <input placeholder="Song" value={song.song} onChange={e => updateSong(cat, idx, 'song', e.target.value)} className="bg-[#faf5eb] border border-[#d4c4a8] rounded px-3 py-2 text-sm text-[#5c3a1e]" />
-                                                        <input placeholder="Raga" value={song.raga} onChange={e => updateSong(cat, idx, 'raga', e.target.value)} className="bg-[#faf5eb] border border-[#d4c4a8] rounded px-3 py-2 text-sm text-[#5c3a1e]" />
-                                                        <input placeholder="Tala" value={song.tala} onChange={e => updateSong(cat, idx, 'tala', e.target.value)} className="bg-[#faf5eb] border border-[#d4c4a8] rounded px-3 py-2 text-sm text-[#5c3a1e]" />
-                                                        <input placeholder="Composer" value={song.composer} onChange={e => updateSong(cat, idx, 'composer', e.target.value)} className="bg-[#faf5eb] border border-[#d4c4a8] rounded px-3 py-2 text-sm text-[#5c3a1e]" />
+                                                        <input placeholder="Song" value={song.song} onChange={e => updateSong(cat, idx, 'song', e.target.value)} className="bg-[#faf5eb] border border-[#d4c4a8] rounded-lg px-3 py-2 text-sm text-[#5c3a1e]" />
+                                                        <input placeholder="Raga" value={song.raga} onChange={e => updateSong(cat, idx, 'raga', e.target.value)} className="bg-[#faf5eb] border border-[#d4c4a8] rounded-lg px-3 py-2 text-sm text-[#5c3a1e]" />
+                                                        <input placeholder="Tala" value={song.tala} onChange={e => updateSong(cat, idx, 'tala', e.target.value)} className="bg-[#faf5eb] border border-[#d4c4a8] rounded-lg px-3 py-2 text-sm text-[#5c3a1e]" />
+                                                        <input placeholder="Composer" value={song.composer} onChange={e => updateSong(cat, idx, 'composer', e.target.value)} className="bg-[#faf5eb] border border-[#d4c4a8] rounded-lg px-3 py-2 text-sm text-[#5c3a1e]" />
                                                     </div>
                                                 </div>
                                             ))}
@@ -356,7 +356,7 @@ export default function RegisterPage() {
                                             {(['raga1', 'raga2', 'raga3'] as const).map((field, i) => (
                                                 <div key={field}>
                                                     <label className="text-xs font-bold text-[#7a5c3a] uppercase">Raga {i + 1}</label>
-                                                    <input placeholder={`Raga ${i + 1}`} value={(categoryData.Alapana?.alapana as any)?.[field] || ''} onChange={e => updateAlapana(field, e.target.value)} className="w-full bg-white border border-[#d4c4a8] rounded px-3 py-2 text-sm text-[#5c3a1e] mt-1" />
+                                                    <input placeholder={`Raga ${i + 1}`} value={(categoryData.Alapana?.alapana as any)?.[field] || ''} onChange={e => updateAlapana(field, e.target.value)} className="w-full bg-white border border-[#d4c4a8] rounded-lg px-3 py-2 text-sm text-[#5c3a1e] mt-1" />
                                                 </div>
                                             ))}
                                         </div>
@@ -368,12 +368,12 @@ export default function RegisterPage() {
                                             <p className="text-xs text-[#7a5c3a]">Submit 1 viruttham with up to 4 ragas.</p>
                                             <div>
                                                 <label className="text-xs font-bold text-[#7a5c3a] uppercase">Sahityam</label>
-                                                <input placeholder="Sahityam" value={(categoryData.Viruttham?.viruttham as any)?.sahityam || ''} onChange={e => updateViruttham('sahityam', e.target.value)} className="w-full bg-white border border-[#d4c4a8] rounded px-3 py-2 text-sm text-[#5c3a1e] mt-1" />
+                                                <input placeholder="Sahityam" value={(categoryData.Viruttham?.viruttham as any)?.sahityam || ''} onChange={e => updateViruttham('sahityam', e.target.value)} className="w-full bg-white border border-[#d4c4a8] rounded-lg px-3 py-2 text-sm text-[#5c3a1e] mt-1" />
                                             </div>
                                             {(['raga1', 'raga2', 'raga3', 'raga4'] as const).map((field, i) => (
                                                 <div key={field}>
                                                     <label className="text-xs font-bold text-[#7a5c3a] uppercase">Raga {i + 1}</label>
-                                                    <input placeholder={`Raga ${i + 1}`} value={(categoryData.Viruttham?.viruttham as any)?.[field] || ''} onChange={e => updateViruttham(field, e.target.value)} className="w-full bg-white border border-[#d4c4a8] rounded px-3 py-2 text-sm text-[#5c3a1e] mt-1" />
+                                                    <input placeholder={`Raga ${i + 1}`} value={(categoryData.Viruttham?.viruttham as any)?.[field] || ''} onChange={e => updateViruttham(field, e.target.value)} className="w-full bg-white border border-[#d4c4a8] rounded-lg px-3 py-2 text-sm text-[#5c3a1e] mt-1" />
                                                 </div>
                                             ))}
                                         </div>
@@ -387,13 +387,13 @@ export default function RegisterPage() {
                     {step === 3 && (
                         <div className="space-y-6">
                             <h2 className="text-2xl font-bold text-[#5c3a1e] flex items-center gap-2">
-                                <CreditCard className="h-6 w-6 text-[#8b0a30]" /> Review & Pay
+                                <CreditCard className="h-6 w-6 text-[#3d230d]" /> Review & Pay
                             </h2>
 
                             <div className="space-y-4">
                                 <div className="border border-[#d4c4a8] rounded-lg overflow-hidden">
                                     <table className="w-full text-sm">
-                                        <thead className="bg-[#8b0a30] text-white">
+                                        <thead className="bg-[#3d230d] text-white">
                                             <tr>
                                                 <th className="text-left px-4 py-2">Category</th>
                                                 <th className="text-right px-4 py-2">Fee</th>
@@ -406,9 +406,9 @@ export default function RegisterPage() {
                                                     <td className="px-4 py-3 text-right text-[#5c3a1e]">$35.00</td>
                                                 </tr>
                                             ))}
-                                            <tr className="border-t-2 border-[#8b0a30] bg-[#8b0a30]/5">
-                                                <td className="px-4 py-3 font-bold text-[#8b0a30]">Total</td>
-                                                <td className="px-4 py-3 text-right font-bold text-[#8b0a30] text-lg">${totalFee}.00</td>
+                                            <tr className="border-t-2 border-[#3d230d] bg-[#3d230d]/5">
+                                                <td className="px-4 py-3 font-bold text-[#3d230d]">Total</td>
+                                                <td className="px-4 py-3 text-right font-bold text-[#3d230d] text-lg">${totalFee}.00</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -441,17 +441,17 @@ export default function RegisterPage() {
                         ) : <div />}
 
                         {step === 1 && (
-                            <button type="button" onClick={goToStep2} className="flex items-center bg-[#8b0a30] text-white font-bold py-2.5 px-6 rounded-md hover:bg-[#6a0822] transition-colors">
+                            <button type="button" onClick={goToStep2} className="flex items-center bg-[#3d230d] text-white font-bold py-2.5 px-6 rounded-lg hover:bg-[#2a1809] transition-colors">
                                 Next <ChevronRight className="h-4 w-4 ml-1" />
                             </button>
                         )}
                         {step === 2 && (
-                            <button type="button" onClick={() => setStep(3)} className="flex items-center bg-[#8b0a30] text-white font-bold py-2.5 px-6 rounded-md hover:bg-[#6a0822] transition-colors">
+                            <button type="button" onClick={() => setStep(3)} className="flex items-center bg-[#3d230d] text-white font-bold py-2.5 px-6 rounded-lg hover:bg-[#2a1809] transition-colors">
                                 Review & Pay <ChevronRight className="h-4 w-4 ml-1" />
                             </button>
                         )}
                         {step === 3 && (
-                            <button type="button" onClick={handlePayment} disabled={submitting} className="flex items-center bg-[#8b0a30] text-white font-bold py-3 px-8 rounded-md hover:bg-[#6a0822] transition-colors disabled:opacity-50 shadow-lg">
+                            <button type="button" onClick={handlePayment} disabled={submitting} className="flex items-center bg-[#3d230d] text-white font-bold py-3 px-8 rounded-lg hover:bg-[#2a1809] transition-colors disabled:opacity-50 shadow-lg">
                                 {submitting ? <Loader2 className="h-5 w-5 animate-spin mr-2" /> : <CreditCard className="h-5 w-5 mr-2" />}
                                 {submitting ? 'Processing...' : `Pay $${totalFee} with Razorpay`}
                             </button>
@@ -462,3 +462,4 @@ export default function RegisterPage() {
         </div>
     );
 }
+

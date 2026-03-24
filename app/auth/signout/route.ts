@@ -8,3 +8,4 @@ export async function POST(request: Request) {
     revalidatePath("/", "layout");
     redirect("/login");
 }
+

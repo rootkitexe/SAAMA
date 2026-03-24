@@ -4,7 +4,7 @@ export default function CompetitionsPage() {
     return (
         <div className="bg-[#faf5eb] min-h-screen">
             {/* Hero */}
-            <div className="bg-[#8b0a30] py-16 text-center border-b-4 border-[#5c3a1e]">
+            <div className="bg-[#3d230d] py-16 text-center border-b-4 border-[#5c3a1e]">
                 <h1 className="text-4xl font-serif font-bold text-white">The Music Competition</h1>
                 <p className="mt-3 text-[#ffd700] text-lg font-serif italic">2026 Season</p>
             </div>
@@ -20,17 +20,17 @@ export default function CompetitionsPage() {
                     <h2 className="text-2xl font-bold mb-6 border-b-2 border-[#d4c4a8] pb-2">Key Dates</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div className="bg-white/80 border border-[#d4c4a8] rounded-lg p-5 shadow-sm">
-                            <div className="text-xs uppercase tracking-wider text-[#8b0a30] font-bold mb-1">Application Deadline</div>
+                            <div className="text-xs uppercase tracking-wider text-[#3d230d] font-bold mb-1">Application Deadline</div>
                             <div className="text-xl font-bold">May 14, 2026</div>
                             <p className="text-sm text-[#7a5c3a] mt-1">All entries must be submitted and paid in full by this date. No changes allowed after the deadline.</p>
                         </div>
                         <div className="bg-white/80 border border-[#d4c4a8] rounded-lg p-5 shadow-sm">
-                            <div className="text-xs uppercase tracking-wider text-[#8b0a30] font-bold mb-1">Competition Dates</div>
+                            <div className="text-xs uppercase tracking-wider text-[#3d230d] font-bold mb-1">Competition Dates</div>
                             <div className="text-xl font-bold">May 30 – June 13, 2026</div>
                             <p className="text-sm text-[#7a5c3a] mt-1">Weekends between these dates, conducted via Zoom.</p>
                         </div>
                         <div className="bg-white/80 border border-[#d4c4a8] rounded-lg p-5 shadow-sm">
-                            <div className="text-xs uppercase tracking-wider text-[#8b0a30] font-bold mb-1">Prize Distribution</div>
+                            <div className="text-xs uppercase tracking-wider text-[#3d230d] font-bold mb-1">Prize Distribution</div>
                             <div className="text-xl font-bold">June 21, 2026</div>
                             <p className="text-sm text-[#7a5c3a] mt-1">At the Aaroha Carnatic Music Festival.</p>
                         </div>
@@ -44,7 +44,7 @@ export default function CompetitionsPage() {
                         Create a profile for each participant, log in, select the categories they wish to enter, and submit
                         the application with payment online. Please review category rules and eligibility before proceeding.
                     </p>
-                    <Link href="/portal/register" className="inline-block bg-[#8b0a30] text-white font-bold py-3 px-8 rounded-md hover:bg-[#6a0822] transition-colors shadow-sm">
+                    <Link href="/portal/register" className="inline-block bg-[#3d230d] text-white font-bold py-3 px-8 rounded-lg hover:bg-[#2a1809] transition-colors shadow-sm">
                         Proceed to Registration →
                     </Link>
                 </section>
@@ -121,15 +121,15 @@ export default function CompetitionsPage() {
                             <p className="text-[15px] mb-3">There will be three age groups:</p>
                             <div className="grid grid-cols-3 gap-4">
                                 <div className="bg-white/80 border border-[#d4c4a8] rounded-lg p-4 text-center shadow-sm">
-                                    <div className="text-2xl font-bold text-[#8b0a30]">6–9</div>
+                                    <div className="text-2xl font-bold text-[#3d230d]">6–9</div>
                                     <div className="font-semibold mt-1">Sub-Junior</div>
                                 </div>
                                 <div className="bg-white/80 border border-[#d4c4a8] rounded-lg p-4 text-center shadow-sm">
-                                    <div className="text-2xl font-bold text-[#8b0a30]">10–14</div>
+                                    <div className="text-2xl font-bold text-[#3d230d]">10–14</div>
                                     <div className="font-semibold mt-1">Junior</div>
                                 </div>
                                 <div className="bg-white/80 border border-[#d4c4a8] rounded-lg p-4 text-center shadow-sm">
-                                    <div className="text-2xl font-bold text-[#8b0a30]">15–18</div>
+                                    <div className="text-2xl font-bold text-[#3d230d]">15–18</div>
                                     <div className="font-semibold mt-1">Senior</div>
                                 </div>
                             </div>
@@ -143,7 +143,7 @@ export default function CompetitionsPage() {
                             </div>
                             <div>
                                 <h3 className="font-bold text-lg mb-2">Entry Fee</h3>
-                                <p className="text-[15px]"><strong className="text-[#8b0a30] text-xl">US $35</strong> per entry per category.</p>
+                                <p className="text-[15px]"><strong className="text-[#3d230d] text-xl">US $35</strong> per entry per category.</p>
                             </div>
                         </div>
 
@@ -183,12 +183,12 @@ export default function CompetitionsPage() {
                 </section>
 
                 {/* CTA */}
-                <div className="rounded-xl bg-[#8b0a30] p-8 text-center text-white shadow-lg">
+                <div className="rounded-xl bg-[#3d230d] p-8 text-center text-white shadow-lg">
                     <h2 className="text-2xl font-bold mb-4 font-serif">Ready to Compete?</h2>
                     <p className="mb-6 text-white/80">
                         The completed registration application and the associated entry fee must be received by <strong>May 14, 2026</strong>.
                     </p>
-                    <Link href="/portal/register" className="inline-block bg-white text-[#8b0a30] font-bold py-3 px-8 rounded-md hover:bg-gray-100 transition-colors shadow-sm">
+                    <Link href="/portal/register" className="inline-block bg-white text-[#3d230d] font-bold py-3 px-8 rounded-lg hover:bg-gray-100 transition-colors shadow-sm">
                         Register Now →
                     </Link>
                 </div>
@@ -196,3 +196,4 @@ export default function CompetitionsPage() {
         </div>
     );
 }
+

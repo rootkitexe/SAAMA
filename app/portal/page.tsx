@@ -40,19 +40,19 @@ export default async function PortalPage() {
     }
 
     return (
-        <div className="min-h-screen bg-background p-4 sm:p-8" >
+        <div className="min-h-screen bg-[#faf5eb] p-4 sm:p-8" >
             <div className="mx-auto max-w-6xl">
                 {/* Header */}
-                <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-white/10 pb-6">
+                <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-[#d4c4a8] pb-6">
                     <div>
-                        <h1 className="text-3xl font-serif font-bold text-white">Participant Portal</h1>
-                        <p className="text-gray-400 mt-1 flex items-center gap-2">
+                        <h1 className="text-3xl font-serif font-bold text-[#3d230d]">Participant Portal</h1>
+                        <p className="text-[#7a5c3a] mt-1 flex items-center gap-2 font-medium">
                             <User className="h-4 w-4" />
-                            Welcome back, <span className="text-primary">{user.email}</span>
+                            Welcome back, <span className="text-[#3d230d] font-bold">{user.email}</span>
                         </p>
                     </div>
                     <form action="/auth/signout" method="post">
-                        <button className="rounded-md bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/20 transition-colors">
+                        <button className="rounded-lg bg-white border border-[#d4c4a8] px-4 py-2 text-sm font-bold text-[#3d230d] hover:bg-[#f0ebe0] transition-colors shadow-sm">
                             Sign Out
                         </button>
                     </form>
@@ -63,47 +63,47 @@ export default async function PortalPage() {
 
                     {/* Main Content: Registrations */}
                     <div className="lg:col-span-2 space-y-6">
-                        <h2 className="text-xl font-bold text-white">My Registrations</h2>
+                        <h2 className="text-xl font-bold text-[#3d230d]">My Registrations</h2>
 
                         {registrations && registrations.length > 0 ? (
                             <div className="space-y-4">
                                 {registrations.map((reg) => (
-                                    <div key={reg.id} className="bg-white/5 border border-white/10 rounded-xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                    <div key={reg.id} className="bg-white border border-[#d4c4a8] rounded-xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
                                         <div className="space-y-2">
                                             <div className="flex items-center gap-2">
-                                                <span className="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium bg-green-400/10 text-green-400 ring-1 ring-inset ring-green-400/20">
+                                                <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold bg-green-100 text-green-800 ring-1 ring-inset ring-green-600/20">
                                                     {reg.status === 'pending_payment' ? 'Registered' : reg.status}
                                                 </span>
-                                                <span className="text-xs text-gray-500 uppercase tracking-wider font-semibold border border-white/10 px-2 py-0.5 rounded">
+                                                <span className="text-xs text-[#7a5c3a] uppercase tracking-wider font-bold border border-[#d4c4a8] px-2 py-0.5 rounded-full bg-[#faf5eb]">
                                                     {reg.category}
                                                 </span>
                                             </div>
-                                            <h3 className="text-lg font-semibold text-white">{reg.competition_item}</h3>
-                                            <div className="flex flex-col sm:flex-row sm:items-center gap-3 text-sm text-gray-400">
+                                            <h3 className="text-lg font-bold text-[#3d230d]">{reg.competition_item}</h3>
+                                            <div className="flex flex-col sm:flex-row sm:items-center gap-3 text-sm text-[#7a5c3a] font-medium">
                                                 <div className="flex items-center gap-1">
-                                                    <Calendar className="h-4 w-4 text-primary" />
+                                                    <Calendar className="h-4 w-4 text-[#3d230d]" />
                                                     {getSchedule(reg.competition_item)}
                                                 </div>
-                                                <div className="hidden sm:block text-gray-700">•</div>
+                                                <div className="hidden sm:block text-[#d4c4a8]">•</div>
                                                 <div className="flex items-center gap-1">
-                                                    <MapPin className="h-4 w-4 text-secondary" />
+                                                    <MapPin className="h-4 w-4 text-[#3d230d]" />
                                                     {getVenue(reg.competition_item)}
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <a href={`/portal/registrations/${reg.id}`} className="whitespace-nowrap rounded-md bg-blue-600/20 px-4 py-2 text-sm font-medium text-blue-400 hover:bg-blue-600/30 transition-colors text-center">
+                                        <a href={`/portal/registrations/${reg.id}`} className="whitespace-nowrap rounded-lg bg-[#3d230d] px-4 py-2 text-sm font-bold text-white hover:bg-[#2a1809] transition-colors text-center shadow">
                                             View Details
                                         </a>
                                     </div>
                                 ))}
                             </div>
                         ) : (
-                            <div className="text-center py-12 bg-white/5 rounded-xl border border-white/10 border-dashed">
-                                <Music className="h-8 w-8 text-gray-600 mx-auto mb-3" />
-                                <h3 className="text-white font-medium">No registrations yet</h3>
-                                <p className="text-gray-500 text-sm mt-1">Start by browsing our competitions.</p>
-                                <a href="/competitions" className="mt-4 inline-block text-primary hover:text-white text-sm font-semibold">
+                            <div className="text-center py-12 bg-white rounded-xl border border-[#d4c4a8] border-dashed shadow-sm">
+                                <Music className="h-8 w-8 text-[#d4c4a8] mx-auto mb-3" />
+                                <h3 className="text-[#3d230d] font-bold text-lg">No registrations yet</h3>
+                                <p className="text-[#7a5c3a] text-sm mt-1">Start by browsing our competitions.</p>
+                                <a href="/competitions" className="mt-4 inline-block text-[#3d230d] hover:underline text-sm font-bold">
                                     Browse Competitions &rarr;
                                 </a>
                             </div>
@@ -112,31 +112,31 @@ export default async function PortalPage() {
 
                     {/* Sidebar: Quick Actions */}
                     <div className="space-y-6">
-                        <div className="rounded-xl bg-gradient-to-br from-primary/20 to-black border border-primary/20 p-6">
+                        <div className="rounded-xl bg-[#3d230d] border border-[#d4c4a8] p-6 shadow-lg">
                             <h3 className="text-lg font-bold text-white mb-2">New Registration</h3>
-                            <p className="text-gray-400 text-sm mb-6">
+                            <p className="text-white/80 text-sm mb-6">
                                 Registration for 2026 is now open! Secure your spot in the competitions.
                             </p>
-                            <a href="/portal/register" className="block w-full rounded-md bg-primary px-3 py-2 text-center text-sm font-bold text-white shadow-sm hover:bg-red-700">
+                            <a href="/portal/register" className="block w-full rounded-lg bg-[#faf5eb] px-3 py-2 text-center text-sm font-bold text-[#3d230d] shadow-sm hover:bg-white transition-colors">
                                 Register New Entry
                             </a>
                         </div>
 
-                        <div className="rounded-xl bg-white/5 border border-white/10 p-6">
-                            <h3 className="text-md font-bold text-white mb-4">Quick Links</h3>
-                            <ul className="space-y-3 text-sm text-gray-400">
+                        <div className="rounded-xl bg-white border border-[#d4c4a8] p-6 shadow-sm">
+                            <h3 className="text-[#3d230d] font-bold text-lg mb-4">Quick Links</h3>
+                            <ul className="space-y-3 text-sm text-[#7a5c3a]">
                                 <li>
-                                    <a href="/portal/profile" className="hover:text-primary transition-colors flex items-center justify-between">
+                                    <a href="/portal/profile" className="hover:text-[#3d230d] font-bold transition-colors flex items-center justify-between">
                                         Edit Profile <span>&rarr;</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="/competitions" className="hover:text-primary transition-colors flex items-center justify-between">
+                                    <a href="/competitions" className="hover:text-[#3d230d] font-bold transition-colors flex items-center justify-between">
                                         Competition Rules <span>&rarr;</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="/contact" className="hover:text-primary transition-colors flex items-center justify-between">
+                                    <a href="/contact" className="hover:text-[#3d230d] font-bold transition-colors flex items-center justify-between">
                                         Contact Support <span>&rarr;</span>
                                     </a>
                                 </li>
@@ -149,3 +149,4 @@ export default async function PortalPage() {
         </div >
     )
 }
+

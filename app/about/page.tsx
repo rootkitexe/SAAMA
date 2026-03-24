@@ -37,10 +37,12 @@ export default function AboutPage() {
                         while sustaining the living lineage of Indian classical music.
                     </p>
 
-                    <figure className="my-8 border-l-4 border-[#8b0a30] pl-4 italic text-[#7a5c3a]">
-                        "Music is the language of the spirit. It opens the secret of life bringing peace, abolishing strife."
-                        <figcaption className="mt-2 text-sm text-[#9a7a5a]">— Kahlil Gibran</figcaption>
-                    </figure>
+                    <blockquote className="mt-8 border-l-4 border-[#3d230d] pl-4 font-serif italic text-lg leading-relaxed text-[#7a5c3a]">
+                        "Musical excellence arises through sustained effort within a living tradition."
+                        <figcaption className="mt-2 text-sm text-[#9a7a5a]">
+                            — Sadhana Academy for Musical Arts
+                        </figcaption>
+                    </blockquote>
                 </div>
             </div>
         </div>

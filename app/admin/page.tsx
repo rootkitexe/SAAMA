@@ -36,7 +36,7 @@ export default async function AdminPage() {
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="mb-8">
                     <h1 className="text-3xl font-serif font-bold text-[#5c3a1e]">SaaMa Admin Area</h1>
-                    <p className="text-[#8b0a30] font-bold mt-1 text-sm bg-white inline-block px-3 py-1 rounded shadow-sm border border-[#d4c4a8]">
+                    <p className="text-[#3d230d] font-bold mt-1 text-sm bg-white inline-block px-3 py-1 rounded shadow-sm border border-[#d4c4a8]">
                         Logged in as Administrator: {user.email}
                     </p>
                 </div>
@@ -56,3 +56,4 @@ export default async function AdminPage() {
         </div>
     );
 }
+

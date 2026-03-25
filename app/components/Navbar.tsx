@@ -41,7 +41,7 @@ export default function Navbar() {
     '/saama-5.jpg',
     '/saama-6.jpg',
     '/saama-7.jpg',
-    '/saama-8.jpg',
+
   ];
 
   // We add 5 images as buffer to the end for seamless looping
@@ -65,17 +65,17 @@ export default function Navbar() {
 
   // On server and first client render, show a static state (isMounted = false)
   // This ensures hydration matches perfectly
-  const currentTransform = isMounted 
+  const currentTransform = isMounted
     ? `translateX(-${currentIndex * (100 / displayImages.length)}%)`
     : 'translateX(0%)';
 
   return (
     <header className="flex flex-col w-full overflow-visible shrink-0 relative z-[100]">
       {/* Banner Section */}
-      <div className="flex bg-[#e2be93] h-[340px] items-stretch">
+      <div className="flex bg-[#e2be93] h-[450px] items-stretch">
         {/* Left: Info */}
-        <div className="w-[35%] p-6 flex flex-col justify-start text-black">
-          <div className="mb-2 w-full flex justify-center h-[130px]">
+        <div className="w-[35%] p-8 flex flex-col justify-start text-black">
+          <div className="mb-6 w-full flex justify-center h-[180px]">
             <Link href="/" className="h-full">
               <img
                 src="/logo.png"
@@ -86,13 +86,13 @@ export default function Navbar() {
             </Link>
           </div>
 
-          <p className="text-[11px] text-center text-black/80 mb-2 font-sans font-semibold">
+          <p className="text-[15px] text-center text-black/80 mb-2 font-sans font-bold tracking-tight uppercase">
             Sadhana Academy for Musical Arts
           </p>
-          <p className="text-[11px] text-center text-[#5c3a1e] italic mb-3 font-serif">
+          <p className="text-[13px] text-center text-[#5c3a1e] italic mb-6 font-serif">
             Celebrating Sādhana, Tradition, and the Next Generation.
           </p>
-          <p className="text-[11px] leading-[1.4] text-justify text-black/80 font-serif">
+          <p className="text-[11px] leading-[1.8] text-justify text-black/80 font-serif">
             SaaMa — Sadhana Academy for Musical Arts is a 501(c)(3) non-profit organization
             dedicated to nurturing and sustaining the living tradition of Indian classical music.
             Through concerts, workshops, mentorship, and community initiatives, we seek to inspire
@@ -101,17 +101,17 @@ export default function Navbar() {
         </div>
 
         {/* Right: Images (Sliding Gallery) */}
-        <div className="w-[65%] shrink-0 border-l-[4px] border-black overflow-hidden bg-[#faf5eb] relative">
-          <div 
+        <div className="w-[65%] shrink-0 border-l-[4px] border-black overflow-hidden bg-[#e2be93] relative">
+          <div
             className={`flex h-full p-2 gap-2 ${isMounted && isTransitioning ? 'transition-transform duration-1000 ease-in-out' : ''}`}
             onTransitionEnd={handleTransitionEnd}
-            style={{ 
+            style={{
               transform: currentTransform,
               width: `${(displayImages.length / 5) * 100}%`
             }}
           >
             {displayImages.map((img, idx) => (
-              <div 
+              <div
                 key={idx}
                 className="h-full rounded-lg overflow-hidden shadow-sm border border-black/5 bg-black/5 flex-shrink-0"
                 style={{ width: `calc(${100 / displayImages.length}% - 8px)` }}

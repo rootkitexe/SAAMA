@@ -206,10 +206,18 @@ export default function ProfilePage() {
                         </div>
                     )}
 
-                    <button onClick={handleSave} disabled={saving} className="w-full flex items-center justify-center gap-2 bg-[#3d230d] text-white font-bold py-3 px-6 rounded-lg hover:bg-[#2a1809] transition-colors disabled:opacity-50">
-                        {saving ? <Loader2 className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
-                        {saving ? 'Saving...' : 'Save Profile'}
-                    </button>
+                    <div className="flex flex-col gap-3 pt-2">
+                        <button onClick={handleSave} disabled={saving} className="w-full flex items-center justify-center gap-2 bg-[#3d230d] text-white font-bold py-3 px-6 rounded-lg hover:bg-[#2a1809] transition-colors disabled:opacity-50 shadow-md">
+                            {saving ? <Loader2 className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
+                            {saving ? 'Saving...' : 'Save Profile'}
+                        </button>
+
+                        {(message === 'Profile saved successfully!' || (profile.full_name?.trim() !== '' && profile.birthday?.trim() !== '')) && (
+                            <a href="/portal/register" className="w-full flex items-center justify-center gap-2 bg-white text-[#3d230d] border-2 border-[#3d230d] font-bold py-3 px-6 rounded-lg hover:bg-[#faf5eb] transition-colors shadow-sm animate-in fade-in slide-in-from-top-2 duration-300">
+                                Continue to Register a New Entry
+                            </a>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

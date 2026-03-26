@@ -74,8 +74,8 @@ export default function Navbar() {
       {/* Banner Section */}
       <div className="flex bg-[#e2be93] h-[450px] items-stretch">
         {/* Left: Info */}
-        <div className="w-[35%] p-8 flex flex-col justify-start text-black">
-          <div className="mb-6 w-full flex justify-center h-[180px]">
+        <div className="w-[35%] px-8 pt-1 pb-8 flex flex-col justify-start text-black">
+          <div className="-mt-2 mb-6 w-full flex justify-center h-[180px]">
             <Link href="/" className="h-full">
               <img
                 src="/logo.png"
@@ -89,10 +89,10 @@ export default function Navbar() {
           <p className="text-[15px] text-center text-black/80 mb-2 font-sans font-bold tracking-tight uppercase">
             Sadhana Academy for Musical Arts
           </p>
-          <p className="text-[13px] text-center text-[#5c3a1e] italic mb-6 font-serif">
+          <p className="text-[13px] text-center text-[#5c3a1e] italic mb-2 font-serif">
             Celebrating Sādhana, Tradition, and the Next Generation.
           </p>
-          <p className="text-[11px] leading-[1.8] text-justify text-black/80 font-serif">
+          <p className="text-[14px] leading-[1.7] text-justify text-black/80 font-serif">
             SaaMa — Sadhana Academy for Musical Arts is a 501(c)(3) non-profit organization
             dedicated to nurturing and sustaining the living tradition of Indian classical music.
             Through concerts, workshops, mentorship, and community initiatives, we seek to inspire

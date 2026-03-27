@@ -2,8 +2,6 @@
 
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { revalidatePath } from 'next/cache';
-import fs from 'fs';
-import path from 'path';
 
 // Instantiate admin client to securely bypass RLS on server
 const adminSupabase = createSupabaseClient(
@@ -22,21 +20,27 @@ export async function addUpcomingEvent(formData: FormData) {
             return { error: 'All fields including the image are required.' };
         }
 
-        // Handle Image Storage locally to public/events
-        const buffer = Buffer.from(await imageFile.arrayBuffer());
-        const filename = Date.now() + '_' + imageFile.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-        const uploadDir = path.join(process.cwd(), 'public', 'events');
-        
-        // Ensure directory exists
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
+        // Upload to Supabase Storage
+        const filename = `${Date.now()}_${imageFile.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+        const { data: uploadData, error: uploadError } = await adminSupabase
+            .storage
+            .from('events')
+            .upload(filename, imageFile, {
+                contentType: imageFile.type,
+                cacheControl: '3600',
+                upsert: false
+            });
+
+        if (uploadError) {
+            console.error('Storage Upload Error:', uploadError);
+            return { error: 'Failed to upload image to Supabase Storage.' };
         }
 
-        const filepath = path.join(uploadDir, filename);
-        fs.writeFileSync(filepath, buffer);
-
-        // Public path for the database and frontend
-        const publicImagePath = `/events/${filename}`;
+        // Get the Public URL
+        const { data: { publicUrl } } = adminSupabase
+            .storage
+            .from('events')
+            .getPublicUrl(filename);
 
         // Insert into database
         const { data, error } = await adminSupabase
@@ -45,7 +49,7 @@ export async function addUpcomingEvent(formData: FormData) {
                 title,
                 date,
                 venue,
-                image: publicImagePath
+                image: publicUrl
             }]);
 
         if (error) {
@@ -53,7 +57,6 @@ export async function addUpcomingEvent(formData: FormData) {
             return { error: 'Failed to insert event into database.' };
         }
 
-        // Force homepage and admin page to refresh to show new event
         revalidatePath('/');
         revalidatePath('/admin');
 
@@ -98,20 +101,27 @@ export async function addBlogPost(formData: FormData) {
             return { error: 'All fields including the image are required.' };
         }
 
-        // Handle Image Storage locally to public/blog
-        const buffer = Buffer.from(await imageFile.arrayBuffer());
-        const filename = Date.now() + '_' + imageFile.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-        const uploadDir = path.join(process.cwd(), 'public', 'blog');
-        
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
+        // Upload to Supabase Storage
+        const filename = `${Date.now()}_${imageFile.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+        const { data: uploadData, error: uploadError } = await adminSupabase
+            .storage
+            .from('blog')
+            .upload(filename, imageFile, {
+                contentType: imageFile.type,
+                cacheControl: '3600',
+                upsert: false
+            });
+
+        if (uploadError) {
+            console.error('Storage Upload Error:', uploadError);
+            return { error: 'Failed to upload blog image to Supabase Storage.' };
         }
 
-        const filepath = path.join(uploadDir, filename);
-        fs.writeFileSync(filepath, buffer);
-
-        // Public path for the database and frontend
-        const publicImagePath = `/blog/${filename}`;
+        // Get the Public URL
+        const { data: { publicUrl } } = adminSupabase
+            .storage
+            .from('blog')
+            .getPublicUrl(filename);
 
         // Insert into database
         const { data, error } = await adminSupabase
@@ -121,7 +131,7 @@ export async function addBlogPost(formData: FormData) {
                 author,
                 read_time: readTime,
                 content,
-                image: publicImagePath
+                image: publicUrl
             }]);
 
         if (error) {
@@ -160,3 +170,4 @@ export async function deleteBlogPost(id: number) {
         return { error: e.message || 'An unexpected error occurred.' };
     }
 }
+

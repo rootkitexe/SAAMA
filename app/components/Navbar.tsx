@@ -134,15 +134,16 @@ export default function Navbar() {
           <Link href="/festival" className="block px-4 py-[8px] hover:underline text-[12px]">Aaroha Carnatic Music Festival</Link>
           <div className="absolute top-[100%] left-1/2 -translate-x-1/2 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200 z-[60]">
             <div className="w-48 bg-[#2a1809] border border-[#faf5eb]/20 shadow-2xl rounded-b-md overflow-hidden flex flex-col pt-1">
-              <Link href="/festival" className="block px-4 py-2 hover:bg-[#3d230d] transition-colors border-b border-[#faf5eb]/10">2026 Festival</Link>
-              <Link href="/festival/tickets" className="block px-4 py-2 hover:bg-[#3d230d] transition-colors border-b border-[#faf5eb]/10">Tickets</Link>
-              <Link href="/festival/directions" className="block px-4 py-2 hover:bg-[#3d230d] transition-colors border-b border-[#faf5eb]/10">Directions</Link>
-              <Link href="/festival/accommodations" className="block px-4 py-2 hover:bg-[#3d230d] transition-colors">Accommodations</Link>
+              <Link href="/festival/2026" className="block px-4 py-2 hover:bg-[#3d230d] transition-colors border-b border-[#faf5eb]/10">2026 Festival</Link>
+              <Link href="#" className="block px-4 py-2 hover:bg-[#3d230d] text-white/50 transition-colors border-b border-[#faf5eb]/10">2027 Festival</Link>
+              <Link href="#" className="block px-4 py-2 hover:bg-[#3d230d] text-white/50 transition-colors">2028 Festival</Link>
             </div>
           </div>
         </div>
 
         <div><Link href="/competitions" className="block px-6 py-[8px] hover:underline">Competitions</Link></div>
+        <div><Link href="/gallery" className="block px-6 py-[8px] hover:underline">Gallery</Link></div>
+        <div><Link href="/blog" className="block px-6 py-[8px] hover:underline">Blog</Link></div>
         <div><Link href="/support" className="block px-6 py-[8px] hover:underline">Support us</Link></div>
         <div><Link href="/contact" className="block px-6 py-[8px] hover:underline">Contact us</Link></div>
 

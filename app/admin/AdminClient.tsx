@@ -1,7 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Download, Users, FileText, ChevronDown, ChevronUp } from 'lucide-react';
+import { Download, Users, FileText, ChevronDown, ChevronUp, Calendar, Plus, Loader2, Trash2, BookOpen } from 'lucide-react';
+import { addUpcomingEvent, deleteUpcomingEvent, addBlogPost, deleteBlogPost } from './actions';
+import { useFormStatus } from 'react-dom';
+import { useRouter } from 'next/navigation';
 
 type Profile = any;
 type Registration = any;
@@ -9,11 +12,74 @@ type Registration = any;
 interface Props {
     initialProfiles: Profile[];
     initialRegistrations: Registration[];
+    initialEvents: any[];
+    initialBlogPosts: any[];
 }
 
-export default function AdminClient({ initialProfiles, initialRegistrations }: Props) {
-    const [tab, setTab] = useState<'registrations' | 'users'>('registrations');
+function SubmitButton({ pendingText = 'Saving...', defaultText = 'Confirm & Add' }: { pendingText?: string, defaultText?: string }) {
+    const { pending } = useFormStatus();
+    return (
+        <button type="submit" disabled={pending} className="bg-green-700 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-800 disabled:opacity-50 flex items-center gap-2 shadow">
+            {pending ? <Loader2 className="animate-spin h-4 w-4"/> : <Plus className="h-4 w-4"/>}
+            {pending ? pendingText : defaultText}
+        </button>
+    );
+}
+
+export default function AdminClient({ initialProfiles, initialRegistrations, initialEvents, initialBlogPosts }: Props) {
+    const router = useRouter();
+    const [tab, setTab] = useState<'registrations' | 'users' | 'events' | 'blog'>('registrations');
     const [expandedRowId, setExpandedRowId] = useState<number | null>(null);
+    
+    const [showEventForm, setShowEventForm] = useState(false);
+    const [eventFormError, setEventFormError] = useState('');
+    const [eventToDelete, setEventToDelete] = useState<number | null>(null);
+
+    const [showBlogForm, setShowBlogForm] = useState(false);
+    const [blogFormError, setBlogFormError] = useState('');
+    const [blogToDelete, setBlogToDelete] = useState<number | null>(null);
+
+    const handleAddEvent = async (formData: FormData) => {
+        setEventFormError('');
+        const res = await addUpcomingEvent(formData);
+        if (res?.error) {
+            setEventFormError(res.error);
+        } else {
+            setShowEventForm(false);
+            router.refresh();
+        }
+    };
+
+    const handleDeleteEvent = async (id: number) => {
+        setEventFormError('');
+        const res = await deleteUpcomingEvent(id);
+        if (res?.error) {
+            setEventFormError(res.error);
+        } else {
+            router.refresh();
+        }
+    };
+
+    const handleAddBlog = async (formData: FormData) => {
+        setBlogFormError('');
+        const res = await addBlogPost(formData);
+        if (res?.error) {
+            setBlogFormError(res.error);
+        } else {
+            setShowBlogForm(false);
+            router.refresh();
+        }
+    };
+
+    const handleDeleteBlog = async (id: number) => {
+        setBlogFormError('');
+        const res = await deleteBlogPost(id);
+        if (res?.error) {
+            setBlogFormError(res.error);
+        } else {
+            router.refresh();
+        }
+    };
 
     // Filters for registrations
     const [categoryFilter, setCategoryFilter] = useState('');
@@ -148,6 +214,18 @@ export default function AdminClient({ initialProfiles, initialRegistrations }: P
                     >
                         <Users className="h-4 w-4 mr-2" /> Users ({initialProfiles.length})
                     </button>
+                    <button
+                        onClick={() => setTab('events')}
+                        className={`flex items-center px-4 py-2 text-sm font-bold rounded-md transition-colors ${tab === 'events' ? 'bg-[#3d230d] text-white shadow' : 'text-[#7a5c3a] hover:bg-[#faf5eb]'}`}
+                    >
+                        <Calendar className="h-4 w-4 mr-2" /> Events ({initialEvents.length})
+                    </button>
+                    <button
+                        onClick={() => setTab('blog')}
+                        className={`flex items-center px-4 py-2 text-sm font-bold rounded-md transition-colors ${tab === 'blog' ? 'bg-[#3d230d] text-white shadow' : 'text-[#7a5c3a] hover:bg-[#faf5eb]'}`}
+                    >
+                        <BookOpen className="h-4 w-4 mr-2" /> Blog ({initialBlogPosts.length})
+                    </button>
                 </div>
                 <button
                     onClick={exportCsv}
@@ -275,7 +353,222 @@ export default function AdminClient({ initialProfiles, initialRegistrations }: P
                         </table>
                     </div>
                 )}
+
+                {tab === 'events' && (
+                    <div className="space-y-6">
+                        <div className="flex justify-between items-center border-b border-[#d4c4a8] pb-4">
+                            <h3 className="text-xl font-bold text-[#3d230d]">Upcoming Events Platform</h3>
+                            <button onClick={() => setShowEventForm(!showEventForm)} className="flex items-center gap-2 bg-[#3d230d] text-white px-4 py-2 rounded-lg hover:bg-[#2a1809] font-bold shadow">
+                                <Plus className="h-4 w-4" /> Add Event
+                            </button>
+                        </div>
+                        
+                        {showEventForm && (
+                            <form action={handleAddEvent} className="bg-[#faf5eb] p-6 rounded-xl border border-[#d4c4a8] space-y-5 shadow-sm">
+                                <h4 className="font-bold text-[#5c3a1e] text-lg border-b border-[#d4c4a8] pb-2">Publish New Event</h4>
+                                
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                    <div>
+                                        <label className="block text-sm font-bold text-[#5c3a1e] mb-1">Event Title *</label>
+                                        <input type="text" name="title" required className="w-full rounded-lg p-2.5 bg-white text-[#3d230d] placeholder:text-[#d4c4a8] font-medium border border-[#d4c4a8] focus:ring-[#3d230d] focus:border-[#3d230d]" placeholder="e.g. Masterclass with Vid. XYZ" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-[#5c3a1e] mb-1">Date & Time *</label>
+                                        <input type="text" name="date" required placeholder="e.g. May 24th | 11 AM" className="w-full rounded-lg p-2.5 bg-white text-[#3d230d] placeholder:text-[#d4c4a8] font-medium border border-[#d4c4a8] focus:ring-[#3d230d] focus:border-[#3d230d]" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-[#5c3a1e] mb-1">Venue *</label>
+                                        <input type="text" name="venue" required placeholder="e.g. Town Hall, Redmond" className="w-full rounded-lg p-2.5 bg-white text-[#3d230d] placeholder:text-[#d4c4a8] font-medium border border-[#d4c4a8] focus:ring-[#3d230d] focus:border-[#3d230d]" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-[#5c3a1e] mb-1">Upload Event Image *</label>
+                                        <input type="file" name="image" accept="image/*" required className="w-full text-sm text-[#5c3a1e] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#e2be93] file:text-[#3d230d] hover:file:bg-[#d4c4a8] file:cursor-pointer p-1" />
+                                    </div>
+                                </div>
+
+                                {eventFormError && <p className="text-red-700 bg-red-100 p-2 rounded text-sm font-bold border border-red-300">{eventFormError}</p>}
+                                
+                                <div className="flex justify-end pt-2">
+                                    <SubmitButton pendingText="Publishing Event..." defaultText="Confirm & Add Event" />
+                                </div>
+                            </form>
+                        )}
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+                            {initialEvents.map(ev => (
+                                <div key={ev.id} className="border border-[#d4c4a8] rounded-xl overflow-hidden shadow-sm bg-white flex flex-col relative group">
+                                    <button 
+                                        type="button"
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            setEventToDelete(ev.id);
+                                        }}
+                                        className="absolute top-3 right-3 p-2 bg-red-600 text-white rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-700 z-50 cursor-pointer"
+                                        title="Delete Event"
+                                    >
+                                        <Trash2 className="h-4 w-4" />
+                                    </button>
+                                    <div className="h-40 bg-gray-200 relative border-b border-[#d4c4a8]">
+                                        <img src={ev.image} alt={ev.title} className="w-full h-full object-cover" />
+                                    </div>
+                                    <div className="p-5 flex flex-col flex-grow">
+                                        <h4 className="font-bold text-[#3d230d] text-lg leading-tight mb-3 line-clamp-2">{ev.title}</h4>
+                                        <div className="mt-auto space-y-1">
+                                            <p className="text-sm text-[#7a5c3a] font-medium flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5"/> {ev.date}</p>
+                                            <p className="text-sm text-[#7a5c3a] flex items-center gap-1.5"><FileText className="h-3.5 w-3.5"/> {ev.venue}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                            {initialEvents.length === 0 && !showEventForm && (
+                                <div className="col-span-3 text-center py-12 bg-white rounded border border-[#d4c4a8] border-dashed">
+                                    <Calendar className="h-8 w-8 text-[#d4c4a8] mx-auto mb-2" />
+                                    <p className="text-[#3d230d] font-bold">No upcoming events setup yet.</p>
+                                    <p className="text-sm text-[#7a5c3a] mt-1">Click "Add Event" to publish one to the homepage.</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
+
+                {tab === 'blog' && (
+                    <div className="space-y-6">
+                        <div className="flex justify-between items-center border-b border-[#d4c4a8] pb-4">
+                            <h3 className="text-xl font-bold text-[#3d230d]">Blog Platform</h3>
+                            <button onClick={() => setShowBlogForm(!showBlogForm)} className="flex items-center gap-2 bg-[#3d230d] text-white px-4 py-2 rounded-lg hover:bg-[#2a1809] font-bold shadow">
+                                <Plus className="h-4 w-4" /> Add Article
+                            </button>
+                        </div>
+                        
+                        {showBlogForm && (
+                            <form action={handleAddBlog} className="bg-[#faf5eb] p-6 rounded-xl border border-[#d4c4a8] space-y-5 shadow-sm">
+                                <h4 className="font-bold text-[#5c3a1e] text-lg border-b border-[#d4c4a8] pb-2">Publish New Article</h4>
+                                
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                    <div>
+                                        <label className="block text-sm font-bold text-[#5c3a1e] mb-1">Article Title *</label>
+                                        <input type="text" name="title" required className="w-full rounded-lg p-2.5 bg-white text-[#3d230d] placeholder:text-[#d4c4a8] font-medium border border-[#d4c4a8] focus:ring-[#3d230d] focus:border-[#3d230d]" placeholder="e.g. The Evolution of Carnatic Ragas" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-[#5c3a1e] mb-1">Author *</label>
+                                        <input type="text" name="author" required placeholder="e.g. Vid.XYZ" className="w-full rounded-lg p-2.5 bg-white text-[#3d230d] placeholder:text-[#d4c4a8] font-medium border border-[#d4c4a8] focus:ring-[#3d230d] focus:border-[#3d230d]" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-[#5c3a1e] mb-1">Estimated Read Time *</label>
+                                        <input type="text" name="readTime" required placeholder="e.g. 5 min read" className="w-full rounded-lg p-2.5 bg-white text-[#3d230d] placeholder:text-[#d4c4a8] font-medium border border-[#d4c4a8] focus:ring-[#3d230d] focus:border-[#3d230d]" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-[#5c3a1e] mb-1">Upload Cover Image *</label>
+                                        <input type="file" name="image" accept="image/*" required className="w-full text-sm text-[#5c3a1e] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#e2be93] file:text-[#3d230d] hover:file:bg-[#d4c4a8] file:cursor-pointer p-1" />
+                                    </div>
+                                    <div className="col-span-1 md:col-span-2">
+                                        <label className="block text-sm font-bold text-[#5c3a1e] mb-1">Article Content *</label>
+                                        <textarea name="content" required rows={10} className="w-full rounded-lg p-2.5 bg-white text-[#3d230d] placeholder:text-[#d4c4a8] font-medium border border-[#d4c4a8] focus:ring-[#3d230d] focus:border-[#3d230d]" placeholder="Write your full article here..."></textarea>
+                                    </div>
+                                </div>
+
+                                {blogFormError && <p className="text-red-700 bg-red-100 p-2 rounded text-sm font-bold border border-red-300">{blogFormError}</p>}
+                                
+                                <div className="flex justify-end pt-2">
+                                    <SubmitButton pendingText="Publishing Article..." defaultText="Confirm & Post Article" />
+                                </div>
+                            </form>
+                        )}
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+                            {initialBlogPosts.map(post => (
+                                <div key={post.id} className="border border-[#d4c4a8] rounded-xl overflow-hidden shadow-sm bg-white flex flex-col relative group">
+                                    <button 
+                                        type="button"
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            setBlogToDelete(post.id);
+                                        }}
+                                        className="absolute top-3 right-3 p-2 bg-red-600 text-white rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-700 z-50 cursor-pointer"
+                                        title="Delete Article"
+                                    >
+                                        <Trash2 className="h-4 w-4" />
+                                    </button>
+                                    <div className="h-40 bg-gray-200 relative border-b border-[#d4c4a8]">
+                                        <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
+                                    </div>
+                                    <div className="p-5 flex flex-col flex-grow">
+                                        <h4 className="font-bold text-[#3d230d] text-lg leading-tight mb-3 line-clamp-2">{post.title}</h4>
+                                        <div className="mt-auto space-y-1">
+                                            <p className="text-sm text-[#7a5c3a] font-medium flex items-center gap-1.5"><BookOpen className="h-3.5 w-3.5"/> {post.read_time}</p>
+                                            <p className="text-sm text-[#7a5c3a] flex items-center gap-1.5"><Users className="h-3.5 w-3.5"/> {post.author}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                            {initialBlogPosts.length === 0 && !showBlogForm && (
+                                <div className="col-span-3 text-center py-12 bg-white rounded border border-[#d4c4a8] border-dashed">
+                                    <BookOpen className="h-8 w-8 text-[#d4c4a8] mx-auto mb-2" />
+                                    <p className="text-[#3d230d] font-bold">No blog articles published yet.</p>
+                                    <p className="text-sm text-[#7a5c3a] mt-1">Click "Add Article" to post one to the blog.</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
             </div>
+
+            {/* Custom Confirmation Modal */}
+            {eventToDelete !== null && (
+                <div className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4">
+                    <div className="bg-[#faf5eb] rounded-xl shadow-xl max-w-sm w-full p-6 border border-[#d4c4a8]">
+                        <h3 className="text-xl font-bold text-[#3d230d] mb-2 font-serif">Delete Event?</h3>
+                        <p className="text-[#7a5c3a] text-sm mb-6">Are you absolutely sure you want to permanently delete this event? This action cannot be undone.</p>
+                        <div className="flex justify-end gap-3">
+                            <button 
+                                type="button"
+                                onClick={() => setEventToDelete(null)}
+                                className="px-4 py-2 border border-[#d4c4a8] rounded-md text-[#5c3a1e] font-bold hover:bg-white transition-colors shadow-sm bg-[#faf5eb]"
+                            >
+                                Cancel
+                            </button>
+                            <button 
+                                type="button"
+                                onClick={() => {
+                                    handleDeleteEvent(eventToDelete);
+                                    setEventToDelete(null);
+                                }}
+                                className="px-4 py-2 bg-red-600 text-white rounded-md font-bold hover:bg-red-700 transition-colors shadow-sm"
+                            >
+                                Yes, Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {blogToDelete !== null && (
+                <div className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4">
+                    <div className="bg-[#faf5eb] rounded-xl shadow-xl max-w-sm w-full p-6 border border-[#d4c4a8]">
+                        <h3 className="text-xl font-bold text-[#3d230d] mb-2 font-serif">Delete Article?</h3>
+                        <p className="text-[#7a5c3a] text-sm mb-6">Are you absolutely sure you want to permanently delete this article? This action cannot be undone.</p>
+                        <div className="flex justify-end gap-3">
+                            <button 
+                                type="button"
+                                onClick={() => setBlogToDelete(null)}
+                                className="px-4 py-2 border border-[#d4c4a8] rounded-md text-[#5c3a1e] font-bold hover:bg-white transition-colors shadow-sm bg-[#faf5eb]"
+                            >
+                                Cancel
+                            </button>
+                            <button 
+                                type="button"
+                                onClick={() => {
+                                    handleDeleteBlog(blogToDelete);
+                                    setBlogToDelete(null);
+                                }}
+                                className="px-4 py-2 bg-red-600 text-white rounded-md font-bold hover:bg-red-700 transition-colors shadow-sm"
+                            >
+                                Yes, Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

@@ -13,6 +13,9 @@ export default async function PortalPage() {
         return redirect('/login')
     }
 
+    const ADMIN_EMAILS = ['saama.seattle@gmail.com', 'testuser@example.com', 'adminuser@saama.com'];
+    const isAdmin = ADMIN_EMAILS.includes(user.email || '');
+
     // Fetch real registrations
     const { data: registrations, error } = await supabase
         .from('registrations')
@@ -51,11 +54,18 @@ export default async function PortalPage() {
                             Welcome back, <span className="text-[#3d230d] font-bold">{user.email}</span>
                         </p>
                     </div>
-                    <form action="/auth/signout" method="post">
-                        <button className="rounded-lg bg-white border border-[#d4c4a8] px-4 py-2 text-sm font-bold text-[#3d230d] hover:bg-[#f0ebe0] transition-colors shadow-sm">
-                            Sign Out
-                        </button>
-                    </form>
+                    <div className="flex items-center gap-3">
+                        {isAdmin && (
+                            <a href="/admin" className="rounded-lg bg-[#3d230d] border border-[#3d230d] px-4 py-2 text-sm font-bold text-white hover:bg-[#2a1809] transition-colors shadow-sm whitespace-nowrap">
+                                Go to Admin Area
+                            </a>
+                        )}
+                        <form action="/auth/signout" method="post">
+                            <button className="whitespace-nowrap rounded-lg bg-white border border-[#d4c4a8] px-4 py-2 text-sm font-bold text-[#3d230d] hover:bg-[#f0ebe0] transition-colors shadow-sm">
+                                Sign Out
+                            </button>
+                        </form>
+                    </div>
                 </header>
 
                 {/* Dashboard Grid */}

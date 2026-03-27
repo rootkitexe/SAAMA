@@ -1,8 +1,9 @@
 import { createClient } from '@/utils/supabase/server';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { redirect } from 'next/navigation';
 import AdminClient from './AdminClient';
 
-const ADMIN_EMAILS = ['saama.seattle@gmail.com', 'testuser@example.com'];
+const ADMIN_EMAILS = ['saama.seattle@gmail.com', 'testuser@example.com', 'adminuser@saama.com'];
 
 export default async function AdminPage() {
     const supabase = await createClient();
@@ -13,15 +14,33 @@ export default async function AdminPage() {
         return redirect('/portal'); // Redirect non-admins to their portal dashboard
     }
 
+    // Instantiate admin client to bypass RLS
+    const adminSupabase = createSupabaseClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+
     // Fetch all profiles
-    const { data: profiles, error: profilesError } = await supabase
+    const { data: profiles, error: profilesError } = await adminSupabase
         .from('profiles')
         .select('*')
         .order('full_name', { ascending: true });
 
     // Fetch all registrations
-    const { data: registrations, error: regError } = await supabase
+    const { data: registrations, error: regError } = await adminSupabase
         .from('registrations')
+        .select('*')
+        .order('id', { ascending: false });
+
+    // Fetch all events
+    const { data: events, error: eventsError } = await adminSupabase
+        .from('upcoming_events')
+        .select('*')
+        .order('id', { ascending: false });
+
+    // Fetch all blog posts
+    const { data: blogPosts, error: blogError } = await adminSupabase
+        .from('blog_posts')
         .select('*')
         .order('id', { ascending: false });
 
@@ -30,6 +49,8 @@ export default async function AdminPage() {
 
     if (profilesError) console.error("Profiles Error:", profilesError);
     if (regError) console.error("Registrations Error:", regError);
+    if (eventsError) console.error("Events Error:", eventsError);
+    if (blogError) console.error("Blog Error:", blogError);
 
     return (
         <div className="min-h-screen bg-[#faf5eb] py-8">
@@ -50,7 +71,9 @@ export default async function AdminPage() {
 
                 <AdminClient 
                     initialProfiles={profiles || []} 
-                    initialRegistrations={registrations || []} 
+                    initialRegistrations={registrations || []}
+                    initialEvents={events || []} 
+                    initialBlogPosts={blogPosts || []}
                 />
             </div>
         </div>

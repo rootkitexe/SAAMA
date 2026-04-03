@@ -100,3 +100,22 @@ create policy "Anyone can submit a contact message" on contact_messages
 -- Assuming admins are tracking them. For now, allow no one to read them publicly.
 create policy "Only authenticated users can view messages" on contact_messages
   for select using (auth.role() = 'authenticated');
+
+-- ==========================================
+-- RLS Policy for blog_posts table
+-- ==========================================
+alter table public.blog_posts enable row level security;
+
+-- Allow anyone to read blog posts
+create policy "Anyone can view blog posts" on public.blog_posts
+  for select using (true);
+
+-- Allow only authenticated users (admins) to modify blog posts
+create policy "Only authenticated users can insert blog posts" on public.blog_posts
+  for insert with check (auth.role() = 'authenticated');
+  
+create policy "Only authenticated users can update blog posts" on public.blog_posts
+  for update using (auth.role() = 'authenticated');
+
+create policy "Only authenticated users can delete blog posts" on public.blog_posts
+  for delete using (auth.role() = 'authenticated');

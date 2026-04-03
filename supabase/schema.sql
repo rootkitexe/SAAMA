@@ -74,3 +74,29 @@ $$ language plpgsql security definer;
 create or replace trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
+
+-- Create a table for contact form messages
+create table contact_messages (
+  id uuid default gen_random_uuid() primary key,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  first_name text not null,
+  last_name text not null,
+  email text not null,
+  subject text not null,
+  message text not null,
+  
+  -- Tracking if the message was read/handled by admin
+  status text default 'unread'
+);
+
+-- RLS for contact messages
+alter table contact_messages enable row level security;
+
+-- Allow anyone (even anonymous) to insert a contact message
+create policy "Anyone can submit a contact message" on contact_messages
+  for insert with check (true);
+
+-- Only authenticated users (or admins) should be able to view them.
+-- Assuming admins are tracking them. For now, allow no one to read them publicly.
+create policy "Only authenticated users can view messages" on contact_messages
+  for select using (auth.role() = 'authenticated');

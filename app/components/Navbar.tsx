@@ -34,14 +34,26 @@ export default function Navbar() {
   const [isMounted, setIsMounted] = useState(false);
 
   const galleryImages = [
-    '/saama-1.png',
-    '/saama-2.jpg',
-    '/saama-3.jpg',
-    '/saama-4.jpg',
-    '/saama-5.jpg',
-    '/saama-6.jpg',
-    '/saama-7.jpg',
-
+    '/gallery/saama-1.png',
+    '/gallery/saama-2.jpg',
+    '/gallery/saama-3.jpg',
+    '/gallery/saama-4.jpg',
+    '/gallery/saama-5.jpg',
+    '/gallery/saama-6.jpg',
+    '/gallery/saama-7.jpg',
+    '/gallery/saama-9.jpg',
+    '/gallery/saama-10.jpg',
+    '/gallery/saama-11.jpg',
+    '/gallery/saama-12.jpg',
+    '/gallery/saama-13.jpg',
+    '/gallery/saama-14.jpg',
+    '/gallery/saama-15.jpg',
+    '/gallery/saama-16.jpg',
+    '/gallery/saama-17.jpg',
+    '/gallery/saama-18.jpg',
+    '/gallery/saama-19.jpg',
+    '/gallery/saama-20.png',
+    '/gallery/saama-21.jpg',
   ];
 
   // We add 5 images as buffer to the end for seamless looping
@@ -74,8 +86,8 @@ export default function Navbar() {
       {/* Banner Section */}
       <div className="flex bg-[#e2be93] h-[450px] items-stretch">
         {/* Left: Info */}
-        <div className="w-[35%] px-8 pt-1 pb-8 flex flex-col justify-start text-black">
-          <div className="-mt-2 mb-6 w-full flex justify-center h-[180px]">
+        <div className="w-[35%] px-8 pt-2 flex flex-col justify-start text-black">
+          <div className="mb-3 w-full flex justify-center h-[180px]">
             <Link href="/" className="h-full">
               <img
                 src="/logo.png"
@@ -110,15 +122,32 @@ export default function Navbar() {
               width: `${(displayImages.length / 5) * 100}%`
             }}
           >
-            {displayImages.map((img, idx) => (
-              <div
-                key={idx}
-                className="h-full rounded-lg overflow-hidden shadow-sm border border-black/5 bg-black/5 flex-shrink-0"
-                style={{ width: `calc(${100 / displayImages.length}% - 8px)` }}
-              >
-                <img src={img} className="w-full h-full object-cover" alt={`SaaMa Gallery ${idx + 1}`} />
-              </div>
-            ))}
+            {displayImages.map((img, idx) => {
+              // Custom object positions for specific images to keep faces in frame
+              let objectPosition = 'center';
+              if (img.includes('saama-9.jpg')) {
+                objectPosition = '30% 30%'; // Focus on the left side for image 9
+              } else if (img.includes('saama-10.jpg')) {
+                objectPosition = '60% 30%'; // Less extreme focus on the right side for image 10
+              } else if (img.includes('saama-21.jpg')) {
+                objectPosition = '30% 30%'; // Focus on the left side for image 21
+              }
+
+              return (
+                <div
+                  key={idx}
+                  className={`h-full rounded-lg overflow-hidden shadow-sm border flex-shrink-0 ${img.includes('saama-20.png') ? 'bg-black border-black/20' : 'bg-black/5 border-black/5'}`}
+                  style={{ width: `calc(${100 / displayImages.length}% - 8px)` }}
+                >
+                  <img
+                    src={img}
+                    className="w-full h-full object-cover"
+                    style={{ objectPosition }}
+                    alt={`SaaMa Gallery ${idx + 1}`}
+                  />
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -134,9 +163,7 @@ export default function Navbar() {
           <Link href="/festival" className="block px-4 py-[8px] hover:underline text-[12px]">Aaroha Carnatic Music Festival</Link>
           <div className="absolute top-[100%] left-1/2 -translate-x-1/2 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200 z-[60]">
             <div className="w-48 bg-[#2a1809] border border-[#faf5eb]/20 shadow-2xl rounded-b-md overflow-hidden flex flex-col pt-1">
-              <Link href="/festival/2026" className="block px-4 py-2 hover:bg-[#3d230d] transition-colors border-b border-[#faf5eb]/10">2026 Festival</Link>
-              <Link href="#" className="block px-4 py-2 hover:bg-[#3d230d] text-white/50 transition-colors border-b border-[#faf5eb]/10">2027 Festival</Link>
-              <Link href="#" className="block px-4 py-2 hover:bg-[#3d230d] text-white/50 transition-colors">2028 Festival</Link>
+              <Link href="/festival/2026" className="block px-4 py-2 hover:bg-[#3d230d] transition-colors">2026 Festival</Link>
             </div>
           </div>
         </div>

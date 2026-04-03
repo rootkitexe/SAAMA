@@ -6,30 +6,8 @@ import { Image as ImageIcon, X, ChevronLeft, ChevronRight } from 'lucide-react';
 export default function GalleryPage() {
     const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
 
-    // List of 21 images
-    const images = [
-        { src: '/gallery/saama-1.png', alt: 'SaaMa Gallery 1' },
-        { src: '/gallery/saama-2.jpg', alt: 'SaaMa Gallery 2' },
-        { src: '/gallery/saama-3.jpg', alt: 'SaaMa Gallery 3' },
-        { src: '/gallery/saama-4.jpg', alt: 'SaaMa Gallery 4' },
-        { src: '/gallery/saama-5.jpg', alt: 'SaaMa Gallery 5' },
-        { src: '/gallery/saama-6.jpg', alt: 'SaaMa Gallery 6' },
-        { src: '/gallery/saama-7.jpg', alt: 'SaaMa Gallery 7' },
-        { src: '/gallery/saama-8.jpg', alt: 'SaaMa Gallery 8' },
-        { src: '/gallery/saama-9.jpg', alt: 'SaaMa Gallery 9' },
-        { src: '/gallery/saama-10.jpg', alt: 'SaaMa Gallery 10' },
-        { src: '/gallery/saama-11.jpg', alt: 'SaaMa Gallery 11' },
-        { src: '/gallery/saama-12.jpg', alt: 'SaaMa Gallery 12' },
-        { src: '/gallery/saama-13.jpg', alt: 'SaaMa Gallery 13' },
-        { src: '/gallery/saama-14.jpg', alt: 'SaaMa Gallery 14' },
-        { src: '/gallery/saama-15.jpg', alt: 'SaaMa Gallery 15' },
-        { src: '/gallery/saama-16.jpg', alt: 'SaaMa Gallery 16' },
-        { src: '/gallery/saama-17.jpg', alt: 'SaaMa Gallery 17' },
-        { src: '/gallery/saama-18.jpg', alt: 'SaaMa Gallery 18' },
-        { src: '/gallery/saama-19.jpg', alt: 'SaaMa Gallery 19' },
-        { src: '/gallery/saama-20.png', alt: 'SaaMa Gallery 20' },
-        { src: '/gallery/saama-21.jpg', alt: 'SaaMa Gallery 21' },
-    ];
+    // List of 21 images (currently hidden as requested)
+    const images: { src: string, alt: string }[] = [];
 
     const openLightbox = (index: number) => setSelectedImageIndex(index);
     const closeLightbox = () => setSelectedImageIndex(null);
@@ -47,24 +25,32 @@ export default function GalleryPage() {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {images.map((image, index) => (
-                        <div 
-                            key={index} 
-                            onClick={() => openLightbox(index)}
-                            className="relative aspect-square overflow-hidden rounded-2xl shadow-sm border border-[#d4c4a8] cursor-pointer group hover:shadow-xl transition-all duration-300"
-                        >
-                            <img 
-                                src={image.src} 
-                                alt={image.alt} 
-                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                            />
-                            <div className="absolute inset-0 bg-[#3d230d]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                <ImageIcon className="text-white w-10 h-10" />
+                {images.length > 0 ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {images.map((image, index) => (
+                            <div 
+                                key={index} 
+                                onClick={() => openLightbox(index)}
+                                className="relative aspect-square overflow-hidden rounded-2xl shadow-sm border border-[#d4c4a8] cursor-pointer group hover:shadow-xl transition-all duration-300"
+                            >
+                                <img 
+                                    src={image.src} 
+                                    alt={image.alt} 
+                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                />
+                                <div className="absolute inset-0 bg-[#3d230d]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                    <ImageIcon className="text-white w-10 h-10" />
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="flex flex-col items-center justify-center py-20 bg-white/50 border border-[#d4c4a8] rounded-2xl shadow-sm">
+                        <ImageIcon className="w-16 h-16 text-[#c8a03e] mb-4 opacity-50" />
+                        <h3 className="text-2xl font-serif font-bold text-[#5c3a1e] mb-2">Gallery Update in Progress</h3>
+                        <p className="text-[#7a5c3a]">We are currently curating beautiful new moments to share with you. Check back soon!</p>
+                    </div>
+                )}
 
                 {/* Lightbox Modal */}
                 {selectedImageIndex !== null && (

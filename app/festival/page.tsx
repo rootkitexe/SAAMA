@@ -14,7 +14,7 @@ export default function FestivalPage() {
                 <div className="mb-12">
                     <div className="bg-white rounded-2xl p-8 border border-[#d4c4a8] shadow-sm mb-12">
                         <p className="text-[#5c3a1e] font-serif text-lg leading-relaxed mb-6">
-                            SaaMa, in partnership with <strong>Tapasya School of Music</strong> (led by Vid. Sriranjani Santhanagopalan), invites you to a two-day celebration of Carnatic music, featuring acclaimed artists and exceptional young talent from across the United States.
+                            SaaMa, in partnership with <strong>Tapasya School of Music</strong> (led by Vid. Sriranjani Santhanagopalan), presents the Aaroha Carnatic Music Festival. Join us for a deeply immersive two-day celebration of Carnatic music honoring its rich heritage, timeless compositions, and intricate rhythms through inspiring performances and soulful renditions.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-6 text-[#3d230d] font-bold border-t border-[#d4c4a8]/50 pt-6">
                             <div className="flex items-center gap-3">
@@ -66,6 +66,21 @@ export default function FestivalPage() {
                     </ul>
                 </div>
 
+                {/* Festival Stats */}
+                <div className="flex flex-wrap gap-4 mb-12 justify-center">
+                    {[
+                        "20+ Hours of Music", 
+                        "80+ Participants", 
+                        "70+ Ragas", 
+                        "60+ Compositions", 
+                        "15+ Themes"
+                    ].map((stat, idx) => (
+                        <div key={idx} className="bg-[#3d230d] text-[#faf5eb] px-5 py-2.5 rounded-full font-serif font-bold text-sm shadow-sm border border-[#5c3a1e] hover:bg-[#5c3a1e] transition-colors cursor-default whitespace-nowrap">
+                            {stat}
+                        </div>
+                    ))}
+                </div>
+
                 {/* Venue Info */}
                 <div className="mb-12 rounded-xl bg-white/80 p-6 flex items-center gap-4 border border-[#d4c4a8] shadow-sm">
                     <div className="p-3 bg-[#3d230d]/10 rounded-full text-[#3d230d] shrink-0">
@@ -81,4 +96,3 @@ export default function FestivalPage() {
         </div>
     );
 }
-

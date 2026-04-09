@@ -1,7 +1,36 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Calendar, Ticket, MapPin } from 'lucide-react';
+import { Calendar, Ticket, MapPin, Clock } from 'lucide-react';
+
+const scheduleDay1 = [
+    { time: "9.45 - 10 AM", name: "Welcome & Invocation", theme: "Invocation song", artists: ["Janani Iyer of WA (Vocal)"] },
+    { time: "10 - 11 AM", name: "Ensemble", theme: "Nadarnava: a confluence in the carnatic. Curated by Vid. Arun Prakash, coordinated by Shri. Subramanian Janardanan and presented by the Northwest talent.", artists: ["Myan Sudarshanan of WA (Mridangam and Konnakol)", "Srikrishna Prasannan of OR (Ghatam & Morsing)", "Shreyas Muralidharan of CA (Nadaswaram)", "Surya Katari of WA (Kanjira)", "Manthan Satish of WA (Flute)", "Anjana Sriram of WA, Aparajitha Sethuraman of WA (Veena)", "Pramati Bharat of WA, Harini Ganesh of OR, Amatra Jagannathan of WA (Violin)", "Vibha Shivarajan of WA, Akshara Gundimeda of WA, Amogh Nimmagada of WA, Smera Subramanian of WA (Vocal)"] },
+    { time: "11:10 - 12:10 PM", name: "Thematic group rendition by Vid. Dharini Kalyanaram and her students", theme: "Muthuswamy Dikshitar's Guruguha Vibhakthi Krithis", artists: ["Vid. Dharini Kalyanaram of WA (Vocal)", "Vibha Shivarajan of WA (Vocal)", "Diya Ramkumar of WA (Vocal)", "Lahari Katari of WA (Vocal)", "Guhan Kumar of WA (Vocal)", "Krishna Srikanth of OR and Sriram Ramanan of CA (Double Mridangam)", "Harini Ganesh of OR (Violin)"] },
+    { time: "12.20 - 1:05 PM", name: "Thematic Concert", theme: "Thyagaraja's Immortal Pancharatnams", artists: ["Shashank Ganesan of WA (Vocal)", "Aakarsh Dhilip of WA (Violin)", "Anuraag Prakash of WA and Sriram Ramanan of CA (Double Mridangam)"] },
+    { time: "1:15 - 2:15 PM", name: "Thematic Concert", theme: "Compositions of Papanasam Sivan", artists: ["Sinthu Sethuraman of CA (Vocal)", "Vishnu Shreehari of VA (Violin)", "Krishna Srikanth of OR (Mridangam)", "Srikrishna Prasannan of OR (Ghatam)"] },
+    { time: "2.25 - 2.55 PM", name: "Thematic Concert", theme: "Vivadhi compositions of Thyagaraja", artists: ["Tejas Saikrishnan of WA (Vocal)", "Sahana Prakash of WA (Violin)", "Anirudh Parthasarathy of WA (Mridangam)"] },
+    { time: "3:00 - 3:20 PM", name: "Thematic group rendition by students of Shri. Subramanian Janardanan", theme: "Bhairavi Swarajathi", artists: ["Smera Subramanian of WA (Vocal)", "Divya Sriram of WA (Vocal)", "Soumya Sriram of WA (Vocal)", "Deeksha Tangirala of WA (Vocal)", "Kriti Tangirala of WA (Vocal)", "Aditi Arunkumar of WA (Violin)", "Mayukh Nimmagada of WA (Mridangam)"] },
+    { time: "3.30 - 4:15 PM", name: "Thematic Concert", theme: "RTP", artists: ["Aditi Marehalli of WA (Vocal)", "Nandini Viswanathan of WA (Violin)", "Srikrishna Prasannan of OR (Ghatam)", "Krishna Srikanth of OR (Ghatam)"] },
+    { time: "4.20 - 5 PM", name: "Documentary screening", theme: "Colonial Interlude: The Nottuswara Sahityas of Dikshitar. An award-winning film by renowned musicologist Dr. Kanniks Kannikeswaran", artists: [] },
+    { time: "5.10 PM - 6.10 PM", name: "Workshop presentation", theme: "Timeless Gems of the Trinity. Curated by Vid. Sriranjani Santhanagopalan and presented by the participants", artists: ["Arnav Sudarshan of OR and Tarun Ravi of OR (Double Mridangam)", "Vishnu Shreehari of VA (Violin)"] },
+    { time: "6.15 PM - 7:00 PM", name: "Carnatic Trivia", theme: "Led by Vid. Sriranjani Tapasya Santhanagopalan", artists: [] },
+    { time: "7.10 - 8.40 PM", name: "Grand Concert", theme: "Carnatic Crossover Concert", artists: ["Vid. Ravi Gopinath of WA (Vocal)", "Amatra Jagannathan of WA (Violin)", "Vid. Jagadeeswaran Jayaprakash of WA (Mridangam)", "Vid. Vignesh Lakshminarayanan of WA (Guitar)"] },
+];
+
+const scheduleDay2 = [
+    { time: "8.20 - 8.50 AM", name: "Thematic group rendition by Vid. RaginiSri's students", theme: "Nottuswarams", artists: [] },
+    { time: "9 - 9:30 AM", name: "Thematic Concert", theme: "Compositions on Lord Muruga", artists: ["Janhavi Subramanian of WA (Vocal)", "Dhanya Srinivasan of WA (Vocal)", "Saanvi Karthik of WA (Vocal)", "Mayukh Nimmagada of WA (Mridangam)"] },
+    { time: "9.40 - 10.25 AM", name: "Thematic Concert", theme: "Compositions on Lord Rama", artists: ["Amogh Nimmagada of WA (Vocal)", "Vishnu Shreehari of VA (Violin)", "Mayukh Nimmagada of WA (Mridangam)", "Srikrishna Prasannan of OR (Ghatam)"] },
+    { time: "10.35 - 11.35 AM", name: "Thematic Concert", theme: "RTP", artists: ["Akshara Gundimeda of WA (Vocal)", "Arjun Gundimeda of WA (Violin)", "Anirudh Parthasarathy of WA (Mridangam)"] },
+    { time: "11.45 - 12.30 PM", name: "Thematic Concert", theme: "Avatāra Vaibhavam – Selected Compositions on Vishnu’s Incarnations", artists: ["Shreyas Muralidharan of CA (Vocal)", "Vishnu Shreehari of VA (Violin)", "Arnav Sudarshan of OR (Mridangam)", "Srikrishna Prasannan of OR (Ghatam)"] },
+    { time: "12.40 - 1.40 PM", name: "Thematic Concert", theme: "RTP", artists: ["Vijayanti Pappu of AZ (Veena)", "Tarun Ravi of OR (Mridangam)"] },
+    { time: "1.50 - 2.50 PM", name: "Thematic Concert", theme: "", artists: ["Indiana Brothers of IN (Vocal)", "Tarun Ravi of OR (Mridangam)"] },
+    { time: "2.55 - 3.25 PM", name: "Thematic Concert", theme: "Padams and Javalis", artists: ["Smera Subramanian of WA (Vocal)", "Pramati Bharat of WA (Violin)", "Myan Sudarshan of WA (Mridangam)"] },
+    { time: "3.35 - 5.05 PM", name: "Thematic Concert", theme: "Tamil Compositions", artists: ["Bhargavi Chandrasekar of TX (Vocal)", "Pramati Bharat of WA (Violin)", "Myan Sudarshan of WA (Mridangam)", "Srikrishna Prasannan of OR (Ghatam)"] },
+    { time: "5.15 - 5.45 PM", name: "Awards Ceremony", theme: "SaaMa Music competition prize distribution", artists: [] },
+    { time: "6 - 8 PM", name: "Grand Concert", theme: "Grand Finale Concert", artists: ["Vid. Sriranjani Tapasya Santhagopalan", "Vid. Kamala Kiran Vinjamuri (Violin)", "Vid. Sumesh Narayanan (Mridangam)", "Vid. Ravi Balasubramanian (Ghatam)"] },
+];
 
 export default function Festival2026Page() {
     const [activeTab, setActiveTab] = useState<'schedule' | 'tickets' | 'venue'>('schedule');
@@ -49,49 +78,75 @@ export default function Festival2026Page() {
                             <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
                                 <h2 className="text-3xl font-serif font-bold text-[#3d230d] mb-6 border-b border-[#d4c4a8] pb-4">Festival Schedule</h2>
                                 
-                                <div className="space-y-8">
+                                <div className="space-y-12">
+                                    {/* Day 1 */}
                                     <div>
-                                        <h3 className="text-xl font-bold text-[#5c3a1e] mb-4 bg-[#faf5eb] inline-block px-4 py-1 rounded-md">Day 1: Saturday, June 20, 2026</h3>
-                                        <ul className="space-y-4 ml-2">
-                                            <li className="flex gap-4">
-                                                <span className="text-[#3d230d] font-bold w-24 shrink-0">09:00 AM</span>
-                                                <span className="text-[#7a5c3a]">Inauguration & Inaugural Concert</span>
-                                            </li>
-                                            <li className="flex gap-4">
-                                                <span className="text-[#3d230d] font-bold w-24 shrink-0">11:00 AM</span>
-                                                <span className="text-[#7a5c3a]">Workshop and Interactive Session</span>
-                                            </li>
-                                            <li className="flex gap-4">
-                                                <span className="text-[#3d230d] font-bold w-24 shrink-0">02:00 PM</span>
-                                                <span className="text-[#7a5c3a]">Afternoon Performances</span>
-                                            </li>
-                                            <li className="flex gap-4">
-                                                <span className="text-[#3d230d] font-bold w-24 shrink-0">06:00 PM</span>
-                                                <span className="text-[#7a5c3a]">Main Evening Concert</span>
-                                            </li>
-                                        </ul>
+                                        <h3 className="text-xl font-bold text-[#5c3a1e] mb-6 bg-[#faf5eb] inline-block px-4 py-2 rounded-md">Day 1: Saturday, June 20, 2026</h3>
+                                        <div className="space-y-6">
+                                            {scheduleDay1.map((item, idx) => (
+                                                <div key={idx} className="bg-white rounded-xl p-6 border border-[#d4c4a8] shadow-sm flex flex-col md:flex-row gap-6">
+                                                    <div className="md:w-1/4 shrink-0 border-b md:border-b-0 md:border-r border-[#d4c4a8]/50 pb-4 md:pb-0 md:pr-4">
+                                                        <div className="flex items-center gap-2 text-[#7a5c3a] font-bold mb-2">
+                                                            <Clock className="w-4 h-4" />
+                                                            <span>{item.time}</span>
+                                                        </div>
+                                                        <h4 className="text-lg font-serif font-bold text-[#3d230d] leading-tight">{item.name}</h4>
+                                                    </div>
+                                                    <div className="md:w-3/4 flex flex-col justify-center">
+                                                        {item.theme && (
+                                                            <p className="text-[#5c3a1e] font-medium mb-3 italic">
+                                                                "{item.theme}"
+                                                            </p>
+                                                        )}
+                                                        {item.artists.length > 0 && (
+                                                            <ul className="space-y-2">
+                                                                {item.artists.map((artist, artistIdx) => (
+                                                                    <li key={artistIdx} className="text-[#7a5c3a] text-sm flex items-start gap-2">
+                                                                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#a07d3c] shrink-0"></span>
+                                                                        <span>{artist}</span>
+                                                                    </li>
+                                                                ))}
+                                                            </ul>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
                                     
+                                    {/* Day 2 */}
                                     <div>
-                                        <h3 className="text-xl font-bold text-[#5c3a1e] mb-4 bg-[#faf5eb] inline-block px-4 py-1 rounded-md">Day 2: Sunday, June 21, 2026</h3>
-                                        <ul className="space-y-4 ml-2">
-                                            <li className="flex gap-4">
-                                                <span className="text-[#3d230d] font-bold w-24 shrink-0">09:00 AM</span>
-                                                <span className="text-[#7a5c3a]">Morning Lec-Dem</span>
-                                            </li>
-                                            <li className="flex gap-4">
-                                                <span className="text-[#3d230d] font-bold w-24 shrink-0">11:00 AM</span>
-                                                <span className="text-[#7a5c3a]">Student Competitions Showcase</span>
-                                            </li>
-                                            <li className="flex gap-4">
-                                                <span className="text-[#3d230d] font-bold w-24 shrink-0">04:00 PM</span>
-                                                <span className="text-[#7a5c3a]">Grand Finale Concert</span>
-                                            </li>
-                                            <li className="flex gap-4">
-                                                <span className="text-[#3d230d] font-bold w-24 shrink-0">07:30 PM</span>
-                                                <span className="text-[#7a5c3a]">Awards Ceremony & Closing</span>
-                                            </li>
-                                        </ul>
+                                        <h3 className="text-xl font-bold text-[#5c3a1e] mb-6 bg-[#faf5eb] inline-block px-4 py-2 rounded-md">Day 2: Sunday, June 21, 2026</h3>
+                                        <div className="space-y-6">
+                                            {scheduleDay2.map((item, idx) => (
+                                                <div key={idx} className="bg-white rounded-xl p-6 border border-[#d4c4a8] shadow-sm flex flex-col md:flex-row gap-6">
+                                                    <div className="md:w-1/4 shrink-0 border-b md:border-b-0 md:border-r border-[#d4c4a8]/50 pb-4 md:pb-0 md:pr-4">
+                                                        <div className="flex items-center gap-2 text-[#7a5c3a] font-bold mb-2">
+                                                            <Clock className="w-4 h-4" />
+                                                            <span>{item.time}</span>
+                                                        </div>
+                                                        <h4 className="text-lg font-serif font-bold text-[#3d230d] leading-tight">{item.name}</h4>
+                                                    </div>
+                                                    <div className="md:w-3/4 flex flex-col justify-center">
+                                                        {item.theme && (
+                                                            <p className="text-[#5c3a1e] font-medium mb-3 italic">
+                                                                "{item.theme}"
+                                                            </p>
+                                                        )}
+                                                        {item.artists.length > 0 && (
+                                                            <ul className="space-y-2">
+                                                                {item.artists.map((artist, artistIdx) => (
+                                                                    <li key={artistIdx} className="text-[#7a5c3a] text-sm flex items-start gap-2">
+                                                                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#a07d3c] shrink-0"></span>
+                                                                        <span>{artist}</span>
+                                                                    </li>
+                                                                ))}
+                                                            </ul>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -47,13 +47,17 @@ export default function Navbar() {
     '/gallery/saama-12.jpg',
     '/gallery/saama-13.jpg',
     '/gallery/saama-14.jpg',
-    '/gallery/saama-15.jpg',
     '/gallery/saama-16.jpg',
     '/gallery/saama-17.jpg',
     '/gallery/saama-18.jpg',
     '/gallery/saama-19.jpg',
     '/gallery/saama-20.png',
     '/gallery/saama-21.jpg',
+    '/gallery/carousel-new-1.png',
+    '/gallery/carousel-new-2.png',
+    '/gallery/carousel-new-3.png',
+    '/gallery/carousel-new-4.jpg',
+    '/gallery/carousel-new-5.jpg',
   ];
 
   // We add 5 images as buffer to the end for seamless looping
@@ -156,11 +160,15 @@ export default function Navbar() {
       <nav className="bg-[#3d230d] text-[#faf5eb] flex justify-center text-[13px] font-bold border-y-2 border-black/40 relative z-50">
 
         <div>
-          <Link href="/about" className="block px-6 py-[8px] hover:underline">About us</Link>
+          <Link href="/" className="block px-3 py-[8px] hover:underline whitespace-nowrap">Home</Link>
+        </div>
+
+        <div>
+          <Link href="/about" className="block px-3 py-[8px] hover:underline whitespace-nowrap">About us</Link>
         </div>
 
         <div className="group relative">
-          <Link href="/festival" className="block px-4 py-[8px] hover:underline text-[12px]">Aaroha Carnatic Music Festival</Link>
+          <Link href="/festival" className="block px-3 py-[8px] hover:underline text-[12px] whitespace-nowrap">Aaroha Carnatic Music Festival</Link>
           <div className="absolute top-[100%] left-1/2 -translate-x-1/2 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200 z-[60]">
             <div className="w-48 bg-[#2a1809] border border-[#faf5eb]/20 shadow-2xl rounded-b-md overflow-hidden flex flex-col pt-1">
               <Link href="/festival/2026" className="block px-4 py-2 hover:bg-[#3d230d] transition-colors">2026 Festival</Link>
@@ -168,26 +176,34 @@ export default function Navbar() {
           </div>
         </div>
 
-        <div><Link href="/competitions" className="block px-6 py-[8px] hover:underline">Competitions</Link></div>
-        <div><Link href="/gallery" className="block px-6 py-[8px] hover:underline">Gallery</Link></div>
-        <div><Link href="/blog" className="block px-6 py-[8px] hover:underline">Blog</Link></div>
-        <div><Link href="/support" className="block px-6 py-[8px] hover:underline">Support us</Link></div>
-        <div><Link href="/contact" className="block px-6 py-[8px] hover:underline">Contact us</Link></div>
+        <div><Link href="/competitions" className="block px-3 py-[8px] hover:underline whitespace-nowrap">Competitions</Link></div>
+        <div><Link href="/gallery" className="block px-3 py-[8px] hover:underline whitespace-nowrap">Gallery</Link></div>
+        <div className="group relative">
+          <span className="block px-3 py-[8px] hover:underline cursor-pointer whitespace-nowrap">Community</span>
+          <div className="absolute top-[100%] left-1/2 -translate-x-1/2 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200 z-[60]">
+            <div className="w-56 bg-[#2a1809] border border-[#faf5eb]/20 shadow-2xl rounded-b-md overflow-hidden flex flex-col pt-1">
+              <Link href="/blog" className="block px-4 py-2 hover:bg-[#3d230d] transition-colors font-normal text-[12.5px]">Blogs</Link>
+              <Link href="/teachers" className="block px-4 py-2 hover:bg-[#3d230d] transition-colors font-normal text-[12.5px]">Teacher Directory</Link>
+            </div>
+          </div>
+        </div>
+        <div><Link href="/support" className="block px-3 py-[8px] hover:underline whitespace-nowrap">Support us</Link></div>
+        <div><Link href="/contact" className="block px-3 py-[8px] hover:underline whitespace-nowrap">Contact us</Link></div>
 
         {userEmail && ['saama.seattle@gmail.com', 'testuser@example.com'].includes(userEmail) && (
           <>
-            <div className="w-[1px] h-4 bg-[#faf5eb]/30 self-center mx-2"></div>
+            <div className="w-[1px] h-4 bg-[#faf5eb]/30 self-center mx-1"></div>
             <div>
-              <Link href="/admin" className="block px-4 py-[8px] text-yellow-400 hover:text-[#faf5eb] transition-colors">Admin Area</Link>
+              <Link href="/admin" className="block px-3 py-[8px] text-yellow-400 hover:text-[#faf5eb] transition-colors whitespace-nowrap">Admin Area</Link>
             </div>
           </>
         )}
 
-        <div className="w-[1px] h-4 bg-[#faf5eb]/30 self-center mx-4"></div>
+        <div className="w-[1px] h-4 bg-[#faf5eb]/30 self-center mx-2"></div>
         <div>
           <Link
             href={isAuthenticated ? "/portal" : "/login"}
-            className="block px-6 py-[8px] hover:text-yellow-400 transition-colors"
+            className="block px-4 py-[8px] hover:text-yellow-400 transition-colors whitespace-nowrap"
           >
             {isAuthenticated ? "Dashboard" : "Portal Login"}
           </Link>

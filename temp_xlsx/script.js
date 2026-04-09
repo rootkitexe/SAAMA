@@ -1,0 +1,1 @@
+const xlsx = require('xlsx'); const wb = xlsx.readFile('d:/CODESTUFF/Aradhna/Aaroha Carnatic Music Festival Schedule.xlsx'); const sheet = wb.Sheets[wb.SheetNames[0]]; console.log(xlsx.utils.sheet_to_csv(sheet));

@@ -14,10 +14,10 @@ export default function Footer() {
                         <img 
                             src="/logo.png" 
                             alt="SaaMa Logo" 
-                            className="h-20 w-auto object-contain mb-4"
+                            className="h-24 w-auto object-contain mb-4"
                         />
                         <p className="text-sm font-medium leading-relaxed text-[#7a5c3a]">
-                            Celebrating and promoting Indian classical music, dance, and fine arts in the Pacific Northwest and beyond.
+                            Celebrating and promoting Indian classical music and fine arts across the Pacific Northwest and beyond through community, education, and performance.
                         </p>
                     </div>
 

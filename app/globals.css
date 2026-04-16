@@ -9,9 +9,9 @@
   /* Gold */
   --secondary-foreground: #000000;
 
-  /* Base Colors (Dark Theme Default) */
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  /* Base Colors (Light Theme Default) */
+  --background: #faf5eb;
+  --foreground: #3d230d;
 
   /* UI Colors */
   --muted: #262626;

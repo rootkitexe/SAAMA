@@ -40,39 +40,38 @@ export default function Festival2026Page() {
             <div className="max-w-6xl mx-auto">
                 <div className="mb-10 text-center">
                     <h1 className="text-4xl md:text-5xl font-serif font-bold text-[#3d230d] mb-4">Aaroha Carnatic Music Festival 2026</h1>
-                    <p className="text-lg text-[#7a5c3a] font-medium max-w-2xl mx-auto">
+                    <p className="text-lg text-[#7a5c3a] font-medium max-w-2xl mx-auto mb-8">
                         Join us for an immersive two-day celebration of Carnatic music featuring world-renowned artists, interactive workshops, and inspiring performances.
                     </p>
-                </div>
-
-                <div className="flex flex-col md:flex-row gap-8 items-start">
                     
-                    {/* Left Sidebar Navigation */}
-                    <div className="w-full md:w-64 flex-shrink-0 bg-white rounded-2xl shadow-sm border border-[#d4c4a8] overflow-hidden sticky top-8">
-                        <nav className="flex flex-col">
+                    {/* Horizontal Navigation */}
+                    <div className="flex justify-center w-full">
+                        <nav className="inline-flex flex-wrap justify-center bg-white rounded-full shadow-sm border border-[#d4c4a8] p-1 gap-1">
                             <button 
                                 onClick={() => setActiveTab('schedule')}
-                                className={`flex items-center gap-3 px-6 py-4 text-left font-bold transition-colors border-b border-[#d4c4a8]/50 ${activeTab === 'schedule' ? 'bg-[#3d230d] text-white' : 'text-[#5c3a1e] hover:bg-[#faf5eb]'}`}
+                                className={`flex items-center gap-2 px-6 py-3 font-bold transition-all rounded-full whitespace-nowrap ${activeTab === 'schedule' ? 'bg-[#3d230d] text-white shadow-md' : 'text-[#5c3a1e] hover:bg-[#faf5eb]'}`}
                             >
-                                <Calendar className="w-5 h-5" /> Schedule
+                                <Calendar className="w-4 h-4" /> Schedule
                             </button>
                             <button 
                                 onClick={() => setActiveTab('tickets')}
-                                className={`flex items-center gap-3 px-6 py-4 text-left font-bold transition-colors border-b border-[#d4c4a8]/50 ${activeTab === 'tickets' ? 'bg-[#3d230d] text-white' : 'text-[#5c3a1e] hover:bg-[#faf5eb]'}`}
+                                className={`flex items-center gap-2 px-6 py-3 font-bold transition-all rounded-full whitespace-nowrap ${activeTab === 'tickets' ? 'bg-[#3d230d] text-white shadow-md' : 'text-[#5c3a1e] hover:bg-[#faf5eb]'}`}
                             >
-                                <Ticket className="w-5 h-5" /> Tickets
+                                <Ticket className="w-4 h-4" /> Tickets
                             </button>
                             <button 
                                 onClick={() => setActiveTab('venue')}
-                                className={`flex items-center gap-3 px-6 py-4 text-left font-bold transition-colors ${activeTab === 'venue' ? 'bg-[#3d230d] text-white' : 'text-[#5c3a1e] hover:bg-[#faf5eb]'}`}
+                                className={`flex items-center gap-2 px-6 py-3 font-bold transition-all rounded-full whitespace-nowrap ${activeTab === 'venue' ? 'bg-[#3d230d] text-white shadow-md' : 'text-[#5c3a1e] hover:bg-[#faf5eb]'}`}
                             >
-                                <MapPin className="w-5 h-5" /> Venue & Parking
+                                <MapPin className="w-4 h-4" /> Venue & Parking
                             </button>
                         </nav>
                     </div>
+                </div>
 
+                <div className="w-full">
                     {/* Main Content Area */}
-                    <div className="flex-grow bg-white rounded-2xl shadow-sm border border-[#d4c4a8] p-6 sm:p-10 min-h-[500px]">
+                    <div className="w-full bg-white rounded-2xl shadow-sm border border-[#d4c4a8] p-6 sm:p-10 min-h-[500px]">
                         
                         {activeTab === 'schedule' && (
                             <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
@@ -82,70 +81,54 @@ export default function Festival2026Page() {
                                     {/* Day 1 */}
                                     <div>
                                         <h3 className="text-xl font-bold text-[#5c3a1e] mb-6 bg-[#faf5eb] inline-block px-4 py-2 rounded-md">Day 1: Saturday, June 20, 2026</h3>
-                                        <div className="space-y-6">
-                                            {scheduleDay1.map((item, idx) => (
-                                                <div key={idx} className="bg-white rounded-xl p-6 border border-[#d4c4a8] shadow-sm flex flex-col md:flex-row gap-6">
-                                                    <div className="md:w-1/4 shrink-0 border-b md:border-b-0 md:border-r border-[#d4c4a8]/50 pb-4 md:pb-0 md:pr-4">
-                                                        <div className="flex items-center gap-2 text-[#7a5c3a] font-bold mb-2">
-                                                            <Clock className="w-4 h-4" />
-                                                            <span>{item.time}</span>
-                                                        </div>
-                                                        <h4 className="text-lg font-serif font-bold text-[#3d230d] leading-tight">{item.name}</h4>
-                                                    </div>
-                                                    <div className="md:w-3/4 flex flex-col justify-center">
-                                                        {item.theme && (
-                                                            <p className="text-[#5c3a1e] font-medium mb-3 italic">
-                                                                "{item.theme}"
-                                                            </p>
-                                                        )}
-                                                        {item.artists.length > 0 && (
-                                                            <ul className="space-y-2">
-                                                                {item.artists.map((artist, artistIdx) => (
-                                                                    <li key={artistIdx} className="text-[#7a5c3a] text-sm flex items-start gap-2">
-                                                                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#a07d3c] shrink-0"></span>
-                                                                        <span>{artist}</span>
-                                                                    </li>
-                                                                ))}
-                                                            </ul>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            ))}
+                                        <div className="overflow-x-auto rounded-xl border border-[#d4c4a8] shadow-sm">
+                                            <table className="w-full text-left border-collapse bg-white">
+                                                <thead>
+                                                    <tr className="bg-[#f0e8d5] border-b border-[#d4c4a8] text-[#5c3a1e]">
+                                                        <th className="p-4 font-semibold text-sm whitespace-nowrap border-r border-[#d4c4a8]">Time</th>
+                                                        <th className="p-4 font-semibold text-sm border-r border-[#d4c4a8] min-w-[150px]">Event Name</th>
+                                                        <th className="p-4 font-semibold text-sm border-r border-[#d4c4a8] min-w-[200px]">Theme</th>
+                                                        <th className="p-4 font-semibold text-sm">Artists</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="divide-y divide-[#d4c4a8]">
+                                                    {scheduleDay1.map((item, idx) => (
+                                                        <tr key={idx} className="hover:bg-[#faf5eb] transition-colors">
+                                                            <td className="p-4 text-sm text-[#7a5c3a] font-medium align-top whitespace-nowrap border-r border-[#d4c4a8]">{item.time}</td>
+                                                            <td className="p-4 text-sm text-[#3d230d] font-bold align-top border-r border-[#d4c4a8]">{item.name}</td>
+                                                            <td className="p-4 text-sm text-[#5c3a1e] italic align-top border-r border-[#d4c4a8]">{item.theme}</td>
+                                                            <td className="p-4 text-sm text-[#7a5c3a] align-top">{item.artists.join(', ')}</td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                     
                                     {/* Day 2 */}
                                     <div>
                                         <h3 className="text-xl font-bold text-[#5c3a1e] mb-6 bg-[#faf5eb] inline-block px-4 py-2 rounded-md">Day 2: Sunday, June 21, 2026</h3>
-                                        <div className="space-y-6">
-                                            {scheduleDay2.map((item, idx) => (
-                                                <div key={idx} className="bg-white rounded-xl p-6 border border-[#d4c4a8] shadow-sm flex flex-col md:flex-row gap-6">
-                                                    <div className="md:w-1/4 shrink-0 border-b md:border-b-0 md:border-r border-[#d4c4a8]/50 pb-4 md:pb-0 md:pr-4">
-                                                        <div className="flex items-center gap-2 text-[#7a5c3a] font-bold mb-2">
-                                                            <Clock className="w-4 h-4" />
-                                                            <span>{item.time}</span>
-                                                        </div>
-                                                        <h4 className="text-lg font-serif font-bold text-[#3d230d] leading-tight">{item.name}</h4>
-                                                    </div>
-                                                    <div className="md:w-3/4 flex flex-col justify-center">
-                                                        {item.theme && (
-                                                            <p className="text-[#5c3a1e] font-medium mb-3 italic">
-                                                                "{item.theme}"
-                                                            </p>
-                                                        )}
-                                                        {item.artists.length > 0 && (
-                                                            <ul className="space-y-2">
-                                                                {item.artists.map((artist, artistIdx) => (
-                                                                    <li key={artistIdx} className="text-[#7a5c3a] text-sm flex items-start gap-2">
-                                                                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#a07d3c] shrink-0"></span>
-                                                                        <span>{artist}</span>
-                                                                    </li>
-                                                                ))}
-                                                            </ul>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            ))}
+                                        <div className="overflow-x-auto rounded-xl border border-[#d4c4a8] shadow-sm">
+                                            <table className="w-full text-left border-collapse bg-white">
+                                                <thead>
+                                                    <tr className="bg-[#f0e8d5] border-b border-[#d4c4a8] text-[#5c3a1e]">
+                                                        <th className="p-4 font-semibold text-sm whitespace-nowrap border-r border-[#d4c4a8]">Time</th>
+                                                        <th className="p-4 font-semibold text-sm border-r border-[#d4c4a8] min-w-[150px]">Event Name</th>
+                                                        <th className="p-4 font-semibold text-sm border-r border-[#d4c4a8] min-w-[200px]">Theme</th>
+                                                        <th className="p-4 font-semibold text-sm">Artists</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="divide-y divide-[#d4c4a8]">
+                                                    {scheduleDay2.map((item, idx) => (
+                                                        <tr key={idx} className="hover:bg-[#faf5eb] transition-colors">
+                                                            <td className="p-4 text-sm text-[#7a5c3a] font-medium align-top whitespace-nowrap border-r border-[#d4c4a8]">{item.time}</td>
+                                                            <td className="p-4 text-sm text-[#3d230d] font-bold align-top border-r border-[#d4c4a8]">{item.name}</td>
+                                                            <td className="p-4 text-sm text-[#5c3a1e] italic align-top border-r border-[#d4c4a8]">{item.theme}</td>
+                                                            <td className="p-4 text-sm text-[#7a5c3a] align-top">{item.artists.join(', ')}</td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>

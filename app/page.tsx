@@ -26,10 +26,22 @@ export default async function Home() {
   return (
     <div className="bg-[#faf5eb] py-20 px-4 sm:px-6 lg:px-8 w-full border-b border-[#d4c4a8]/50">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-4xl font-serif text-center font-bold text-[#3d230d] mb-14 relative">
-          <span className="bg-[#faf5eb] px-8 relative z-10 text-[#5c3a1e]">Upcoming Events</span>
-          <div className="absolute left-[10%] right-[10%] top-1/2 h-px bg-[#d4c4a8] -z-0"></div>
-        </h2>
+        <div className="flex items-center justify-center gap-0 mb-14">
+          {/* Left ornament */}
+          <div className="flex-1 flex items-center justify-end">
+            <img src="/ornament-flourish.png?v=2" alt="" className="h-44 w-auto object-contain" style={{ transform: 'scaleX(-1)' }} />
+          </div>
+
+          {/* Title */}
+          <h2 className="text-4xl font-serif font-bold text-[#5c3a1e] whitespace-nowrap px-2">
+            Upcoming Events
+          </h2>
+
+          {/* Right ornament */}
+          <div className="flex-1 flex items-center justify-start">
+            <img src="/ornament-flourish.png?v=2" alt="" className="h-44 w-auto object-contain" />
+          </div>
+        </div>
 
         <UpcomingEventsGrid events={events} />
       </div>

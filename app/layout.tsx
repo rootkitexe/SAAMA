@@ -25,11 +25,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className="bg-[#faf5eb]">
+    <html lang="en" suppressHydrationWarning className="bg-[#180e06]">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col bg-[#faf5eb] text-[#3d230d]`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col bg-[#180e06] text-[#faf5eb] p-0 sm:p-6 md:p-10 lg:p-14 xl:p-16`}
       >
-        <div className="w-full flex flex-col min-h-screen text-[#3d230d]">
+        <div className="w-full max-w-[1800px] mx-auto flex flex-col flex-1 bg-[#faf5eb] text-[#3d230d] shadow-2xl sm:rounded-2xl overflow-hidden relative">
           <Navbar />
           <main className="flex-1 w-full flex flex-col">
             {children}

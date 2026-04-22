@@ -37,6 +37,14 @@ export default function AboutPage() {
                         while sustaining the living lineage of Indian classical music.
                     </p>
 
+                    <blockquote className="mt-12 border-l-4 border-[#c8a03e] pl-6 py-4 bg-[#f5efe3] rounded-r-lg">
+                        <p className="text-[17px] leading-relaxed italic text-[#5c3a1e]">
+                            &ldquo;They who realize and abide in the seven notes, emanating from the primordial Praṇava—whose very nature is the Supreme Brahman—are verily jīvanmuktas, liberated while yet embodied.&rdquo;
+                        </p>
+                        <footer className="mt-3 text-sm font-bold text-[#3d230d]">
+                            — Tyagaraja Swami
+                        </footer>
+                    </blockquote>
 
                 </div>
             </div>

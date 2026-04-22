@@ -4,8 +4,11 @@ import { useState, useEffect, useCallback } from 'react';
 import { createBrowserClient } from '@supabase/ssr';
 import { CheckCircle, ChevronRight, ChevronLeft, Loader2, Music, CreditCard } from 'lucide-react';
 
-const CATEGORIES = ['Geetham', 'Varnam', 'Krithi', 'Thillana', 'Viruttham', 'Alapana'] as const;
-type Category = typeof CATEGORIES[number];
+const ALL_CATEGORIES = ['Geetham', 'Varnam', 'Krithi', 'Thillana', 'Viruttham', 'Alapana', 'Swarams'] as const;
+type Category = typeof ALL_CATEGORIES[number];
+
+const SUB_JUNIOR_CATEGORIES: Category[] = ['Geetham', 'Varnam'];
+const JUNIOR_SENIOR_CATEGORIES: Category[] = ['Krithi', 'Thillana', 'Viruttham', 'Alapana', 'Swarams'];
 
 const ENTRY_FEE = 35; // USD per category
 
@@ -21,16 +24,22 @@ function calculateAgeAsOfMay1(birthday: string): number | null {
 
 function getAgeGroup(age: number | null): string {
     if (age === null) return '—';
-    if (age >= 6 && age <= 9) return 'Sub-Junior';
+    if (age >= 5 && age <= 9) return 'Sub-Junior';
     if (age >= 10 && age <= 14) return 'Junior';
     if (age >= 15 && age <= 18) return 'Senior';
     return 'Not Eligible';
 }
 
+function getAvailableCategories(ageGroup: string): Category[] {
+    if (ageGroup === 'Sub-Junior') return SUB_JUNIOR_CATEGORIES;
+    if (ageGroup === 'Junior' || ageGroup === 'Senior') return JUNIOR_SENIOR_CATEGORIES;
+    return [];
+}
+
 function getRequiredSongCount(ageGroup: string): number {
-    if (ageGroup === 'Senior') return 4;
+    if (ageGroup === 'Senior') return 3;
     if (ageGroup === 'Junior') return 3;
-    if (ageGroup === 'Sub-Junior') return 1;
+    if (ageGroup === 'Sub-Junior') return 2;
     return 1;
 }
 
@@ -69,6 +78,7 @@ export default function RegisterPage() {
     const ageGroup = getAgeGroup(age);
     const songCount = getRequiredSongCount(ageGroup);
     const totalFee = selectedCategories.length * ENTRY_FEE;
+    const availableCategories = getAvailableCategories(ageGroup);
 
     useEffect(() => {
         async function load() {
@@ -146,6 +156,45 @@ export default function RegisterPage() {
         setErrorMsg('');
         initCategoryData(selectedCategories);
         setStep(2);
+    };
+
+    // Validate that all repertoire fields are filled before proceeding to payment
+    const validateRepertoireData = (): string | null => {
+        for (const cat of selectedCategories) {
+            if (['Geetham', 'Varnam', 'Krithi', 'Thillana', 'Swarams'].includes(cat)) {
+                const songs = categoryData[cat]?.songs || [];
+                for (let i = 0; i < songs.length; i++) {
+                    const s = songs[i];
+                    if (!s.song.trim() || !s.raga.trim() || !s.tala.trim() || !s.composer.trim()) {
+                        return `Please fill in all fields for ${cat} — Composition ${i + 1} (Song, Raga, Tala, and Composer are all required).`;
+                    }
+                }
+            } else if (cat === 'Alapana') {
+                const a = categoryData.Alapana?.alapana as AlapanaEntry | undefined;
+                if (!a?.raga1?.trim() || !a?.raga2?.trim() || !a?.raga3?.trim()) {
+                    return 'Please fill in all 3 ragas for Alapana.';
+                }
+            } else if (cat === 'Viruttham') {
+                const v = categoryData.Viruttham?.viruttham as VirutthamEntry | undefined;
+                if (!v?.sahityam?.trim()) {
+                    return 'Please fill in the Sahityam for Viruttham.';
+                }
+                if (!v?.raga1?.trim() || !v?.raga2?.trim()) {
+                    return 'Viruttham requires a minimum of 2 ragas. Please fill in at least Raga 1 and Raga 2.';
+                }
+            }
+        }
+        return null;
+    };
+
+    const goToStep3 = () => {
+        const validationError = validateRepertoireData();
+        if (validationError) {
+            setErrorMsg(validationError);
+            return;
+        }
+        setErrorMsg('');
+        setStep(3);
     };
 
     const loadRazorpayScript = (): Promise<boolean> => {
@@ -295,10 +344,18 @@ export default function RegisterPage() {
                             <h2 className="text-2xl font-bold text-[#5c3a1e] flex items-center gap-2">
                                 <Music className="h-6 w-6 text-[#3d230d]" /> Select Categories
                             </h2>
-                            <p className="text-[#7a5c3a] text-sm">Select all the categories you wish to register for. Each category costs <strong className="text-[#3d230d]">US $35</strong>.</p>
+                            <p className="text-[#7a5c3a] text-sm">
+                                Select all the categories you wish to register for. Each category costs <strong className="text-[#3d230d]">US $35</strong>.
+                                {ageGroup === 'Sub-Junior' && (
+                                    <span className="block mt-1 text-[#7a5c3a] italic">Sub-Junior participants may only compete in Geetham and Varnam.</span>
+                                )}
+                                {(ageGroup === 'Junior' || ageGroup === 'Senior') && (
+                                    <span className="block mt-1 text-[#7a5c3a] italic">Junior and Senior participants may compete in Kriti, Thillana, Viruttham, Alapana, and Swarams.</span>
+                                )}
+                            </p>
 
                             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                                {CATEGORIES.map(cat => (
+                                {availableCategories.map(cat => (
                                     <button
                                         key={cat}
                                         type="button"
@@ -329,20 +386,20 @@ export default function RegisterPage() {
                                 <div key={cat} className="border border-[#d4c4a8] rounded-lg p-6 bg-[#faf5eb]">
                                     <h3 className="font-bold text-lg text-[#3d230d] mb-4">{cat}</h3>
 
-                                    {/* Geetham / Varnam / Krithi / Thillana — Song inputs */}
-                                    {['Geetham', 'Varnam', 'Krithi', 'Thillana'].includes(cat) && (
+                                    {/* Geetham / Varnam / Krithi / Thillana / Swarams — Song inputs */}
+                                    {['Geetham', 'Varnam', 'Krithi', 'Thillana', 'Swarams'].includes(cat) && (
                                         <div className="space-y-4">
                                             <p className="text-xs text-[#7a5c3a]">
-                                                {ageGroup} category: submit <strong>{songCount}</strong> {songCount === 1 ? 'composition' : 'compositions'}
+                                                {ageGroup} category: submit <strong>{songCount}</strong> {songCount === 1 ? 'composition' : 'compositions'}. All fields are required.
                                             </p>
                                             {categoryData[cat]?.songs?.map((song, idx) => (
                                                 <div key={idx} className="bg-white rounded-lg border border-[#d4c4a8] p-4">
                                                     <p className="text-xs font-bold text-[#7a5c3a] uppercase mb-3">Composition {idx + 1}</p>
                                                     <div className="grid grid-cols-2 gap-3">
-                                                        <input placeholder="Song" value={song.song} onChange={e => updateSong(cat, idx, 'song', e.target.value)} className="bg-[#faf5eb] border border-[#d4c4a8] rounded-lg px-3 py-2 text-sm text-[#5c3a1e]" />
-                                                        <input placeholder="Raga" value={song.raga} onChange={e => updateSong(cat, idx, 'raga', e.target.value)} className="bg-[#faf5eb] border border-[#d4c4a8] rounded-lg px-3 py-2 text-sm text-[#5c3a1e]" />
-                                                        <input placeholder="Tala" value={song.tala} onChange={e => updateSong(cat, idx, 'tala', e.target.value)} className="bg-[#faf5eb] border border-[#d4c4a8] rounded-lg px-3 py-2 text-sm text-[#5c3a1e]" />
-                                                        <input placeholder="Composer" value={song.composer} onChange={e => updateSong(cat, idx, 'composer', e.target.value)} className="bg-[#faf5eb] border border-[#d4c4a8] rounded-lg px-3 py-2 text-sm text-[#5c3a1e]" />
+                                                        <input placeholder="Song *" required value={song.song} onChange={e => updateSong(cat, idx, 'song', e.target.value)} className="bg-[#faf5eb] border border-[#d4c4a8] rounded-lg px-3 py-2 text-sm text-[#5c3a1e]" />
+                                                        <input placeholder="Raga *" required value={song.raga} onChange={e => updateSong(cat, idx, 'raga', e.target.value)} className="bg-[#faf5eb] border border-[#d4c4a8] rounded-lg px-3 py-2 text-sm text-[#5c3a1e]" />
+                                                        <input placeholder="Tala *" required value={song.tala} onChange={e => updateSong(cat, idx, 'tala', e.target.value)} className="bg-[#faf5eb] border border-[#d4c4a8] rounded-lg px-3 py-2 text-sm text-[#5c3a1e]" />
+                                                        <input placeholder="Composer *" required value={song.composer} onChange={e => updateSong(cat, idx, 'composer', e.target.value)} className="bg-[#faf5eb] border border-[#d4c4a8] rounded-lg px-3 py-2 text-sm text-[#5c3a1e]" />
                                                     </div>
                                                 </div>
                                             ))}
@@ -352,11 +409,11 @@ export default function RegisterPage() {
                                     {/* Alapana — 3 Ragas */}
                                     {cat === 'Alapana' && (
                                         <div className="space-y-3">
-                                            <p className="text-xs text-[#7a5c3a]">Submit 3 ragas. The judges will select one for you to present.</p>
+                                            <p className="text-xs text-[#7a5c3a]">Submit 3 ragas. The judges will select one for you to present. All fields are required.</p>
                                             {(['raga1', 'raga2', 'raga3'] as const).map((field, i) => (
                                                 <div key={field}>
-                                                    <label className="text-xs font-bold text-[#7a5c3a] uppercase">Raga {i + 1}</label>
-                                                    <input placeholder={`Raga ${i + 1}`} value={(categoryData.Alapana?.alapana as any)?.[field] || ''} onChange={e => updateAlapana(field, e.target.value)} className="w-full bg-white border border-[#d4c4a8] rounded-lg px-3 py-2 text-sm text-[#5c3a1e] mt-1" />
+                                                    <label className="text-xs font-bold text-[#7a5c3a] uppercase">Raga {i + 1} *</label>
+                                                    <input placeholder={`Raga ${i + 1}`} required value={(categoryData.Alapana?.alapana as any)?.[field] || ''} onChange={e => updateAlapana(field, e.target.value)} className="w-full bg-white border border-[#d4c4a8] rounded-lg px-3 py-2 text-sm text-[#5c3a1e] mt-1" />
                                                 </div>
                                             ))}
                                         </div>
@@ -365,14 +422,14 @@ export default function RegisterPage() {
                                     {/* Viruttham — Sahityam + 4 Ragas */}
                                     {cat === 'Viruttham' && (
                                         <div className="space-y-3">
-                                            <p className="text-xs text-[#7a5c3a]">Submit 1 viruttham with up to 4 ragas.</p>
+                                            <p className="text-xs text-[#7a5c3a]">Submit 1 viruttham with a minimum of 2 and maximum of 4 ragas. Sahityam and at least 2 ragas are required.</p>
                                             <div>
-                                                <label className="text-xs font-bold text-[#7a5c3a] uppercase">Sahityam</label>
-                                                <input placeholder="Sahityam" value={(categoryData.Viruttham?.viruttham as any)?.sahityam || ''} onChange={e => updateViruttham('sahityam', e.target.value)} className="w-full bg-white border border-[#d4c4a8] rounded-lg px-3 py-2 text-sm text-[#5c3a1e] mt-1" />
+                                                <label className="text-xs font-bold text-[#7a5c3a] uppercase">Sahityam *</label>
+                                                <input placeholder="Sahityam" required value={(categoryData.Viruttham?.viruttham as any)?.sahityam || ''} onChange={e => updateViruttham('sahityam', e.target.value)} className="w-full bg-white border border-[#d4c4a8] rounded-lg px-3 py-2 text-sm text-[#5c3a1e] mt-1" />
                                             </div>
                                             {(['raga1', 'raga2', 'raga3', 'raga4'] as const).map((field, i) => (
                                                 <div key={field}>
-                                                    <label className="text-xs font-bold text-[#7a5c3a] uppercase">Raga {i + 1}</label>
+                                                    <label className="text-xs font-bold text-[#7a5c3a] uppercase">Raga {i + 1} {i < 2 ? '*' : '(optional)'}</label>
                                                     <input placeholder={`Raga ${i + 1}`} value={(categoryData.Viruttham?.viruttham as any)?.[field] || ''} onChange={e => updateViruttham(field, e.target.value)} className="w-full bg-white border border-[#d4c4a8] rounded-lg px-3 py-2 text-sm text-[#5c3a1e] mt-1" />
                                                 </div>
                                             ))}
@@ -419,7 +476,7 @@ export default function RegisterPage() {
                                 </div>
 
                                 <div className="bg-yellow-50 border border-yellow-200 p-3 rounded-lg text-yellow-800 text-xs">
-                                    By proceeding, you confirm that all details are accurate and agree to the competition rules. No changes allowed after <strong>May 14, 2026</strong>.
+                                    By proceeding, you confirm that all details are accurate and agree to the competition rules. No changes allowed after <strong>May 29, 2026</strong>.
                                 </div>
                             </div>
                         </div>
@@ -446,7 +503,7 @@ export default function RegisterPage() {
                             </button>
                         )}
                         {step === 2 && (
-                            <button type="button" onClick={() => setStep(3)} className="flex items-center bg-[#3d230d] text-white font-bold py-2.5 px-6 rounded-lg hover:bg-[#2a1809] transition-colors">
+                            <button type="button" onClick={goToStep3} className="flex items-center bg-[#3d230d] text-white font-bold py-2.5 px-6 rounded-lg hover:bg-[#2a1809] transition-colors">
                                 Review & Pay <ChevronRight className="h-4 w-4 ml-1" />
                             </button>
                         )}
@@ -462,4 +519,3 @@ export default function RegisterPage() {
         </div>
     );
 }
-

@@ -87,18 +87,18 @@ export default function Navbar() {
   return (
     <header className="flex flex-col w-full overflow-visible shrink-0 relative z-[100]">
       {/* Nav Strip */}
-      <nav className="bg-[#3d230d] text-[#faf5eb] flex justify-center text-[13px] font-bold border-y-2 border-black/40 relative z-50">
+      <nav className="bg-[#3d230d] text-[#faf5eb] flex justify-center items-center text-[14px] font-bold border-y-2 border-black/40 relative z-50">
 
         <div>
-          <Link href="/" className="block px-3 py-[8px] hover:underline whitespace-nowrap">Home</Link>
+          <Link href="/" className="block px-4 py-[14px] hover:underline whitespace-nowrap">Home</Link>
         </div>
 
         <div>
-          <Link href="/about" className="block px-3 py-[8px] hover:underline whitespace-nowrap">About us</Link>
+          <Link href="/about" className="block px-4 py-[14px] hover:underline whitespace-nowrap">About us</Link>
         </div>
 
         <div className="group relative">
-          <Link href="/festival" className="block px-3 py-[8px] hover:underline text-[12px] whitespace-nowrap">Aaroha Carnatic Music Festival</Link>
+          <Link href="/festival" className="block px-4 py-[14px] hover:underline text-[14px] whitespace-nowrap">Aaroha Carnatic Music Festival</Link>
           <div className="absolute top-[100%] left-1/2 -translate-x-1/2 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200 z-[60]">
             <div className="w-48 bg-[#2a1809] border border-[#faf5eb]/20 shadow-2xl rounded-b-md overflow-hidden flex flex-col pt-1">
               <Link href="/festival/2026" className="block px-4 py-2 hover:bg-[#3d230d] transition-colors">2026 Festival</Link>
@@ -106,10 +106,10 @@ export default function Navbar() {
           </div>
         </div>
 
-        <div><Link href="/competitions" className="block px-3 py-[8px] hover:underline whitespace-nowrap">Competitions</Link></div>
-        <div><Link href="/gallery" className="block px-3 py-[8px] hover:underline whitespace-nowrap">Gallery</Link></div>
+        <div><Link href="/competitions" className="block px-4 py-[14px] hover:underline whitespace-nowrap">Competitions</Link></div>
+        <div><Link href="/gallery" className="block px-4 py-[14px] hover:underline whitespace-nowrap">Gallery</Link></div>
         <div className="group relative">
-          <span className="block px-3 py-[8px] hover:underline cursor-pointer whitespace-nowrap">Community</span>
+          <span className="block px-4 py-[14px] hover:underline cursor-pointer whitespace-nowrap">Community</span>
           <div className="absolute top-[100%] left-1/2 -translate-x-1/2 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200 z-[60]">
             <div className="w-56 bg-[#2a1809] border border-[#faf5eb]/20 shadow-2xl rounded-b-md overflow-hidden flex flex-col pt-1">
               <Link href="/blog" className="block px-4 py-2 hover:bg-[#3d230d] transition-colors font-normal text-[12.5px]">Blogs</Link>
@@ -117,23 +117,21 @@ export default function Navbar() {
             </div>
           </div>
         </div>
-        <div><Link href="/support" className="block px-3 py-[8px] hover:underline whitespace-nowrap">Support us</Link></div>
-        <div><Link href="/contact" className="block px-3 py-[8px] hover:underline whitespace-nowrap">Contact us</Link></div>
+        <div><Link href="/support" className="block px-4 py-[14px] hover:underline whitespace-nowrap">Support us</Link></div>
+        <div><Link href="/contact" className="block px-4 py-[14px] hover:underline whitespace-nowrap">Contact us</Link></div>
 
         {userEmail && ['saama.seattle@gmail.com', 'testuser@example.com'].includes(userEmail) && (
           <>
-            <div className="w-[1px] h-4 bg-[#faf5eb]/30 self-center mx-1"></div>
             <div>
-              <Link href="/admin" className="block px-3 py-[8px] text-yellow-400 hover:text-[#faf5eb] transition-colors whitespace-nowrap">Admin Area</Link>
+              <Link href="/admin" className="block px-4 py-[14px] text-yellow-400 hover:text-[#faf5eb] transition-colors whitespace-nowrap">Admin Area</Link>
             </div>
           </>
         )}
 
-        <div className="w-[1px] h-4 bg-[#faf5eb]/30 self-center mx-2"></div>
         <div>
           <Link
             href={isAuthenticated ? "/portal" : "/login"}
-            className="block px-4 py-[8px] hover:text-yellow-400 transition-colors whitespace-nowrap"
+            className="block px-4 py-[14px] hover:text-yellow-400 transition-colors whitespace-nowrap"
           >
             {isAuthenticated ? "Dashboard" : "Portal Login"}
           </Link>
@@ -143,25 +141,25 @@ export default function Navbar() {
       {/* Banner Section */}
       <div className="flex bg-[#faf5eb] h-[450px] items-stretch">
         {/* Left: Info */}
-        <div className="w-[35%] px-8 pt-2 flex flex-col justify-start text-black">
-          <div className="mb-3 w-full flex justify-center h-[180px]">
+        <div className="w-[35%] px-8 pt-2 flex flex-col justify-start bg-[#3d230d] text-[#faf5eb]">
+          <div className="mb-2 w-full flex justify-center h-[210px]">
             <Link href="/" className="h-full">
               <img
-                src="/logo.png"
+                src="/logo_saama_.png"
                 alt="Logo"
-                className="h-full object-contain mix-blend-multiply cursor-pointer hover:opacity-90 transition-opacity"
-                style={{ filter: 'contrast(1.1) brightness(1.1)' }}
+                className="h-full object-contain cursor-pointer hover:opacity-90 transition-opacity"
+                style={{ filter: 'drop-shadow(0 0 6px rgba(61,35,13,0.4))' }}
               />
             </Link>
           </div>
 
-          <p className="text-[15px] text-center text-black/80 mb-2 font-sans font-bold tracking-tight uppercase">
+          <p className="text-[15px] text-center text-[#faf5eb]/90 mb-2 font-sans font-bold tracking-tight uppercase">
             Sadhana Academy for Musical Arts
           </p>
-          <p className="text-[13px] text-center text-[#5c3a1e] italic mb-2 font-serif">
+          <p className="text-[13px] text-center text-[#D4AF37] italic mb-2 font-serif">
             Celebrating Sādhana, Tradition, and the Next Generation.
           </p>
-          <p className="text-[14px] leading-[1.7] text-justify text-black/80 font-serif">
+          <p className="text-[14px] leading-[1.7] text-justify text-[#faf5eb]/80 font-serif">
             SaaMa — Sadhana Academy for Musical Arts is a 501(c)(3) non-profit organization
             dedicated to nurturing and sustaining the living tradition of Indian classical music.
             Through concerts, workshops, mentorship, and community initiatives, we seek to inspire
@@ -170,7 +168,7 @@ export default function Navbar() {
         </div>
 
         {/* Right: Images (3D Perspective Gallery) */}
-        <div className="w-[65%] shrink-0 border-l-[3px] border-[#3d230d] overflow-hidden bg-[#faf5eb] relative">
+        <div className="w-[65%] shrink-0 border-l-[3px] border-black overflow-hidden bg-[#3d230d] relative">
           <div className="flex h-full items-center justify-center relative w-full overflow-hidden" style={{ perspective: '1200px' }}>
             {galleryImages.map((img, i) => {
               // Calculate shortest distance in ring buffer
@@ -226,7 +224,7 @@ export default function Navbar() {
       </div>
 
       {/* Separator Line */}
-      <div className="w-full h-[3px] bg-[#3d230d]"></div>
+      <div className="w-full h-[3px] bg-black"></div>
 
     </header>
   );

@@ -12,7 +12,7 @@ export default function Footer() {
                     {/* Column 1: Logo & Description */}
                     <div className="flex flex-col items-start">
                         <img 
-                            src="/logo.png" 
+                            src="/logo_footer-Photoroom.png" 
                             alt="SaaMa Logo" 
                             className="h-32 w-auto object-contain mb-4"
                         />

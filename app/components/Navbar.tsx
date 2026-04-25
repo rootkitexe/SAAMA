@@ -145,7 +145,7 @@ export default function Navbar() {
           <div className="mb-2 w-full flex justify-center h-[210px]">
             <Link href="/" className="h-full">
               <img
-                src="/logo_saama_.png"
+                src="/logo_header-Photoroom.png"
                 alt="Logo"
                 className="h-full object-contain cursor-pointer hover:opacity-90 transition-opacity"
                 style={{ filter: 'drop-shadow(0 0 6px rgba(61,35,13,0.4))' }}

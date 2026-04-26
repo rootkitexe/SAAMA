@@ -6,8 +6,10 @@ import { Image as ImageIcon, X, ChevronLeft, ChevronRight } from 'lucide-react';
 export default function GalleryPage() {
     const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
 
-    // List of 21 images (currently hidden as requested)
-    const images: { src: string, alt: string }[] = [];
+    // List of images
+    const images: { src: string, alt: string }[] = [
+        { src: "/gallery 1.jpeg", alt: "SaaMa festival gallery image 1" }
+    ];
 
     const openLightbox = (index: number) => setSelectedImageIndex(index);
     const closeLightbox = () => setSelectedImageIndex(null);

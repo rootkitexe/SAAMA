@@ -20,6 +20,12 @@ export default async function Home() {
       if (event.title.includes('Aaroha Carnatic')) {
           return { ...event, image: '/aaroha-highlight.jpg' };
       }
+      if (event.title.includes('Workshop by Vid. Sriranjani')) {
+          return { ...event, image: '/may 9-10_2.jpeg' };
+      }
+      if (event.title.includes('Violin Concert by Vid. Charumathi')) {
+          return { ...event, image: '/may 23_2.jpeg' };
+      }
       return event;
   });
 

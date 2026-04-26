@@ -98,7 +98,7 @@ export default function Navbar() {
         </div>
 
         <div className="group relative">
-          <Link href="/festival" className="block px-4 py-[14px] hover:underline text-[14px] whitespace-nowrap">Aaroha Carnatic Music Festival</Link>
+          <span className="block px-4 py-[14px] hover:underline cursor-pointer text-[14px] whitespace-nowrap">Aaroha Carnatic Music Festival</span>
           <div className="absolute top-[100%] left-1/2 -translate-x-1/2 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200 z-[60]">
             <div className="w-48 bg-[#2a1809] border border-[#faf5eb]/20 shadow-2xl rounded-b-md overflow-hidden flex flex-col pt-1">
               <Link href="/festival/2026" className="block px-4 py-2 hover:bg-[#3d230d] transition-colors">2026 Festival</Link>
@@ -160,7 +160,7 @@ export default function Navbar() {
             Celebrating Sādhana, Tradition, and the Next Generation.
           </p>
           <p className="text-[14px] leading-[1.7] text-justify text-[#faf5eb]/80 font-serif">
-            SaaMa — Sadhana Academy for Musical Arts is a 501(c)(3) non-profit organization
+            Sadhana Academy for Musical Arts is a 501(c)(3) non-profit organization
             dedicated to nurturing and sustaining the living tradition of Indian classical music.
             Through concerts, workshops, mentorship, and community initiatives, we seek to inspire
             young musicians and cultivate a vibrant cultural space.

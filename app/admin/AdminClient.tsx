@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Download, Users, FileText, ChevronDown, ChevronUp, Calendar, Plus, Loader2, Trash2, BookOpen } from 'lucide-react';
-import { addUpcomingEvent, deleteUpcomingEvent, addBlogPost, deleteBlogPost } from './actions';
+import { Download, Users, FileText, ChevronDown, ChevronUp, Calendar, Plus, Loader2, Trash2, BookOpen, MapPin } from 'lucide-react';
+import { addUpcomingEvent, deleteUpcomingEvent, addBlogPost, deleteBlogPost, addDirectoryEntry, deleteDirectoryEntry } from './actions';
 import { useFormStatus } from 'react-dom';
 import { useRouter } from 'next/navigation';
 
@@ -14,6 +14,7 @@ interface Props {
     initialRegistrations: Registration[];
     initialEvents: any[];
     initialBlogPosts: any[];
+    initialDirectory: any[];
 }
 
 function SubmitButton({ pendingText = 'Saving...', defaultText = 'Confirm & Add' }: { pendingText?: string, defaultText?: string }) {
@@ -26,9 +27,9 @@ function SubmitButton({ pendingText = 'Saving...', defaultText = 'Confirm & Add'
     );
 }
 
-export default function AdminClient({ initialProfiles, initialRegistrations, initialEvents, initialBlogPosts }: Props) {
+export default function AdminClient({ initialProfiles, initialRegistrations, initialEvents, initialBlogPosts, initialDirectory }: Props) {
     const router = useRouter();
-    const [tab, setTab] = useState<'registrations' | 'users' | 'events' | 'blog'>('registrations');
+    const [tab, setTab] = useState<'registrations' | 'users' | 'events' | 'blog' | 'directory'>('registrations');
     const [expandedRowId, setExpandedRowId] = useState<number | null>(null);
     
     const [showEventForm, setShowEventForm] = useState(false);
@@ -38,6 +39,10 @@ export default function AdminClient({ initialProfiles, initialRegistrations, ini
     const [showBlogForm, setShowBlogForm] = useState(false);
     const [blogFormError, setBlogFormError] = useState('');
     const [blogToDelete, setBlogToDelete] = useState<number | null>(null);
+
+    const [showDirForm, setShowDirForm] = useState(false);
+    const [dirFormError, setDirFormError] = useState('');
+    const [dirToDelete, setDirToDelete] = useState<number | null>(null);
 
     const handleAddEvent = async (formData: FormData) => {
         setEventFormError('');
@@ -76,6 +81,27 @@ export default function AdminClient({ initialProfiles, initialRegistrations, ini
         const res = await deleteBlogPost(id);
         if (res?.error) {
             setBlogFormError(res.error);
+        } else {
+            router.refresh();
+        }
+    };
+
+    const handleAddDirectory = async (formData: FormData) => {
+        setDirFormError('');
+        const res = await addDirectoryEntry(formData);
+        if (res?.error) {
+            setDirFormError(res.error);
+        } else {
+            setShowDirForm(false);
+            router.refresh();
+        }
+    };
+
+    const handleDeleteDirectory = async (id: number) => {
+        setDirFormError('');
+        const res = await deleteDirectoryEntry(id);
+        if (res?.error) {
+            setDirFormError(res.error);
         } else {
             router.refresh();
         }
@@ -225,6 +251,12 @@ export default function AdminClient({ initialProfiles, initialRegistrations, ini
                         className={`flex items-center px-4 py-2 text-sm font-bold rounded-md transition-colors ${tab === 'blog' ? 'bg-[#3d230d] text-white shadow' : 'text-[#7a5c3a] hover:bg-[#faf5eb]'}`}
                     >
                         <BookOpen className="h-4 w-4 mr-2" /> Blog ({initialBlogPosts.length})
+                    </button>
+                    <button
+                        onClick={() => setTab('directory')}
+                        className={`flex items-center px-4 py-2 text-sm font-bold rounded-md transition-colors ${tab === 'directory' ? 'bg-[#3d230d] text-white shadow' : 'text-[#7a5c3a] hover:bg-[#faf5eb]'}`}
+                    >
+                        <MapPin className="h-4 w-4 mr-2" /> Directory ({initialDirectory.length})
                     </button>
                 </div>
                 <button
@@ -511,6 +543,116 @@ export default function AdminClient({ initialProfiles, initialRegistrations, ini
                         </div>
                     </div>
                 )}
+
+                {tab === 'directory' && (
+                    <div className="space-y-6">
+                        <div className="flex justify-between items-center border-b border-[#d4c4a8] pb-4">
+                            <h3 className="text-xl font-bold text-[#3d230d]">Teacher Directory Management</h3>
+                            <button onClick={() => setShowDirForm(!showDirForm)} className="flex items-center gap-2 bg-[#3d230d] text-white px-4 py-2 rounded-lg hover:bg-[#2a1809] font-bold shadow">
+                                <Plus className="h-4 w-4" /> Add Entry
+                            </button>
+                        </div>
+                        
+                        {showDirForm && (
+                            <form action={handleAddDirectory} className="bg-[#faf5eb] p-6 rounded-xl border border-[#d4c4a8] space-y-5 shadow-sm">
+                                <h4 className="font-bold text-[#5c3a1e] text-lg border-b border-[#d4c4a8] pb-2">Add New Directory Entry</h4>
+                                
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                    <div>
+                                        <label className="block text-sm font-bold text-[#5c3a1e] mb-1">Organization Name *</label>
+                                        <input type="text" name="name" required className="w-full rounded-lg p-2.5 bg-white text-[#3d230d] placeholder:text-[#d4c4a8] font-medium border border-[#d4c4a8] focus:ring-[#3d230d] focus:border-[#3d230d]" placeholder="e.g. Seattle Violin Academy" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-[#5c3a1e] mb-1">Email *</label>
+                                        <input type="email" name="email" required className="w-full rounded-lg p-2.5 bg-white text-[#3d230d] placeholder:text-[#d4c4a8] font-medium border border-[#d4c4a8] focus:ring-[#3d230d] focus:border-[#3d230d]" placeholder="contact@example.com" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-[#5c3a1e] mb-1">Phone *</label>
+                                        <input type="tel" name="phone" required className="w-full rounded-lg p-2.5 bg-white text-[#3d230d] placeholder:text-[#d4c4a8] font-medium border border-[#d4c4a8] focus:ring-[#3d230d] focus:border-[#3d230d]" placeholder="(425) 555-0100" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-[#5c3a1e] mb-1">Location *</label>
+                                        <input type="text" name="location" required className="w-full rounded-lg p-2.5 bg-white text-[#3d230d] placeholder:text-[#d4c4a8] font-medium border border-[#d4c4a8] focus:ring-[#3d230d] focus:border-[#3d230d]" placeholder="e.g. Redmond, WA" />
+                                    </div>
+                                    <div className="md:col-span-2">
+                                        <label className="block text-sm font-bold text-[#5c3a1e] mb-1">Services * <span className="font-normal text-xs text-[#7a5c3a]">(comma-separated)</span></label>
+                                        <input type="text" name="services" required className="w-full rounded-lg p-2.5 bg-white text-[#3d230d] placeholder:text-[#d4c4a8] font-medium border border-[#d4c4a8] focus:ring-[#3d230d] focus:border-[#3d230d]" placeholder="e.g. Vocal Carnatic, Violin Lessons, Workshops" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-[#5c3a1e] mb-1">Website <span className="font-normal text-xs text-[#7a5c3a]">(optional)</span></label>
+                                        <input type="url" name="website" className="w-full rounded-lg p-2.5 bg-white text-[#3d230d] placeholder:text-[#d4c4a8] font-medium border border-[#d4c4a8] focus:ring-[#3d230d] focus:border-[#3d230d]" placeholder="https://..." />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-[#5c3a1e] mb-1">Facebook <span className="font-normal text-xs text-[#7a5c3a]">(optional)</span></label>
+                                        <input type="url" name="facebook" className="w-full rounded-lg p-2.5 bg-white text-[#3d230d] placeholder:text-[#d4c4a8] font-medium border border-[#d4c4a8] focus:ring-[#3d230d] focus:border-[#3d230d]" placeholder="https://facebook.com/..." />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-[#5c3a1e] mb-1">Instagram <span className="font-normal text-xs text-[#7a5c3a]">(optional)</span></label>
+                                        <input type="url" name="instagram" className="w-full rounded-lg p-2.5 bg-white text-[#3d230d] placeholder:text-[#d4c4a8] font-medium border border-[#d4c4a8] focus:ring-[#3d230d] focus:border-[#3d230d]" placeholder="https://instagram.com/..." />
+                                    </div>
+                                </div>
+
+                                {dirFormError && <p className="text-red-700 bg-red-100 p-2 rounded text-sm font-bold border border-red-300">{dirFormError}</p>}
+                                
+                                <div className="flex justify-end pt-2">
+                                    <SubmitButton pendingText="Adding..." defaultText="Confirm & Add Entry" />
+                                </div>
+                            </form>
+                        )}
+
+                        {/* Directory Entries Table */}
+                        <div className="overflow-x-auto border border-[#d4c4a8] rounded-lg">
+                            <table className="w-full text-sm text-left">
+                                <thead className="bg-[#3d230d] text-white font-medium uppercase text-xs">
+                                    <tr>
+                                        <th className="px-4 py-3">Organization</th>
+                                        <th className="px-4 py-3">Contact</th>
+                                        <th className="px-4 py-3">Services</th>
+                                        <th className="px-4 py-3">Location</th>
+                                        <th className="px-4 py-3 text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-[#d4c4a8] bg-white">
+                                    {initialDirectory.map((entry: any) => (
+                                        <tr key={entry.id} className="hover:bg-[#faf5eb] transition-colors">
+                                            <td className="px-4 py-3 font-semibold text-[#3d230d]">{entry.name}</td>
+                                            <td className="px-4 py-3 text-[#7a5c3a]">
+                                                <div>{entry.email}</div>
+                                                <div className="text-xs">{entry.phone}</div>
+                                            </td>
+                                            <td className="px-4 py-3">
+                                                <div className="flex flex-wrap gap-1">
+                                                    {(entry.services || []).map((s: string, i: number) => (
+                                                        <span key={i} className="bg-[#5c3a1e] text-white text-xs px-2 py-0.5 rounded-full">{s}</span>
+                                                    ))}
+                                                </div>
+                                            </td>
+                                            <td className="px-4 py-3 text-[#7a5c3a]">{entry.location}</td>
+                                            <td className="px-4 py-3 text-right">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setDirToDelete(entry.id)}
+                                                    className="text-red-600 hover:text-red-800 font-bold text-xs"
+                                                >
+                                                    Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {initialDirectory.length === 0 && !showDirForm && (
+                                        <tr>
+                                            <td colSpan={5} className="px-4 py-8 text-center text-[#7a5c3a]">
+                                                <MapPin className="h-8 w-8 text-[#d4c4a8] mx-auto mb-2" />
+                                                <p className="text-[#3d230d] font-bold">No directory entries yet.</p>
+                                                <p className="text-sm mt-1">Click "Add Entry" to add a school or teacher to the directory.</p>
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                )}
             </div>
 
             {/* Custom Confirmation Modal */}
@@ -560,6 +702,34 @@ export default function AdminClient({ initialProfiles, initialRegistrations, ini
                                 onClick={() => {
                                     handleDeleteBlog(blogToDelete);
                                     setBlogToDelete(null);
+                                }}
+                                className="px-4 py-2 bg-red-600 text-white rounded-md font-bold hover:bg-red-700 transition-colors shadow-sm"
+                            >
+                                Yes, Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {dirToDelete !== null && (
+                <div className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4">
+                    <div className="bg-[#faf5eb] rounded-xl shadow-xl max-w-sm w-full p-6 border border-[#d4c4a8]">
+                        <h3 className="text-xl font-bold text-[#3d230d] mb-2 font-serif">Delete Entry?</h3>
+                        <p className="text-[#7a5c3a] text-sm mb-6">Are you sure you want to remove this directory entry? This action cannot be undone.</p>
+                        <div className="flex justify-end gap-3">
+                            <button 
+                                type="button"
+                                onClick={() => setDirToDelete(null)}
+                                className="px-4 py-2 border border-[#d4c4a8] rounded-md text-[#5c3a1e] font-bold hover:bg-white transition-colors shadow-sm bg-[#faf5eb]"
+                            >
+                                Cancel
+                            </button>
+                            <button 
+                                type="button"
+                                onClick={() => {
+                                    handleDeleteDirectory(dirToDelete);
+                                    setDirToDelete(null);
                                 }}
                                 className="px-4 py-2 bg-red-600 text-white rounded-md font-bold hover:bg-red-700 transition-colors shadow-sm"
                             >

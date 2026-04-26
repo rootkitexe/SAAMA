@@ -19,7 +19,7 @@ export default function SupportPage() {
                         </div>
                         <div>
                             <h2 className="text-2xl font-bold text-[#3d230d]">Ways to Donate</h2>
-                            <p className="text-[#7a5c3a] mt-1 text-sm md:text-base">Support SaaMa's mission by making a tax-deductible donation. We are a registered 501(c)(3) non-profit organization.</p>
+                            <p className="text-[#7a5c3a] mt-1 text-sm md:text-base">Support the Sadhana Academy for Musical Arts mission by making a tax-deductible donation. We are a registered 501(c)(3) non-profit organization.</p>
                         </div>
                     </div>
                     

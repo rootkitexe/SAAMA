@@ -44,6 +44,12 @@ export default async function AdminPage() {
         .select('*')
         .order('id', { ascending: false });
 
+    // Fetch directory entries
+    const { data: directoryEntries, error: directoryError } = await adminSupabase
+        .from('teacher_directory')
+        .select('*')
+        .order('id', { ascending: true });
+
     // Note: Due to Row Level Security, these might return empty arrays unless we add Admin RLS policies.
     // We will instruct the user to add those policies.
 
@@ -51,12 +57,13 @@ export default async function AdminPage() {
     if (regError) console.error("Registrations Error:", regError);
     if (eventsError) console.error("Events Error:", eventsError);
     if (blogError) console.error("Blog Error:", blogError);
+    if (directoryError) console.error("Directory Error:", directoryError);
 
     return (
         <div className="min-h-screen bg-[#faf5eb] py-8">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="mb-8">
-                    <h1 className="text-3xl font-serif font-bold text-[#5c3a1e]">SaaMa Admin Area</h1>
+                    <h1 className="text-3xl font-serif font-bold text-[#5c3a1e]">Admin Area</h1>
                     <p className="text-[#3d230d] font-bold mt-1 text-sm bg-white inline-block px-3 py-1 rounded shadow-sm border border-[#d4c4a8]">
                         Logged in as Administrator: {user.email}
                     </p>
@@ -74,6 +81,7 @@ export default async function AdminPage() {
                     initialRegistrations={registrations || []}
                     initialEvents={events || []} 
                     initialBlogPosts={blogPosts || []}
+                    initialDirectory={directoryEntries || []}
                 />
             </div>
         </div>

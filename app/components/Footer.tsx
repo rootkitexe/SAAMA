@@ -14,7 +14,7 @@ export default function Footer() {
                         <img 
                             src="/logo_footer-Photoroom.png" 
                             alt="SaaMa Logo" 
-                            className="h-32 w-auto object-contain mb-4"
+                            className="h-48 w-auto object-contain mb-4 -ml-4"
                         />
                         <p className="text-sm font-medium leading-relaxed text-[#7a5c3a]">
                             Celebrating and promoting Indian classical music and fine arts across the Pacific Northwest and beyond through community, education, and performance.
@@ -57,7 +57,7 @@ export default function Footer() {
                         <h4 className="font-serif font-bold text-[#3d230d] text-lg mb-6">Follow Us</h4>
                         <div className="flex items-center gap-4">
                             <a 
-                                href="https://www.facebook.com/samaaseattle" 
+                                href="https://www.facebook.com/sadhanaseattle" 
                                 target="_blank" 
                                 rel="noopener noreferrer"
                                 className="w-10 h-10 rounded-full bg-[#faf5eb] border border-[#d4c4a8] flex items-center justify-center text-[#7a5c3a] hover:bg-[#d4c4a8] hover:text-[#3d230d] transition-all"
@@ -65,7 +65,7 @@ export default function Footer() {
                                 <Facebook className="w-5 h-5" />
                             </a>
                             <a 
-                                href="https://www.instagram.com/saama.seattle/" 
+                                href="https://www.instagram.com/sadhanaseattle/" 
                                 target="_blank" 
                                 rel="noopener noreferrer"
                                 className="w-10 h-10 rounded-full bg-[#faf5eb] border border-[#d4c4a8] flex items-center justify-center text-[#7a5c3a] hover:bg-[#d4c4a8] hover:text-[#3d230d] transition-all"

@@ -13,7 +13,7 @@ export default function PrivacyPolicyPage() {
                     
                     <section>
                         <h2 className="text-2xl font-serif font-bold text-[#3d230d] mb-4">1. Information We Collect</h2>
-                        <p>At Sadhana Academy for Musical Arts (SaaMa), we are committed to protecting your privacy. We may collect personal information such as your name, email address, phone number, and mailing address when you voluntarily provide it to us through event registrations, donations, contact forms, or newsletter signups.</p>
+                        <p>At Sadhana Academy for Musical Arts, we are committed to protecting your privacy. We may collect personal information such as your name, email address, phone number, and mailing address when you voluntarily provide it to us through event registrations, donations, contact forms, or newsletter signups.</p>
                     </section>
 
                     <section>

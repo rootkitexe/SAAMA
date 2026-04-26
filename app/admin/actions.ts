@@ -171,3 +171,65 @@ export async function deleteBlogPost(id: number) {
     }
 }
 
+export async function addDirectoryEntry(formData: FormData) {
+    try {
+        const name = formData.get('name') as string;
+        const email = formData.get('email') as string;
+        const phone = formData.get('phone') as string;
+        const services = formData.get('services') as string;
+        const location = formData.get('location') as string;
+        const website = formData.get('website') as string;
+        const facebook = formData.get('facebook') as string;
+        const instagram = formData.get('instagram') as string;
+
+        if (!name || !email || !phone || !services || !location) {
+            return { error: 'Organization, email, phone, services, and location are required.' };
+        }
+
+        const { error } = await adminSupabase
+            .from('teacher_directory')
+            .insert([{
+                name,
+                email,
+                phone,
+                services: services.split(',').map(s => s.trim()).filter(Boolean),
+                location,
+                website: website || null,
+                facebook: facebook || null,
+                instagram: instagram || null,
+            }]);
+
+        if (error) {
+            console.error('Directory Insert Error:', error);
+            return { error: 'Failed to add entry. Make sure the teacher_directory table exists in Supabase.' };
+        }
+
+        revalidatePath('/teachers');
+        revalidatePath('/admin');
+        return { success: true };
+    } catch (e: any) {
+        console.error('Add Directory Exception:', e);
+        return { error: e.message || 'An unexpected error occurred.' };
+    }
+}
+
+export async function deleteDirectoryEntry(id: number) {
+    try {
+        const { error } = await adminSupabase
+            .from('teacher_directory')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error('Directory Delete Error:', error);
+            return { error: 'Failed to delete directory entry.' };
+        }
+
+        revalidatePath('/teachers');
+        revalidatePath('/admin');
+        return { success: true };
+    } catch (e: any) {
+        console.error('Delete Directory Exception:', e);
+        return { error: e.message || 'An unexpected error occurred.' };
+    }
+}

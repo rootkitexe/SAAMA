@@ -14,7 +14,7 @@ export default function FestivalPage() {
                 <div className="mb-12">
                     <div className="bg-white rounded-2xl p-8 border border-[#d4c4a8] shadow-sm mb-12">
                         <p className="text-[#5c3a1e] font-serif text-lg leading-relaxed mb-6">
-                            SaaMa, in partnership with <strong>Tapasya School of Music</strong> (led by Vid. Sriranjani Santhanagopalan), presents the Aaroha Carnatic Music Festival. Join us for a deeply immersive two-day celebration of Carnatic music honoring its rich heritage, timeless compositions, and intricate rhythms through inspiring performances and soulful renditions.
+                            Sadhana Academy for Musical Arts, in partnership with <strong>Tapasya School of Music</strong> (led by Vid. Sriranjani Santhanagopalan), presents the Aaroha Carnatic Music Festival. Join us for a deeply immersive two-day celebration of Carnatic music honoring its rich heritage, timeless compositions, and intricate rhythms through inspiring performances and soulful renditions.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-6 text-[#3d230d] font-bold border-t border-[#d4c4a8]/50 pt-6">
                             <div className="flex items-center gap-3">

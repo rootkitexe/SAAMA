@@ -28,12 +28,12 @@ const scheduleDay2 = [
     { time: "1.50 - 2.50 PM", name: "Thematic Concert", theme: "", artists: ["Indiana Brothers of IN (Vocal)", "Tarun Ravi of OR (Mridangam)"] },
     { time: "2.55 - 3.25 PM", name: "Thematic Concert", theme: "Padams and Javalis", artists: ["Smera Subramanian of WA (Vocal)", "Pramati Bharat of WA (Violin)", "Myan Sudarshan of WA (Mridangam)"] },
     { time: "3.35 - 5.05 PM", name: "Thematic Concert", theme: "Tamil Compositions", artists: ["Bhargavi Chandrasekar of TX (Vocal)", "Pramati Bharat of WA (Violin)", "Myan Sudarshan of WA (Mridangam)", "Srikrishna Prasannan of OR (Ghatam)"] },
-    { time: "5.15 - 5.45 PM", name: "Awards Ceremony", theme: "SaaMa Music competition prize distribution", artists: [] },
+    { time: "5.15 - 5.45 PM", name: "Awards Ceremony", theme: "Sadhana Academy for Musical Arts competition prize distribution", artists: [] },
     { time: "6 - 8 PM", name: "Grand Concert", theme: "Grand Finale Concert", artists: ["Vid. Sriranjani Tapasya Santhagopalan", "Vid. Kamala Kiran Vinjamuri (Violin)", "Vid. Sumesh Narayanan (Mridangam)", "Vid. Ravi Balasubramanian (Ghatam)"] },
 ];
 
 export default function Festival2026Page() {
-    const [activeTab, setActiveTab] = useState<'schedule' | 'tickets' | 'venue'>('schedule');
+    const [activeTab, setActiveTab] = useState<'highlights' | 'schedule' | 'tickets' | 'venue'>('highlights');
 
     return (
         <div className="min-h-screen bg-[#faf5eb] py-12 px-4 sm:px-6 lg:px-8">
@@ -47,6 +47,12 @@ export default function Festival2026Page() {
                     {/* Horizontal Navigation */}
                     <div className="flex justify-center w-full">
                         <nav className="inline-flex flex-wrap justify-center bg-white rounded-full shadow-sm border border-[#d4c4a8] p-1 gap-1">
+                            <button 
+                                onClick={() => setActiveTab('highlights')}
+                                className={`flex items-center gap-2 px-6 py-3 font-bold transition-all rounded-full whitespace-nowrap ${activeTab === 'highlights' ? 'bg-[#3d230d] text-white shadow-md' : 'text-[#5c3a1e] hover:bg-[#faf5eb]'}`}
+                            >
+                                <span className="text-lg">✨</span> Highlights
+                            </button>
                             <button 
                                 onClick={() => setActiveTab('schedule')}
                                 className={`flex items-center gap-2 px-6 py-3 font-bold transition-all rounded-full whitespace-nowrap ${activeTab === 'schedule' ? 'bg-[#3d230d] text-white shadow-md' : 'text-[#5c3a1e] hover:bg-[#faf5eb]'}`}
@@ -73,64 +79,70 @@ export default function Festival2026Page() {
                     {/* Main Content Area */}
                     <div className="w-full bg-white rounded-2xl shadow-sm border border-[#d4c4a8] p-6 sm:p-10 min-h-[500px]">
                         
+                        {activeTab === 'highlights' && (
+                            <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+                                <h2 className="text-3xl font-serif font-bold text-[#3d230d] mb-8 border-b border-[#d4c4a8] pb-4">Festival Highlights</h2>
+                                <ul className="space-y-5 text-[#7a5c3a] font-medium leading-relaxed bg-[#faf5eb] p-8 rounded-2xl border border-[#d4c4a8] mb-12">
+                                    <li className="flex items-start gap-4">
+                                        <div className="mt-2 w-2 h-2 rounded-full bg-[#5c3a1e] shrink-0"></div>
+                                        <span>Curated thematic concerts by local talent and emerging young artists from across the United States</span>
+                                    </li>
+                                    <li className="flex items-start gap-4">
+                                        <div className="mt-2 w-2 h-2 rounded-full bg-[#5c3a1e] shrink-0"></div>
+                                        <span>“Nadarnava” Ensemble, curated by Vid. Arun Prakash, conducted by Shri. Subramanian Janardanan, presented by Pacific Northwest talent</span>
+                                    </li>
+                                    <li className="flex items-start gap-4">
+                                        <div className="mt-2 w-2 h-2 rounded-full bg-[#5c3a1e] shrink-0"></div>
+                                        <span>Carnatic music trivia conducted by Vid. Sriranjani Tapasya Santhanagopalan</span>
+                                    </li>
+                                    <li className="flex items-start gap-4">
+                                        <div className="mt-2 w-2 h-2 rounded-full bg-[#5c3a1e] shrink-0"></div>
+                                        <span>Screening of the award-winning documentary "Colonial Interlude" on the Indo-colonial music of Muthuswami Dikshitar, directed by musicologist Dr. Kanniks Kannikeswaran</span>
+                                    </li>
+                                    <li className="flex items-start gap-4">
+                                        <div className="mt-2 w-2 h-2 rounded-full bg-[#5c3a1e] shrink-0"></div>
+                                        <span>Live Zoom Q&A with musicologist Dr. Kanniks Kannikeswaran</span>
+                                    </li>
+                                    <li className="flex items-start gap-4">
+                                        <div className="mt-2 w-2 h-2 rounded-full bg-[#5c3a1e] shrink-0"></div>
+                                        <span>“Timeless Gems of the Trinity” workshop, curated by Vid. Sriranjani Tapasya Santhanagopalan, presented by participants</span>
+                                    </li>
+                                    <li className="flex items-start gap-4">
+                                        <div className="mt-2 w-2 h-2 rounded-full bg-[#5c3a1e] shrink-0"></div>
+                                        <span>Sadhana Academy for Musical Arts Carnatic Music Competition Awards Ceremony</span>
+                                    </li>
+                                    <li className="flex items-start gap-4">
+                                        <div className="mt-2 w-2 h-2 rounded-full bg-[#5c3a1e] shrink-0"></div>
+                                        <span>Grand finale concert by Vid. Sriranjani Tapasya Santhanagopalan, accompanied by Vid. Kamala Kiran on the Violin, Vid. Sumesh Narayanan on the Mridangam.</span>
+                                    </li>
+                                </ul>
+
+                                {/* Festival Stats */}
+                                <div className="flex flex-wrap gap-4 mb-4 justify-center">
+                                    {[
+                                        "20+ Hours of Music", 
+                                        "80+ Participants", 
+                                        "70+ Ragas", 
+                                        "60+ Compositions", 
+                                        "15+ Themes"
+                                    ].map((stat, idx) => (
+                                        <div key={idx} className="bg-[#3d230d] text-[#faf5eb] px-5 py-2.5 rounded-full font-serif font-bold text-sm shadow-sm border border-[#5c3a1e] hover:bg-[#5c3a1e] transition-colors cursor-default whitespace-nowrap">
+                                            {stat}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
                         {activeTab === 'schedule' && (
                             <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
                                 <h2 className="text-3xl font-serif font-bold text-[#3d230d] mb-6 border-b border-[#d4c4a8] pb-4">Festival Schedule</h2>
-                                
-                                <div className="space-y-12">
-                                    {/* Day 1 */}
-                                    <div>
-                                        <h3 className="text-xl font-bold text-[#5c3a1e] mb-6 bg-[#faf5eb] inline-block px-4 py-2 rounded-md">Day 1: Saturday, June 20, 2026</h3>
-                                        <div className="overflow-x-auto rounded-xl border border-[#d4c4a8] shadow-sm">
-                                            <table className="w-full text-left border-collapse bg-white">
-                                                <thead>
-                                                    <tr className="bg-[#f0e8d5] border-b border-[#d4c4a8] text-[#5c3a1e]">
-                                                        <th className="p-4 font-semibold text-sm whitespace-nowrap border-r border-[#d4c4a8]">Time</th>
-                                                        <th className="p-4 font-semibold text-sm border-r border-[#d4c4a8] min-w-[150px]">Event Name</th>
-                                                        <th className="p-4 font-semibold text-sm border-r border-[#d4c4a8] min-w-[200px]">Theme</th>
-                                                        <th className="p-4 font-semibold text-sm">Artists</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody className="divide-y divide-[#d4c4a8]">
-                                                    {scheduleDay1.map((item, idx) => (
-                                                        <tr key={idx} className="hover:bg-[#faf5eb] transition-colors">
-                                                            <td className="p-4 text-sm text-[#7a5c3a] font-medium align-top whitespace-nowrap border-r border-[#d4c4a8]">{item.time}</td>
-                                                            <td className="p-4 text-sm text-[#3d230d] font-bold align-top border-r border-[#d4c4a8]">{item.name}</td>
-                                                            <td className="p-4 text-sm text-[#5c3a1e] italic align-top border-r border-[#d4c4a8]">{item.theme}</td>
-                                                            <td className="p-4 text-sm text-[#7a5c3a] align-top">{item.artists.join(', ')}</td>
-                                                        </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    
-                                    {/* Day 2 */}
-                                    <div>
-                                        <h3 className="text-xl font-bold text-[#5c3a1e] mb-6 bg-[#faf5eb] inline-block px-4 py-2 rounded-md">Day 2: Sunday, June 21, 2026</h3>
-                                        <div className="overflow-x-auto rounded-xl border border-[#d4c4a8] shadow-sm">
-                                            <table className="w-full text-left border-collapse bg-white">
-                                                <thead>
-                                                    <tr className="bg-[#f0e8d5] border-b border-[#d4c4a8] text-[#5c3a1e]">
-                                                        <th className="p-4 font-semibold text-sm whitespace-nowrap border-r border-[#d4c4a8]">Time</th>
-                                                        <th className="p-4 font-semibold text-sm border-r border-[#d4c4a8] min-w-[150px]">Event Name</th>
-                                                        <th className="p-4 font-semibold text-sm border-r border-[#d4c4a8] min-w-[200px]">Theme</th>
-                                                        <th className="p-4 font-semibold text-sm">Artists</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody className="divide-y divide-[#d4c4a8]">
-                                                    {scheduleDay2.map((item, idx) => (
-                                                        <tr key={idx} className="hover:bg-[#faf5eb] transition-colors">
-                                                            <td className="p-4 text-sm text-[#7a5c3a] font-medium align-top whitespace-nowrap border-r border-[#d4c4a8]">{item.time}</td>
-                                                            <td className="p-4 text-sm text-[#3d230d] font-bold align-top border-r border-[#d4c4a8]">{item.name}</td>
-                                                            <td className="p-4 text-sm text-[#5c3a1e] italic align-top border-r border-[#d4c4a8]">{item.theme}</td>
-                                                            <td className="p-4 text-sm text-[#7a5c3a] align-top">{item.artists.join(', ')}</td>
-                                                        </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
+                                <div className="py-12 text-center bg-[#faf5eb] rounded-xl border border-[#d4c4a8] border-dashed">
+                                    <Calendar className="w-12 h-12 text-[#d4c4a8] mx-auto mb-4" />
+                                    <h3 className="text-xl font-bold text-[#5c3a1e] mb-2">Schedule Coming Soon</h3>
+                                    <p className="text-[#7a5c3a] max-w-md mx-auto">
+                                        The full, detailed schedule will be posted soon. Stay tuned!
+                                    </p>
                                 </div>
                             </div>
                         )}
@@ -249,10 +261,6 @@ export default function Festival2026Page() {
                                         <div className="bg-[#faf5eb] p-6 rounded-xl border border-[#d4c4a8] text-[#7a5c3a] text-sm leading-relaxed space-y-2">
                                             <ul className="list-disc pl-5 space-y-2">
                                                 <li>No parking fees required on <strong>Sundays</strong>.</li>
-                                                <li><strong>Event Parking Codes:</strong> Present provided codes to the gatehouse attendant to waive the fee.</li>
-                                                <li><strong>Load & Unload:</strong> Stop at West Gatehouse (15th Ave NE & Stevens Way) for a permit. Drive under Odegaard library for loading dock. (Height limit: 11'9").</li>
-                                                <li>Prorated refunds available for Visa, MasterCard, or cash payments. Special event rates may apply.</li>
-                                                <li>For detailed info or questions: <a href="mailto:ucommute@uw.edu" className="text-[#5c3a1e] underline">ucommute@uw.edu</a> or call 206-221-3701 (Mon-Fri, 8 AM - 4 PM).</li>
                                             </ul>
                                         </div>
                                     </div>

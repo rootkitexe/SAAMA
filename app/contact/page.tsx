@@ -85,7 +85,7 @@ export default function ContactPage() {
                             <h4 className="font-bold text-[#3d230d] mb-4 text-sm uppercase tracking-wide">Follow Our Journey</h4>
                             <div className="flex items-center gap-4">
                                 <a 
-                                    href="https://www.facebook.com/samaaseattle" 
+                                    href="https://www.facebook.com/sadhanaseattle" 
                                     target="_blank" 
                                     rel="noopener noreferrer"
                                     className="w-12 h-12 rounded-full bg-white border border-[#d4c4a8] flex items-center justify-center text-[#5c3a1e] hover:bg-[#3d230d] hover:text-white transition-all shadow-sm"
@@ -93,7 +93,7 @@ export default function ContactPage() {
                                     <Facebook className="w-5 h-5" />
                                 </a>
                                 <a 
-                                    href="https://www.instagram.com/saama.seattle/" 
+                                    href="https://www.instagram.com/sadhanaseattle/" 
                                     target="_blank" 
                                     rel="noopener noreferrer"
                                     className="w-12 h-12 rounded-full bg-white border border-[#d4c4a8] flex items-center justify-center text-[#5c3a1e] hover:bg-[#3d230d] hover:text-white transition-all shadow-sm"
@@ -136,7 +136,7 @@ export default function ContactPage() {
                                     </div>
                                     <h3 className="text-2xl font-serif font-bold text-[#3d230d]">Message Sent!</h3>
                                     <p className="text-[#7a5c3a] max-w-sm">
-                                        Thank you for reaching out to SaaMa. We've received your message and our team will get back to you shortly.
+                                        Thank you for reaching out to Sadhana Academy for Musical Arts. We've received your message and our team will get back to you shortly.
                                     </p>
                                     <button 
                                         onClick={() => setIsSent(false)}

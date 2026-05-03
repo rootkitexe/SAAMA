@@ -74,8 +74,8 @@ export default function TeachersDirectoryPage() {
                     <p className="text-center text-sm text-[#7a5c3a] mt-3">{directoryData.length} schools found</p>
                 </div>
 
-                {/* Directory Table */}
-                <div className="bg-white rounded-2xl shadow-sm border border-[#d4c4a8] overflow-hidden mb-20">
+                {/* Directory Table — Desktop */}
+                <div className="hidden md:block bg-white rounded-2xl shadow-sm border border-[#d4c4a8] overflow-hidden mb-20">
                     <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse">
                             <thead>
@@ -90,12 +90,7 @@ export default function TeachersDirectoryPage() {
                             <tbody className="divide-y divide-[#d4c4a8]/50">
                                 {directoryData.map((school) => (
                                     <tr key={school.id} className="hover:bg-[#faf5eb]/30 transition-colors">
-                                        {/* Organization */}
-                                        <td className="px-6 py-5 font-semibold text-[#3d230d]">
-                                            {school.name}
-                                        </td>
-
-                                        {/* Contact */}
+                                        <td className="px-6 py-5 font-semibold text-[#3d230d]">{school.name}</td>
                                         <td className="px-6 py-5 text-sm text-[#5c3a1e] space-y-2">
                                             <div className="flex items-center gap-2">
                                                 <Mail className="w-4 h-4 text-[#a07d3c]" />
@@ -106,40 +101,24 @@ export default function TeachersDirectoryPage() {
                                                 <a href={`tel:${school.phone.replace(/[^0-9]/g, '')}`} className="hover:underline">{school.phone}</a>
                                             </div>
                                         </td>
-
-                                        {/* Services */}
                                         <td className="px-6 py-5">
                                             <div className="flex flex-wrap gap-2">
                                                 {school.services.map((service, idx) => (
-                                                    <span key={idx} className="bg-[#5c3a1e] text-[#faf5eb] text-xs font-medium px-3 py-1 rounded-full whitespace-nowrap">
-                                                        {service}
-                                                    </span>
+                                                    <span key={idx} className="bg-[#5c3a1e] text-[#faf5eb] text-xs font-medium px-3 py-1 rounded-full whitespace-nowrap">{service}</span>
                                                 ))}
                                             </div>
                                         </td>
-
-                                        {/* Location */}
-                                        <td className="px-6 py-5 text-sm text-[#5c3a1e]">
-                                            {school.location}
-                                        </td>
-
-                                        {/* Links */}
+                                        <td className="px-6 py-5 text-sm text-[#5c3a1e]">{school.location}</td>
                                         <td className="px-6 py-5 text-[#a07d3c]">
                                             <div className="flex items-center justify-center gap-3">
                                                 {school.links.website && (
-                                                    <a href={school.links.website} target="_blank" rel="noreferrer" className="hover:text-[#3d230d] transition-colors">
-                                                        <Globe className="w-5 h-5" />
-                                                    </a>
+                                                    <a href={school.links.website} target="_blank" rel="noreferrer" className="hover:text-[#3d230d] transition-colors"><Globe className="w-5 h-5" /></a>
                                                 )}
                                                 {school.links.facebook && (
-                                                    <a href={school.links.facebook} target="_blank" rel="noreferrer" className="hover:text-[#3d230d] transition-colors">
-                                                        <Facebook className="w-5 h-5" />
-                                                    </a>
+                                                    <a href={school.links.facebook} target="_blank" rel="noreferrer" className="hover:text-[#3d230d] transition-colors"><Facebook className="w-5 h-5" /></a>
                                                 )}
                                                 {school.links.instagram && (
-                                                    <a href={school.links.instagram} target="_blank" rel="noreferrer" className="hover:text-[#3d230d] transition-colors">
-                                                        <Instagram className="w-5 h-5" />
-                                                    </a>
+                                                    <a href={school.links.instagram} target="_blank" rel="noreferrer" className="hover:text-[#3d230d] transition-colors"><Instagram className="w-5 h-5" /></a>
                                                 )}
                                             </div>
                                         </td>
@@ -148,6 +127,42 @@ export default function TeachersDirectoryPage() {
                             </tbody>
                         </table>
                     </div>
+                </div>
+
+                {/* Directory Cards — Mobile */}
+                <div className="md:hidden space-y-4 mb-16">
+                    {directoryData.map((school) => (
+                        <div key={school.id} className="bg-white rounded-xl shadow-sm border border-[#d4c4a8] p-5 space-y-3">
+                            <h3 className="font-bold text-[#3d230d] text-lg">{school.name}</h3>
+                            <div className="text-sm text-[#5c3a1e] space-y-1.5">
+                                <div className="flex items-center gap-2">
+                                    <Mail className="w-4 h-4 text-[#a07d3c] shrink-0" />
+                                    <a href={`mailto:${school.email}`} className="hover:underline break-all">{school.email}</a>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Phone className="w-4 h-4 text-[#a07d3c] shrink-0" />
+                                    <a href={`tel:${school.phone.replace(/[^0-9]/g, '')}`} className="hover:underline">{school.phone}</a>
+                                </div>
+                            </div>
+                            <div className="flex flex-wrap gap-1.5">
+                                {school.services.map((service, idx) => (
+                                    <span key={idx} className="bg-[#5c3a1e] text-[#faf5eb] text-xs font-medium px-2.5 py-1 rounded-full">{service}</span>
+                                ))}
+                            </div>
+                            <p className="text-sm text-[#7a5c3a]">📍 {school.location}</p>
+                            <div className="flex items-center gap-3 text-[#a07d3c]">
+                                {school.links.website && (
+                                    <a href={school.links.website} target="_blank" rel="noreferrer" className="hover:text-[#3d230d] transition-colors"><Globe className="w-5 h-5" /></a>
+                                )}
+                                {school.links.facebook && (
+                                    <a href={school.links.facebook} target="_blank" rel="noreferrer" className="hover:text-[#3d230d] transition-colors"><Facebook className="w-5 h-5" /></a>
+                                )}
+                                {school.links.instagram && (
+                                    <a href={school.links.instagram} target="_blank" rel="noreferrer" className="hover:text-[#3d230d] transition-colors"><Instagram className="w-5 h-5" /></a>
+                                )}
+                            </div>
+                        </div>
+                    ))}
                 </div>
 
                 {/* Call to Action Footer */}

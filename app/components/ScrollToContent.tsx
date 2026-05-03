@@ -10,12 +10,15 @@ export default function ScrollToContent() {
         // Only scroll on non-homepage routes
         if (pathname === '/') return;
 
+        // Skip on mobile — banner is compact, no need to scroll past it
+        if (window.innerWidth < 768) return;
+
         // Check if the URL has #content hash
         if (window.location.hash === '#content') {
             // Start at top
             window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
 
-            // After a brief delay, smooth scroll to content
+            // After 2 seconds, smooth scroll to content
             const timer = setTimeout(() => {
                 const el = document.getElementById('content');
                 if (el) {

@@ -30,21 +30,21 @@ export default async function Home() {
   });
 
   return (
-    <div className="bg-[#faf5eb] py-20 px-4 sm:px-6 lg:px-8 w-full border-b border-[#d4c4a8]/50">
+    <div className="bg-[#faf5eb] py-12 md:py-20 px-4 sm:px-6 lg:px-8 w-full border-b border-[#d4c4a8]/50">
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-center gap-0 mb-14">
-          {/* Left ornament */}
-          <div className="flex-1 flex items-center justify-end">
+        <div className="flex items-center justify-center gap-0 mb-8 md:mb-14">
+          {/* Left ornament — hidden on mobile */}
+          <div className="hidden md:flex flex-1 items-center justify-end">
             <img src="/ornament-flourish.png?v=2" alt="" className="h-44 w-auto object-contain" style={{ transform: 'scaleX(-1)' }} />
           </div>
 
           {/* Title */}
-          <h2 className="text-4xl font-serif font-bold text-[#5c3a1e] whitespace-nowrap px-2">
+          <h2 className="text-2xl md:text-4xl font-serif font-bold text-[#5c3a1e] whitespace-nowrap px-2">
             Upcoming Events
           </h2>
 
-          {/* Right ornament */}
-          <div className="flex-1 flex items-center justify-start">
+          {/* Right ornament — hidden on mobile */}
+          <div className="hidden md:flex flex-1 items-center justify-start">
             <img src="/ornament-flourish.png?v=2" alt="" className="h-44 w-auto object-contain" />
           </div>
         </div>

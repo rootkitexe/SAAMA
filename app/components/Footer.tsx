@@ -10,7 +10,7 @@ export default function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 text-[#5c3a1e]">
                     
                     {/* Column 1: Logo & Description */}
-                    <div className="flex flex-col items-start">
+                    <div className="flex flex-col items-center md:items-start">
                         <img 
                             src="/logo_footer-Photoroom.png" 
                             alt="SaaMa Logo" 

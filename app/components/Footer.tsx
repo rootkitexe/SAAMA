@@ -14,7 +14,7 @@ export default function Footer() {
                         <img 
                             src="/logo_footer-Photoroom.png" 
                             alt="SaaMa Logo" 
-                            className="h-48 w-auto object-contain mb-4 -ml-4"
+                            className="h-36 w-auto object-contain mb-4"
                         />
                         <p className="text-sm font-medium leading-relaxed text-[#7a5c3a]">
                             Celebrating and promoting Indian classical music and fine arts across the Pacific Northwest and beyond through community, education, and performance.

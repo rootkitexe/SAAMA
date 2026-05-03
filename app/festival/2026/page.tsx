@@ -41,7 +41,7 @@ export default function Festival2026Page() {
                 <div className="mb-10 text-center">
                     <h1 className="text-4xl md:text-5xl font-serif font-bold text-[#3d230d] mb-4">Aaroha Carnatic Music Festival 2026</h1>
                     <p className="text-lg text-[#7a5c3a] font-medium max-w-2xl mx-auto mb-8">
-                        Join us for an immersive two-day celebration of Carnatic music featuring world-renowned artists, interactive workshops, and inspiring performances.
+                        Sadhana Academy for Musical Arts, in partnership with Tapasya School of Music (led by Vid. Sriranjani Tapasya Santhanagopalan), presents the Aaroha Carnatic Music Festival. Join us for a deeply immersive two-day celebration of Carnatic music honoring its rich heritage, timeless compositions, and intricate rhythms through inspiring performances and soulful renditions.
                     </p>
                     
                     {/* Horizontal Navigation */}

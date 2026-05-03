@@ -94,31 +94,31 @@ export default function Navbar() {
         </div>
 
         <div>
-          <Link href="/about" className="block px-4 py-[14px] hover:underline whitespace-nowrap">About us</Link>
+          <Link href="/about#content" className="block px-4 py-[14px] hover:underline whitespace-nowrap">About us</Link>
         </div>
 
         <div className="group relative">
           <span className="block px-4 py-[14px] hover:underline cursor-pointer text-[14px] whitespace-nowrap">Aaroha Carnatic Music Festival</span>
           <div className="absolute top-[100%] left-1/2 -translate-x-1/2 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200 z-[60]">
             <div className="w-48 bg-[#2a1809] border border-[#faf5eb]/20 shadow-2xl rounded-b-md overflow-hidden flex flex-col pt-1">
-              <Link href="/festival/2026" className="block px-4 py-2 hover:bg-[#3d230d] transition-colors">2026 Festival</Link>
+              <Link href="/festival/2026#content" className="block px-4 py-2 hover:bg-[#3d230d] transition-colors">2026 Festival</Link>
             </div>
           </div>
         </div>
 
-        <div><Link href="/competitions" className="block px-4 py-[14px] hover:underline whitespace-nowrap">Competitions</Link></div>
-        <div><Link href="/gallery" className="block px-4 py-[14px] hover:underline whitespace-nowrap">Gallery</Link></div>
+        <div><Link href="/competitions#content" className="block px-4 py-[14px] hover:underline whitespace-nowrap">Competitions</Link></div>
+        <div><Link href="/gallery#content" className="block px-4 py-[14px] hover:underline whitespace-nowrap">Gallery</Link></div>
         <div className="group relative">
           <span className="block px-4 py-[14px] hover:underline cursor-pointer whitespace-nowrap">Community</span>
           <div className="absolute top-[100%] left-1/2 -translate-x-1/2 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200 z-[60]">
             <div className="w-56 bg-[#2a1809] border border-[#faf5eb]/20 shadow-2xl rounded-b-md overflow-hidden flex flex-col pt-1">
-              <Link href="/blog" className="block px-4 py-2 hover:bg-[#3d230d] transition-colors font-normal text-[12.5px]">Blogs</Link>
-              <Link href="/teachers" className="block px-4 py-2 hover:bg-[#3d230d] transition-colors font-normal text-[12.5px]">Teacher Directory</Link>
+              <Link href="/blog#content" className="block px-4 py-2 hover:bg-[#3d230d] transition-colors font-normal text-[12.5px]">Blogs</Link>
+              <Link href="/teachers#content" className="block px-4 py-2 hover:bg-[#3d230d] transition-colors font-normal text-[12.5px]">Teacher Directory</Link>
             </div>
           </div>
         </div>
-        <div><Link href="/support" className="block px-4 py-[14px] hover:underline whitespace-nowrap">Support us</Link></div>
-        <div><Link href="/contact" className="block px-4 py-[14px] hover:underline whitespace-nowrap">Contact us</Link></div>
+        <div><Link href="/support#content" className="block px-4 py-[14px] hover:underline whitespace-nowrap">Support us</Link></div>
+        <div><Link href="/contact#content" className="block px-4 py-[14px] hover:underline whitespace-nowrap">Contact us</Link></div>
 
         {userEmail && ['saama.seattle@gmail.com', 'testuser@example.com'].includes(userEmail) && (
           <>
@@ -141,8 +141,8 @@ export default function Navbar() {
       {/* Banner Section */}
       <div className="flex bg-[#faf5eb] h-[450px] items-stretch">
         {/* Left: Info */}
-        <div className="w-[35%] px-8 pt-2 flex flex-col justify-start bg-[#3d230d] text-[#faf5eb]">
-          <div className="mb-2 w-full flex justify-center h-[210px]">
+        <div className="w-[35%] px-8 pt-2 flex flex-col justify-start bg-[#3d230d] text-[#faf5eb] overflow-hidden">
+          <div className="mb-2 w-full flex justify-center h-[190px] shrink-0">
             <Link href="/" className="h-full">
               <img
                 src="/logo_header-Photoroom.png"

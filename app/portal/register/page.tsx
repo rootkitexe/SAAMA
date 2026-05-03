@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { createBrowserClient } from '@supabase/ssr';
 import { CheckCircle, ChevronRight, ChevronLeft, Loader2, Music, CreditCard } from 'lucide-react';
 
@@ -55,7 +55,7 @@ type CategoryData = {
 
 declare global {
     interface Window {
-        Razorpay: any;
+        paypal?: any;
     }
 }
 
@@ -197,50 +197,46 @@ export default function RegisterPage() {
         setStep(3);
     };
 
-    const loadRazorpayScript = (): Promise<boolean> => {
+    const [paymentMethod, setPaymentMethod] = useState<'stripe' | 'paypal' | null>(null);
+    const paypalContainerRef = useRef<HTMLDivElement>(null);
+    const paypalRendered = useRef(false);
+
+    // Load PayPal SDK
+    const loadPayPalScript = (): Promise<boolean> => {
         return new Promise(resolve => {
-            if (window.Razorpay) { resolve(true); return; }
+            if (window.paypal) { resolve(true); return; }
             const script = document.createElement('script');
-            script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+            script.src = `https://www.paypal.com/sdk/js?client-id=${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID}&currency=USD`;
             script.onload = () => resolve(true);
             script.onerror = () => resolve(false);
             document.body.appendChild(script);
         });
     };
 
-    const handlePayment = async () => {
-        setSubmitting(true);
-        setErrorMsg('');
+    // Render PayPal buttons when PayPal is selected
+    useEffect(() => {
+        if (paymentMethod !== 'paypal' || !paypalContainerRef.current || paypalRendered.current) return;
 
-        try {
-            // 1. Create Razorpay order
-            const res = await fetch('/api/razorpay', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    amount: totalFee,
-                    categories: selectedCategories,
-                    userId,
-                }),
-            });
-            const orderData = await res.json();
-            if (!res.ok) throw new Error(orderData.error);
+        const renderButtons = async () => {
+            const loaded = await loadPayPalScript();
+            if (!loaded || !window.paypal || !paypalContainerRef.current) return;
 
-            // 2. Load Razorpay script
-            const loaded = await loadRazorpayScript();
-            if (!loaded) throw new Error('Failed to load Razorpay');
-
-            // 3. Open Razorpay checkout
-            const options = {
-                key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-                amount: orderData.amount,
-                currency: orderData.currency,
-                name: 'SaaMa',
-                description: `Competition Registration (${selectedCategories.length} categories)`,
-                order_id: orderData.orderId,
-                handler: async function (response: any) {
-                    // Payment successful — save registrations
+            paypalRendered.current = true;
+            window.paypal.Buttons({
+                style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'paypal' },
+                createOrder: (_data: any, actions: any) => {
+                    return actions.order.create({
+                        purchase_units: [{
+                            description: `Competition Registration (${selectedCategories.length} categories)`,
+                            amount: { value: totalFee.toFixed(2) },
+                        }],
+                    });
+                },
+                onApprove: async (_data: any, actions: any) => {
+                    setSubmitting(true);
                     try {
+                        const details = await actions.order.capture();
+                        // Save registrations to Supabase
                         const entries = selectedCategories.map(cat => ({
                             user_id: userId,
                             competition_item: cat,
@@ -249,34 +245,87 @@ export default function RegisterPage() {
                             dob: profile?.birthday || null,
                             songs: categoryData[cat] || {},
                             status: 'confirmed',
-                            payment_id: response.razorpay_payment_id,
+                            payment_id: details.id,
+                            payment_method: 'paypal',
                         }));
 
                         const { error } = await supabase.from('registrations').insert(entries);
                         if (error) throw error;
 
-                        window.location.href = '/portal';
+                        window.location.href = '/portal/register/success';
                     } catch (err: any) {
                         setErrorMsg('Payment received but registration save failed: ' + err.message);
                         setSubmitting(false);
                     }
                 },
-                prefill: {
-                    email: profile?.email || '',
-                    contact: profile?.mobile || profile?.phone || '',
+                onError: (err: any) => {
+                    console.error('PayPal error:', err);
+                    setErrorMsg('PayPal payment failed. Please try again.');
                 },
-                theme: {
-                    color: '#3d230d',
+                onCancel: () => {
+                    setSubmitting(false);
                 },
-                modal: {
-                    ondismiss: function () {
-                        setSubmitting(false);
-                    },
-                },
-            };
+            }).render(paypalContainerRef.current);
+        };
 
-            const rzp = new window.Razorpay(options);
-            rzp.open();
+        renderButtons();
+    }, [paymentMethod, selectedCategories, totalFee, userId, profile, categoryData, supabase]);
+
+    // Reset PayPal rendered state when switching methods
+    useEffect(() => {
+        if (paymentMethod !== 'paypal') {
+            paypalRendered.current = false;
+        }
+    }, [paymentMethod]);
+
+    // Handle Stripe payment
+    const handleStripePayment = async () => {
+        setSubmitting(true);
+        setErrorMsg('');
+
+        try {
+            // 1. Save registrations to Supabase first (with pending_payment status)
+            const entries = selectedCategories.map(cat => ({
+                user_id: userId,
+                competition_item: cat,
+                category: 'Music',
+                student_name: profile?.full_name || '',
+                dob: profile?.birthday || null,
+                songs: categoryData[cat] || {},
+                status: 'pending_payment',
+                payment_method: 'stripe',
+            }));
+
+            const { data: savedRegs, error: insertError } = await supabase
+                .from('registrations')
+                .insert(entries)
+                .select('id');
+
+            if (insertError) throw new Error('Failed to save registration: ' + insertError.message);
+
+            const registrationIds = savedRegs?.map((r: any) => r.id) || [];
+
+            // 2. Create Stripe Checkout session (only pass IDs, not song data)
+            const res = await fetch('/api/stripe', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    amount: totalFee,
+                    categories: selectedCategories,
+                    userId,
+                    studentName: profile?.full_name || '',
+                    registrationIds,
+                    profile: {
+                        email: profile?.email || '',
+                    },
+                }),
+            });
+
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error);
+
+            // Redirect to Stripe Checkout
+            window.location.href = data.url;
         } catch (err: any) {
             setErrorMsg(err.message || 'Payment failed');
             setSubmitting(false);
@@ -478,6 +527,44 @@ export default function RegisterPage() {
                                 <div className="bg-yellow-50 border border-yellow-200 p-3 rounded-lg text-yellow-800 text-xs">
                                     By proceeding, you confirm that all details are accurate and agree to the competition rules. No changes allowed after <strong>May 29, 2026</strong>.
                                 </div>
+
+                                {/* Payment Method Selection */}
+                                <div className="pt-4">
+                                    <p className="text-sm font-bold text-[#5c3a1e] mb-3">Choose Payment Method:</p>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                        <button
+                                            type="button"
+                                            onClick={() => setPaymentMethod('stripe')}
+                                            className={`flex items-center justify-center gap-2 p-4 rounded-xl border-2 transition-all font-bold text-sm ${
+                                                paymentMethod === 'stripe'
+                                                    ? 'border-[#635bff] bg-[#635bff]/10 text-[#635bff]'
+                                                    : 'border-[#d4c4a8] bg-white text-[#5c3a1e] hover:border-[#635bff]/50'
+                                            }`}
+                                        >
+                                            <CreditCard className="h-5 w-5" />
+                                            Pay with Card
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setPaymentMethod('paypal')}
+                                            className={`flex items-center justify-center gap-2 p-4 rounded-xl border-2 transition-all font-bold text-sm ${
+                                                paymentMethod === 'paypal'
+                                                    ? 'border-[#0070ba] bg-[#0070ba]/10 text-[#0070ba]'
+                                                    : 'border-[#d4c4a8] bg-white text-[#5c3a1e] hover:border-[#0070ba]/50'
+                                            }`}
+                                        >
+                                            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c1.893 4.267-1.016 7.153-5.882 7.153h-2.19c-1.573 0-2.905 1.146-3.15 2.7l-1.12 7.106a.641.641 0 0 0 .633.74h3.592c.524 0 .968-.382 1.05-.9l.862-5.468c.082-.518.526-.9 1.05-.9h.66c4.298 0 7.664-1.747 8.647-6.797.37-1.898.085-3.384-.545-4.093z"/></svg>
+                                            Pay with PayPal
+                                        </button>
+                                    </div>
+
+                                    {/* PayPal Buttons Container */}
+                                    {paymentMethod === 'paypal' && (
+                                        <div className="mt-4">
+                                            <div ref={paypalContainerRef} className="min-h-[150px]"></div>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     )}
@@ -507,10 +594,10 @@ export default function RegisterPage() {
                                 Review & Pay <ChevronRight className="h-4 w-4 ml-1" />
                             </button>
                         )}
-                        {step === 3 && (
-                            <button type="button" onClick={handlePayment} disabled={submitting} className="flex items-center bg-[#3d230d] text-white font-bold py-3 px-8 rounded-lg hover:bg-[#2a1809] transition-colors disabled:opacity-50 shadow-lg">
+                        {step === 3 && paymentMethod === 'stripe' && (
+                            <button type="button" onClick={handleStripePayment} disabled={submitting} className="flex items-center bg-[#635bff] text-white font-bold py-3 px-8 rounded-lg hover:bg-[#4b45c6] transition-colors disabled:opacity-50 shadow-lg">
                                 {submitting ? <Loader2 className="h-5 w-5 animate-spin mr-2" /> : <CreditCard className="h-5 w-5 mr-2" />}
-                                {submitting ? 'Processing...' : `Pay $${totalFee} with Razorpay`}
+                                {submitting ? 'Redirecting...' : `Pay $${totalFee} with Card`}
                             </button>
                         )}
                     </div>

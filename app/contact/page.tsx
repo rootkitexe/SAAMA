@@ -110,7 +110,7 @@ export default function ContactPage() {
                                 If you&apos;d like to stay connected and receive updates on our upcoming events, workshops, and announcements, we invite you to join our WhatsApp community.
                             </p>
                             <a 
-                                href="https://whatsapp.com/channel/0029VbD6jnoJf05gvNtYhz0V" 
+                                href="https://chat.whatsapp.com/DIVFdV78RibCKWyldbbFbJ" 
                                 target="_blank" 
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center gap-3 bg-[#25D366] hover:bg-[#1da851] text-white px-5 py-3 rounded-xl font-bold transition-all shadow-sm hover:shadow-md text-sm"

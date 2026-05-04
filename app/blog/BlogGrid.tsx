@@ -83,8 +83,8 @@ export default function BlogGrid({ posts }: { posts: any[] }) {
                             </div>
                             
                             {/* Article Body */}
-                            <div className="px-6 md:px-16 lg:px-24 -mt-16 relative z-10">
-                                <div className="bg-white rounded-2xl p-8 shadow-sm border border-[#d4c4a8] mb-12">
+                            <div className="px-4 md:px-8 -mt-16 relative z-10">
+                                <div className="bg-white rounded-2xl p-6 md:p-10 shadow-sm border border-[#d4c4a8] mb-12">
                                     <h2 className="text-3xl md:text-5xl font-serif font-bold text-[#3d230d] mb-6 leading-tight">
                                         {selectedPost.title}
                                     </h2>
@@ -97,9 +97,10 @@ export default function BlogGrid({ posts }: { posts: any[] }) {
                                         </p>
                                     </div>
                                     
-                                    <div className="text-lg text-[#5c3a1e] font-medium leading-[1.8] whitespace-pre-wrap">
-                                        {selectedPost.content}
-                                    </div>
+                                    <div 
+                                        className="text-lg text-[#5c3a1e] font-medium leading-[1.8] space-y-6 rich-text"
+                                        dangerouslySetInnerHTML={{ __html: selectedPost.content }}
+                                    />
                                 </div>
                             </div>
                         </div>

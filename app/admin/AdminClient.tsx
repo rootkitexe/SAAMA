@@ -5,6 +5,10 @@ import { Download, Users, FileText, ChevronDown, ChevronUp, Calendar, Plus, Load
 import { addUpcomingEvent, deleteUpcomingEvent, addBlogPost, deleteBlogPost, addDirectoryEntry, deleteDirectoryEntry } from './actions';
 import { useFormStatus } from 'react-dom';
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
+
+const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
+import 'react-quill-new/dist/quill.snow.css';
 
 type Profile = any;
 type Registration = any;
@@ -39,6 +43,7 @@ export default function AdminClient({ initialProfiles, initialRegistrations, ini
     const [showBlogForm, setShowBlogForm] = useState(false);
     const [blogFormError, setBlogFormError] = useState('');
     const [blogToDelete, setBlogToDelete] = useState<number | null>(null);
+    const [blogContent, setBlogContent] = useState('');
 
     const [showDirForm, setShowDirForm] = useState(false);
     const [dirFormError, setDirFormError] = useState('');
@@ -72,6 +77,7 @@ export default function AdminClient({ initialProfiles, initialRegistrations, ini
             setBlogFormError(res.error);
         } else {
             setShowBlogForm(false);
+            setBlogContent('');
             router.refresh();
         }
     };
@@ -495,7 +501,24 @@ export default function AdminClient({ initialProfiles, initialRegistrations, ini
                                     </div>
                                     <div className="col-span-1 md:col-span-2">
                                         <label className="block text-sm font-bold text-[#5c3a1e] mb-1">Article Content *</label>
-                                        <textarea name="content" required rows={10} className="w-full rounded-lg p-2.5 bg-white text-[#3d230d] placeholder:text-[#d4c4a8] font-medium border border-[#d4c4a8] focus:ring-[#3d230d] focus:border-[#3d230d]" placeholder="Write your full article here..."></textarea>
+                                        <div className="bg-white rounded-lg border border-[#d4c4a8] overflow-hidden text-[#3d230d]">
+                                            <ReactQuill 
+                                                theme="snow" 
+                                                value={blogContent} 
+                                                onChange={setBlogContent} 
+                                                className="bg-white [&_.ql-editor]:min-h-[200px] [&_.ql-editor]:text-base [&_.ql-editor]:font-sans [&_.ql-toolbar]:border-none [&_.ql-toolbar]:border-b [&_.ql-toolbar]:border-[#d4c4a8] [&_.ql-container]:border-none"
+                                                placeholder="Write your beautifully formatted article here..."
+                                                modules={{
+                                                    toolbar: [
+                                                        [{ 'header': [1, 2, 3, false] }],
+                                                        ['bold', 'italic', 'underline', 'strike'],
+                                                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                                                        ['link', 'clean'] // Image removed intentionally to save database space
+                                                    ],
+                                                }}
+                                            />
+                                        </div>
+                                        <input type="hidden" name="content" value={blogContent} />
                                     </div>
                                 </div>
 

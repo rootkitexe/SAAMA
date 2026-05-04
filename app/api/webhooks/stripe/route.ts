@@ -41,6 +41,15 @@ export async function POST(request: Request) {
             try {
                 const ids = JSON.parse(metadata.registrationIds);
 
+                // First check if any of these are still pending_payment to prevent duplicate emails
+                const { data: existingRegs } = await supabaseAdmin
+                    .from('registrations')
+                    .select('id, status')
+                    .in('id', ids)
+                    .eq('status', 'pending_payment');
+
+                const needsUpdate = existingRegs && existingRegs.length > 0;
+
                 // Update status from pending_payment → confirmed
                 const { error } = await supabaseAdmin
                     .from('registrations')
@@ -52,6 +61,10 @@ export async function POST(request: Request) {
 
                 if (error) {
                     console.error('Supabase update error:', error);
+                } else if (needsUpdate) {
+                    // Send confirmation email only if we just changed the status
+                    const { triggerConfirmationEmail } = await import('@/app/portal/actions');
+                    await triggerConfirmationEmail(ids);
                 }
             } catch (err) {
                 console.error('Error processing webhook:', err);

@@ -40,8 +40,11 @@ export default function Festival2026Page() {
             <div className="max-w-6xl mx-auto">
                 <div className="mb-10 text-center">
                     <h1 className="text-4xl md:text-5xl font-serif font-bold text-[#3d230d] mb-4">Aaroha Carnatic Music Festival 2026</h1>
-                    <p className="text-lg text-[#7a5c3a] font-medium max-w-2xl mx-auto mb-8">
+                    <p className="text-lg text-[#7a5c3a] font-medium max-w-3xl mx-auto mb-4">
                         Sadhana Academy for Musical Arts, in partnership with Tapasya School of Music (led by Vid. Sriranjani Tapasya Santhanagopalan), presents the Aaroha Carnatic Music Festival. Join us for a deeply immersive two-day celebration of Carnatic music honoring its rich heritage, timeless compositions, and intricate rhythms through inspiring performances and soulful renditions.
+                    </p>
+                    <p className="text-lg text-[#5c3a1e] font-bold max-w-3xl mx-auto mb-8">
+                        Grand finale concert by Vid. Sriranjani Tapasya Santhanagopalan, accompanied by Vid. Kamala Kiran on the Violin, Vid. Sumesh Narayanan on the Mridangam and Dr. Ravi Balasubramaniam on the Ghatam
                     </p>
                     
                     {/* Horizontal Navigation */}

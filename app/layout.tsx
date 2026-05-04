@@ -28,9 +28,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className="bg-[#180e06]">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col bg-[#180e06] text-[#faf5eb] p-0 sm:p-8 md:p-12 lg:p-16 xl:p-20 2xl:p-28`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col bg-[#180e06] text-[#faf5eb] p-0 sm:px-8 sm:pb-8 md:px-12 md:pb-12 lg:px-16 lg:pb-16 xl:px-20 xl:pb-20 2xl:px-28 2xl:pb-28`}
       >
-        <div className="w-full max-w-[1500px] mx-auto flex flex-col flex-1 bg-[#faf5eb] text-[#3d230d] shadow-2xl sm:rounded-2xl overflow-hidden relative">
+        <div className="w-full max-w-[1500px] mx-auto flex flex-col flex-1 bg-[#faf5eb] text-[#3d230d] shadow-2xl sm:rounded-b-2xl overflow-hidden relative">
           <Navbar />
           <ScrollToContent />
           <main id="content" className="flex-1 w-full flex flex-col scroll-mt-4">

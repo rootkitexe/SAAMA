@@ -28,7 +28,7 @@ export default async function RegistrationDetailsPage(props: { params: Promise<{
     }
 
     // Parse songs if strictly needed, though Supabase returns JSONB as object/array usually
-    const songs = registration.songs || []
+    const songData: any = registration.songs || {}
 
     return (
         <div className="min-h-screen bg-[#faf5eb] text-[#3d230d] p-4 sm:p-8">
@@ -78,27 +78,62 @@ export default async function RegistrationDetailsPage(props: { params: Promise<{
                                 <Mic2 className="h-5 w-5 text-[#3d230d]" /> Performance Details
                             </h2>
                             <div className="bg-white border border-[#d4c4a8] rounded-xl overflow-hidden shadow-sm">
-                                <div className="p-4 bg-[#faf5eb] border-b border-[#d4c4a8] grid grid-cols-12 text-xs font-bold text-[#7a5c3a] uppercase tracking-wider">
-                                    <div className="col-span-4">Song</div>
-                                    <div className="col-span-3">Raga</div>
-                                    <div className="col-span-3">Tala</div>
-                                    <div className="col-span-2">Composer</div>
-                                </div>
-                                <div className="divide-y divide-[#d4c4a8]">
-                                    {Array.isArray(songs) && songs.map((song: any, idx: number) => (
-                                        <div key={idx} className="p-4 grid grid-cols-12 text-sm items-center hover:bg-[#faf5eb] transition-colors">
-                                            <div className="col-span-4 font-bold text-[#3d230d] break-words pr-2">{song.song}</div>
-                                            <div className="col-span-3 text-[#5c3a1e] font-medium break-words pr-2">{song.raga}</div>
-                                            <div className="col-span-3 text-[#5c3a1e] font-medium break-words pr-2">{song.tala}</div>
-                                            <div className="col-span-2 text-[#7a5c3a] break-words">{song.composer}</div>
+                                {registration.competition_item === 'Alapana' && songData.alapana ? (
+                                    <>
+                                        <div className="p-4 bg-[#faf5eb] border-b border-[#d4c4a8] grid grid-cols-3 text-xs font-bold text-[#7a5c3a] uppercase tracking-wider">
+                                            <div>Raga 1</div>
+                                            <div>Raga 2</div>
+                                            <div>Raga 3</div>
                                         </div>
-                                    ))}
-                                    {(!Array.isArray(songs) || songs.length === 0) && (
-                                        <div className="p-8 text-center text-gray-500 italic">
-                                            No song details provided.
+                                        <div className="p-4 grid grid-cols-3 text-sm items-center hover:bg-[#faf5eb] transition-colors">
+                                            <div className="font-bold text-[#3d230d] break-words pr-2">{songData.alapana.raga1}</div>
+                                            <div className="font-bold text-[#3d230d] break-words pr-2">{songData.alapana.raga2}</div>
+                                            <div className="font-bold text-[#3d230d] break-words pr-2">{songData.alapana.raga3}</div>
                                         </div>
-                                    )}
-                                </div>
+                                    </>
+                                ) : registration.competition_item === 'Viruttham' && songData.viruttham ? (
+                                    <div className="p-4 space-y-4">
+                                        <div>
+                                            <p className="text-xs font-bold text-[#7a5c3a] uppercase tracking-wider mb-1">Sahityam</p>
+                                            <p className="text-sm font-medium text-[#3d230d]">{songData.viruttham.sahityam}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-xs font-bold text-[#7a5c3a] uppercase tracking-wider mb-2">Ragas</p>
+                                            <div className="flex flex-wrap gap-2">
+                                                {[songData.viruttham.raga1, songData.viruttham.raga2, songData.viruttham.raga3, songData.viruttham.raga4].filter(Boolean).map((raga, idx) => (
+                                                    <span key={idx} className="inline-flex items-center rounded-full px-3 py-1 text-xs font-bold bg-[#faf5eb] text-[#3d230d] border border-[#d4c4a8]">
+                                                        {raga}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <div className="p-4 bg-[#faf5eb] border-b border-[#d4c4a8] grid grid-cols-12 text-xs font-bold text-[#7a5c3a] uppercase tracking-wider">
+                                            <div className="col-span-4">Song</div>
+                                            <div className="col-span-3">Raga</div>
+                                            <div className="col-span-3">Tala</div>
+                                            <div className="col-span-2">Composer</div>
+                                        </div>
+                                        <div className="divide-y divide-[#d4c4a8]">
+                                            {Array.isArray(songData.songs) && songData.songs.length > 0 ? (
+                                                songData.songs.map((song: any, idx: number) => (
+                                                    <div key={idx} className="p-4 grid grid-cols-12 text-sm items-center hover:bg-[#faf5eb] transition-colors">
+                                                        <div className="col-span-4 font-bold text-[#3d230d] break-words pr-2">{song.song}</div>
+                                                        <div className="col-span-3 text-[#5c3a1e] font-medium break-words pr-2">{song.raga}</div>
+                                                        <div className="col-span-3 text-[#5c3a1e] font-medium break-words pr-2">{song.tala}</div>
+                                                        <div className="col-span-2 text-[#7a5c3a] break-words">{song.composer}</div>
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <div className="p-8 text-center text-gray-500 italic">
+                                                    No song details provided.
+                                                </div>
+                                            )}
+                                        </div>
+                                    </>
+                                )}
                             </div>
                         </div>
 

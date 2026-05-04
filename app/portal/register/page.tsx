@@ -249,8 +249,14 @@ export default function RegisterPage() {
                             payment_method: 'paypal',
                         }));
 
-                        const { error } = await supabase.from('registrations').insert(entries);
+                        const { data: savedRegs, error } = await supabase.from('registrations').insert(entries).select('id');
                         if (error) throw error;
+
+                        if (savedRegs && savedRegs.length > 0) {
+                            const ids = savedRegs.map(r => r.id);
+                            const { triggerConfirmationEmail } = await import('@/app/portal/actions');
+                            await triggerConfirmationEmail(ids);
+                        }
 
                         window.location.href = '/portal/register/success';
                     } catch (err: any) {

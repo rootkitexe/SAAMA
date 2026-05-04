@@ -5,7 +5,7 @@ export default function CompetitionsPage() {
         <div className="bg-[#faf5eb] min-h-screen">
             {/* Hero */}
             <div className="bg-[#3d230d] py-16 text-center border-b-4 border-[#5c3a1e]">
-                <h1 className="text-4xl font-serif font-bold text-white">Sadhana Academy for Musical Arts Carnatic Music Competition</h1>
+                <h1 className="text-4xl font-serif font-bold text-white">Sadhana Carnatic Music Competition</h1>
             </div>
 
             <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8 text-[#5c3a1e]">
@@ -58,7 +58,7 @@ export default function CompetitionsPage() {
                         <div>
                             <h3 className="font-bold text-lg mb-2">Eligibility</h3>
                             <p className="text-[15px]">
-                                This competition is open only to participants from <strong>Washington</strong> and <strong>Oregon</strong>.
+                                This competition is open only to participants from <strong>Washington</strong> and <strong>Oregon</strong>. This competition is open to vocal performances only.
                             </p>
                         </div>
 

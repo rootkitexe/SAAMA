@@ -33,6 +33,15 @@ export default async function RegistrationSuccessPage({
                 if (registrationIds) {
                     const ids = JSON.parse(registrationIds);
 
+                    // First check if any of these are still pending_payment to prevent duplicate emails
+                    const { data: existingRegs } = await supabaseAdmin
+                        .from('registrations')
+                        .select('id, status')
+                        .in('id', ids)
+                        .eq('status', 'pending_payment');
+
+                    const needsUpdate = existingRegs && existingRegs.length > 0;
+
                     // Update the registration status from pending_payment → confirmed
                     const { error: updateError } = await supabaseAdmin
                         .from('registrations')
@@ -46,6 +55,12 @@ export default async function RegistrationSuccessPage({
                         error = updateError.message;
                     } else {
                         saved = true;
+                        
+                        // Send confirmation email only if we just changed the status
+                        if (needsUpdate) {
+                            const { triggerConfirmationEmail } = await import('@/app/portal/actions');
+                            await triggerConfirmationEmail(ids);
+                        }
                     }
                 }
             }

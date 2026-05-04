@@ -24,7 +24,7 @@ export default function ScrollToContent() {
                 if (el) {
                     el.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
-            }, 2000);
+            }, 500);
 
             return () => clearTimeout(timer);
         }

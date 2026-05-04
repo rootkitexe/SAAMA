@@ -10,11 +10,11 @@ export default function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 text-[#5c3a1e]">
                     
                     {/* Column 1: Logo & Description */}
-                    <div className="flex flex-col items-center md:items-start">
+                    <div className="flex flex-col items-center text-center md:items-start md:text-left">
                         <img 
                             src="/logo_footer-Photoroom.png" 
                             alt="SaaMa Logo" 
-                            className="h-28 w-auto object-contain object-left scale-[1.6] origin-left md:-ml-2 mb-6 mt-2"
+                            className="h-28 w-auto object-contain object-center md:object-left scale-[1.4] md:scale-[1.6] origin-center md:origin-left md:-ml-2 mb-6 mt-2"
                         />
                         <p className="text-sm font-medium leading-relaxed text-[#7a5c3a]">
                             Celebrating and promoting Indian classical music and fine arts across the Pacific Northwest and beyond through community, education, and performance.
@@ -22,7 +22,7 @@ export default function Footer() {
                     </div>
 
                     {/* Column 2: Quick Links */}
-                    <div>
+                    <div className="flex flex-col items-center md:items-start text-center md:text-left">
                         <h4 className="font-serif font-bold text-[#3d230d] text-lg mb-6">Quick Links</h4>
                         <ul className="space-y-3 text-sm font-medium">
                             <li><Link href="/festival/2026" className="hover:text-[#3d230d] transition-colors">Upcoming Festival</Link></li>
@@ -34,17 +34,17 @@ export default function Footer() {
                     </div>
 
                     {/* Column 3: Contact */}
-                    <div>
+                    <div className="flex flex-col items-center md:items-start text-center md:text-left">
                         <h4 className="font-serif font-bold text-[#3d230d] text-lg mb-6">Contact</h4>
                         <ul className="space-y-4 text-sm font-medium">
                             <li>
-                                <a href="mailto:saama.seattle@gmail.com" className="flex items-center gap-3 hover:text-[#3d230d] transition-colors">
+                                <a href="mailto:saama.seattle@gmail.com" className="flex items-center justify-center md:justify-start gap-3 hover:text-[#3d230d] transition-colors">
                                     <Mail className="w-5 h-5 text-[#d4c4a8]" />
                                     saama.seattle@gmail.com
                                 </a>
                             </li>
                             <li>
-                                <a href="tel:+14255912391" className="flex items-center gap-3 hover:text-[#3d230d] transition-colors">
+                                <a href="tel:+14255912391" className="flex items-center justify-center md:justify-start gap-3 hover:text-[#3d230d] transition-colors">
                                     <Phone className="w-5 h-5 text-[#d4c4a8]" />
                                     (425) 591-2391
                                 </a>
@@ -53,9 +53,9 @@ export default function Footer() {
                     </div>
 
                     {/* Column 4: Follow Us */}
-                    <div>
+                    <div className="flex flex-col items-center md:items-start text-center md:text-left">
                         <h4 className="font-serif font-bold text-[#3d230d] text-lg mb-6">Follow Us</h4>
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center justify-center md:justify-start gap-4">
                             <a 
                                 href="https://www.facebook.com/sadhanaseattle" 
                                 target="_blank" 

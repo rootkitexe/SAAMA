@@ -245,7 +245,7 @@ export default function Navbar() {
         </div>
 
         {/* Right: Images — Desktop: 3D Gallery | Mobile: Simple Carousel */}
-        <div className="w-full md:w-[65%] shrink-0 border-t-[3px] md:border-t-0 md:border-l-[3px] border-black overflow-hidden bg-[#3d230d] relative h-[250px] md:h-auto">
+        <div className="w-full md:w-[65%] shrink-0 border-t-[3px] md:border-t-0 md:border-l-[3px] border-black overflow-hidden bg-[#3d230d] relative h-[400px] md:h-auto">
           {/* Desktop 3D Gallery */}
           <div className="hidden md:flex h-full items-center justify-center relative w-full overflow-hidden" style={{ perspective: '1200px' }}>
             {galleryImages.map((img, i) => {

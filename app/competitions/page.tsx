@@ -151,7 +151,7 @@ export default function CompetitionsPage() {
                             <p className="text-[15px] mb-3">The participants must indicate the compositions they have prepared in the application form.</p>
                             <ul className="list-disc pl-6 space-y-1 text-[15px]">
                                 <li><strong>Senior Category:</strong> Submit (3) entries</li>
-                                <li><strong>Junior Category:</strong> Submit (3) entries</li>
+                                <li><strong>Junior Category:</strong> Submit (2) entries</li>
                                 <li><strong>Sub-Junior Category:</strong> Submit (2) entries</li>
                             </ul>
                         </div>

@@ -10,7 +10,7 @@ type Category = typeof ALL_CATEGORIES[number];
 const SUB_JUNIOR_CATEGORIES: Category[] = ['Geetham', 'Varnam'];
 const JUNIOR_SENIOR_CATEGORIES: Category[] = ['Krithi', 'Thillana', 'Viruttham', 'Alapana', 'Swarams'];
 
-const ENTRY_FEE = 1; // USD per category
+const ENTRY_FEE = 35; // USD per category
 
 function calculateAgeAsOfMay1(birthday: string): number | null {
     if (!birthday) return null;
@@ -38,7 +38,7 @@ function getAvailableCategories(ageGroup: string): Category[] {
 
 function getRequiredSongCount(ageGroup: string): number {
     if (ageGroup === 'Senior') return 3;
-    if (ageGroup === 'Junior') return 3;
+    if (ageGroup === 'Junior') return 2;
     if (ageGroup === 'Sub-Junior') return 2;
     return 1;
 }
@@ -73,6 +73,7 @@ export default function RegisterPage() {
     const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
     const [categoryData, setCategoryData] = useState<Record<string, CategoryData>>({});
     const [errorMsg, setErrorMsg] = useState('');
+    const [alreadyRegistered, setAlreadyRegistered] = useState(false);
 
     const age = profile?.birthday ? calculateAgeAsOfMay1(profile.birthday) : null;
     const ageGroup = getAgeGroup(age);
@@ -88,6 +89,19 @@ export default function RegisterPage() {
 
             const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
             setProfile(data);
+
+            // Check if user has any confirmed registrations
+            const { data: existing } = await supabase
+                .from('registrations')
+                .select('id')
+                .eq('user_id', user.id)
+                .eq('status', 'confirmed')
+                .limit(1);
+
+            if (existing && existing.length > 0) {
+                setAlreadyRegistered(true);
+            }
+
             setLoading(false);
         }
         load();
@@ -346,6 +360,31 @@ export default function RegisterPage() {
         );
     }
 
+    if (alreadyRegistered) {
+        return (
+            <div className="min-h-screen bg-[#faf5eb] flex items-center justify-center px-4">
+                <div className="bg-white/80 border border-[#d4c4a8] rounded-2xl p-10 max-w-lg text-center shadow-lg">
+                    <div className="bg-green-100 h-16 w-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <CheckCircle className="h-10 w-10 text-green-600" />
+                    </div>
+                    <h2 className="text-3xl font-bold text-[#3d230d] mb-4">Registration Completed</h2>
+                    <p className="text-[#7a5c3a] text-lg mb-8">
+                        You have already successfully registered for the Saama Seattle Festival 2026. 
+                        You can view your registration details, songs, and schedules in your personal dashboard.
+                    </p>
+                    <div className="space-y-3">
+                        <a href="/portal" className="block w-full bg-[#3d230d] text-white font-bold py-3.5 px-8 rounded-xl hover:bg-[#2a1809] transition-all shadow-md">
+                            Go to Dashboard →
+                        </a>
+                        <p className="text-xs text-[#7a5c3a] mt-4">
+                            If you need to make changes to your registration, please contact the festival organizers.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     if (!profile?.full_name || !profile?.birthday) {
         return (
             <div className="min-h-screen bg-[#faf5eb] flex items-center justify-center px-4">
@@ -408,6 +447,17 @@ export default function RegisterPage() {
                                     <span className="block mt-1 text-[#7a5c3a] italic">Junior and Senior participants may compete in Kriti, Thillana, Viruttham, Alapana, and Swarams.</span>
                                 )}
                             </p>
+
+                            <div className="bg-red-50 border border-red-200 p-4 rounded-xl text-red-900 text-sm">
+                                <p className="font-bold flex items-center gap-2 mb-1">
+                                    <span className="text-lg">⚠️</span> Important Notice
+                                </p>
+                                <p>
+                                    Please select <strong>all</strong> categories you wish to compete in now. 
+                                    Once payment is confirmed, your registration will be locked. You will 
+                                    not be able to add more categories or register again using this account.
+                                </p>
+                            </div>
 
                             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                                 {availableCategories.map(cat => (
@@ -542,8 +592,8 @@ export default function RegisterPage() {
                                             type="button"
                                             onClick={() => setPaymentMethod('stripe')}
                                             className={`flex items-center justify-center gap-2 p-4 rounded-xl border-2 transition-all font-bold text-sm ${paymentMethod === 'stripe'
-                                                    ? 'border-[#635bff] bg-[#635bff]/10 text-[#635bff]'
-                                                    : 'border-[#d4c4a8] bg-white text-[#5c3a1e] hover:border-[#635bff]/50'
+                                                ? 'border-[#635bff] bg-[#635bff]/10 text-[#635bff]'
+                                                : 'border-[#d4c4a8] bg-white text-[#5c3a1e] hover:border-[#635bff]/50'
                                                 }`}
                                         >
                                             <CreditCard className="h-5 w-5" />
@@ -553,8 +603,8 @@ export default function RegisterPage() {
                                             type="button"
                                             onClick={() => setPaymentMethod('paypal')}
                                             className={`flex items-center justify-center gap-2 p-4 rounded-xl border-2 transition-all font-bold text-sm ${paymentMethod === 'paypal'
-                                                    ? 'border-[#0070ba] bg-[#0070ba]/10 text-[#0070ba]'
-                                                    : 'border-[#d4c4a8] bg-white text-[#5c3a1e] hover:border-[#0070ba]/50'
+                                                ? 'border-[#0070ba] bg-[#0070ba]/10 text-[#0070ba]'
+                                                : 'border-[#d4c4a8] bg-white text-[#5c3a1e] hover:border-[#0070ba]/50'
                                                 }`}
                                         >
                                             <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c1.893 4.267-1.016 7.153-5.882 7.153h-2.19c-1.573 0-2.905 1.146-3.15 2.7l-1.12 7.106a.641.641 0 0 0 .633.74h3.592c.524 0 .968-.382 1.05-.9l.862-5.468c.082-.518.526-.9 1.05-.9h.66c4.298 0 7.664-1.747 8.647-6.797.37-1.898.085-3.384-.545-4.093z" /></svg>

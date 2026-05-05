@@ -7,7 +7,7 @@ import { CheckCircle, ChevronRight, ChevronLeft, Loader2, Music, CreditCard } fr
 const ALL_CATEGORIES = ['Geetham', 'Varnam', 'Krithi', 'Thillana', 'Viruttham', 'Alapana', 'Swarams'] as const;
 type Category = typeof ALL_CATEGORIES[number];
 
-const SUB_JUNIOR_CATEGORIES: Category[] = ['Geetham', 'Varnam'];
+const SUB_JUNIOR_CATEGORIES: Category[] = ['Geetham', 'Varnam', 'Krithi'];
 const JUNIOR_SENIOR_CATEGORIES: Category[] = ['Krithi', 'Thillana', 'Viruttham', 'Alapana', 'Swarams'];
 
 const ENTRY_FEE = 35; // USD per category
@@ -441,7 +441,7 @@ export default function RegisterPage() {
                             <p className="text-[#7a5c3a] text-sm">
                                 Select all the categories you wish to register for. Each category costs <strong className="text-[#3d230d]">US $35</strong>.
                                 {ageGroup === 'Sub-Junior' && (
-                                    <span className="block mt-1 text-[#7a5c3a] italic">Sub-Junior participants may only compete in Geetham and Varnam.</span>
+                                    <span className="block mt-1 text-[#7a5c3a] italic">Sub-Junior participants may only compete in Geetham, Varnam and Krithi.</span>
                                 )}
                                 {(ageGroup === 'Junior' || ageGroup === 'Senior') && (
                                     <span className="block mt-1 text-[#7a5c3a] italic">Junior and Senior participants may compete in Kriti, Thillana, Viruttham, Alapana, and Swarams.</span>

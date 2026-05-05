@@ -106,7 +106,7 @@ export default function CompetitionsPage() {
                             </div>
                             <p className="text-sm text-[#7a5c3a] mt-2 italic">(Age will be calculated as of May 1.)</p>
                             <div className="mt-4 bg-[#f5efe3] border border-[#d4c4a8] rounded-lg p-4 text-[15px] space-y-2">
-                                <p>Sub-Junior category participants may compete only in <strong>Geetham</strong> and <strong>Varnam</strong> categories.</p>
+                                <p>Sub-Junior category participants may compete only in <strong>Geetham</strong>, <strong>Varnam</strong> and <strong>Krithi</strong> categories.</p>
                                 <p>Junior and Senior category participants may compete in <strong>Kriti</strong>, <strong>Thillana</strong>, <strong>Viruttham</strong>, <strong>Alapana</strong>, and <strong>Swarams</strong>.</p>
                             </div>
                         </div>

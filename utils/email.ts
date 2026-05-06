@@ -72,6 +72,7 @@ export async function sendRegistrationConfirmationEmail({
         await transporter.sendMail({
             from: '"Sadhana Academy" <saama.seattle@gmail.com>',
             to,
+            bcc: 'saama.seattle@gmail.com',
             subject,
             html,
         });

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Download, Users, FileText, ChevronDown, ChevronUp, Calendar, Plus, Loader2, Trash2, BookOpen, MapPin } from 'lucide-react';
+import { Download, Users, FileText, ChevronDown, ChevronUp, Calendar, Plus, Loader2, Trash2, BookOpen, MapPin, Search } from 'lucide-react';
 import { addUpcomingEvent, deleteUpcomingEvent, addBlogPost, deleteBlogPost, addDirectoryEntry, deleteDirectoryEntry } from './actions';
 import { useFormStatus } from 'react-dom';
 import { useRouter } from 'next/navigation';
@@ -116,11 +116,35 @@ export default function AdminClient({ initialProfiles, initialRegistrations, ini
     // Filters for registrations
     const [categoryFilter, setCategoryFilter] = useState('');
     const [itemFilter, setItemFilter] = useState('');
+    const [statusFilter, setStatusFilter] = useState('confirmed'); // Default to confirmed
+    const [userSearch, setUserSearch] = useState('');
+    const [regSearch, setRegSearch] = useState('');
 
     const filteredRegistrations = initialRegistrations.filter(r => {
         if (categoryFilter && r.category !== categoryFilter) return false;
         if (itemFilter && r.competition_item !== itemFilter) return false;
+        if (statusFilter === 'confirmed' && r.status !== 'confirmed') return false;
+        if (statusFilter === 'pending' && r.status !== 'pending_payment') return false;
+        
+        const search = regSearch.toLowerCase();
+        if (search && !(r.student_name || '').toLowerCase().includes(search)) return false;
+        
         return true;
+    });
+
+    const formatDate = (dateString: any) => {
+        if (!dateString) return '—';
+        const date = new Date(dateString);
+        return isNaN(date.getTime()) ? '—' : date.toLocaleDateString();
+    };
+
+    const filteredProfiles = initialProfiles.filter(p => {
+        const search = userSearch.toLowerCase();
+        return (
+            (p.full_name || '').toLowerCase().includes(search) ||
+            (p.email || '').toLowerCase().includes(search) ||
+            (p.mobile || '').toLowerCase().includes(search)
+        );
     });
 
     const exportCsv = () => {
@@ -135,7 +159,7 @@ export default function AdminClient({ initialProfiles, initialRegistrations, ini
                 r.competition_item || '',
                 r.status || '',
                 r.payment_id || '',
-                new Date(r.created_at).toLocaleDateString(),
+                formatDate(r.created_at),
                 `"${JSON.stringify(r.songs || {}).replace(/"/g, '""')}"`
             ]);
             downloadCsv(headers, rows, 'saama_registrations.csv');
@@ -279,20 +303,43 @@ export default function AdminClient({ initialProfiles, initialRegistrations, ini
                 {tab === 'registrations' && (
                     <div className="space-y-4">
                         {/* Filters */}
-                        <div className="flex gap-4 mb-6">
-                            <select 
-                                value={itemFilter} 
-                                onChange={(e) => setItemFilter(e.target.value)}
-                                className="border border-[#d4c4a8] rounded px-3 py-2 text-sm text-[#5c3a1e] bg-white"
-                            >
-                                <option value="">All Categories</option>
-                                <option value="Geetham">Geetham</option>
-                                <option value="Varnam">Varnam</option>
-                                <option value="Krithi">Krithi</option>
-                                <option value="Thillana">Thillana</option>
-                                <option value="Viruttham">Viruttham</option>
-                                <option value="Alapana">Alapana</option>
-                            </select>
+                        <div className="flex flex-col md:flex-row gap-4 mb-6 items-start md:items-center">
+                            <div className="relative flex-grow max-w-md w-full">
+                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[#d4c4a8]" />
+                                <input 
+                                    type="text"
+                                    placeholder="Search by student name..."
+                                    value={regSearch}
+                                    onChange={(e) => setRegSearch(e.target.value)}
+                                    className="w-full pl-10 pr-4 py-2 border border-[#d4c4a8] rounded-lg text-sm text-[#3d230d] focus:ring-[#3d230d] focus:border-[#3d230d] bg-white shadow-sm"
+                                />
+                            </div>
+                            
+                            <div className="flex gap-4 w-full md:w-auto">
+                                <select 
+                                    value={itemFilter} 
+                                    onChange={(e) => setItemFilter(e.target.value)}
+                                    className="flex-1 md:flex-none border border-[#d4c4a8] rounded px-3 py-2 text-sm text-[#5c3a1e] bg-white"
+                                >
+                                    <option value="">All Categories</option>
+                                    <option value="Geetham">Geetham</option>
+                                    <option value="Varnam">Varnam</option>
+                                    <option value="Krithi">Krithi</option>
+                                    <option value="Thillana">Thillana</option>
+                                    <option value="Viruttham">Viruttham</option>
+                                    <option value="Alapana">Alapana</option>
+                                </select>
+
+                                <select 
+                                    value={statusFilter} 
+                                    onChange={(e) => setStatusFilter(e.target.value)}
+                                    className="flex-1 md:flex-none border border-[#d4c4a8] rounded px-3 py-2 text-sm font-bold text-[#5c3a1e] bg-white"
+                                >
+                                    <option value="all">All Statuses</option>
+                                    <option value="confirmed">Confirmed Only (Paid)</option>
+                                    <option value="pending">Registered Only (Pending)</option>
+                                </select>
+                            </div>
                         </div>
 
                         {/* Registrations Table */}
@@ -318,7 +365,7 @@ export default function AdminClient({ initialProfiles, initialRegistrations, ini
                                                         {reg.status === 'pending_payment' ? 'Registered' : reg.status}
                                                     </span>
                                                 </td>
-                                                <td className="px-4 py-3 text-[#7a5c3a]">{new Date(reg.created_at).toLocaleDateString()}</td>
+                                                <td className="px-4 py-3 text-[#7a5c3a]">{formatDate(reg.created_at)}</td>
                                                 <td className="px-4 py-3 text-right">
                                                     <button 
                                                         onClick={() => setExpandedRowId(expandedRowId === reg.id ? null : reg.id)}
@@ -359,7 +406,21 @@ export default function AdminClient({ initialProfiles, initialRegistrations, ini
                 )}
 
                 {tab === 'users' && (
-                    <div className="overflow-x-auto border border-[#d4c4a8] rounded-lg">
+                    <div className="space-y-4">
+                        <div className="mb-4 max-w-md">
+                            <div className="relative">
+                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[#d4c4a8]" />
+                                <input 
+                                    type="text"
+                                    placeholder="Search by name, email or mobile..."
+                                    value={userSearch}
+                                    onChange={(e) => setUserSearch(e.target.value)}
+                                    className="w-full pl-10 pr-4 py-2 border border-[#d4c4a8] rounded-lg text-sm text-[#3d230d] focus:ring-[#3d230d] focus:border-[#3d230d] bg-white shadow-sm"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="overflow-x-auto border border-[#d4c4a8] rounded-lg">
                         <table className="w-full text-sm text-left">
                             <thead className="bg-[#5c3a1e] text-white font-medium uppercase text-xs">
                                 <tr>
@@ -371,7 +432,7 @@ export default function AdminClient({ initialProfiles, initialRegistrations, ini
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-[#d4c4a8] bg-white">
-                                {initialProfiles.map((profile) => (
+                                {filteredProfiles.map((profile) => (
                                     <tr key={profile.id} className="hover:bg-[#faf5eb] transition-colors">
                                         <td className="px-4 py-3 font-semibold text-[#5c3a1e]">{profile.full_name || '—'}</td>
                                         <td className="px-4 py-3 text-[#7a5c3a]">{profile.email}</td>
@@ -380,17 +441,18 @@ export default function AdminClient({ initialProfiles, initialRegistrations, ini
                                         <td className="px-4 py-3 text-[#7a5c3a]">{profile.city ? `${profile.city}, ${profile.state}` : '—'}</td>
                                     </tr>
                                 ))}
-                                {initialProfiles.length === 0 && (
+                                {filteredProfiles.length === 0 && (
                                     <tr>
                                         <td colSpan={5} className="px-4 py-8 text-center text-[#7a5c3a]">
-                                            No user profiles found.
+                                            No user profiles found matching your search.
                                         </td>
                                     </tr>
                                 )}
                             </tbody>
                         </table>
                     </div>
-                )}
+                </div>
+            )}
 
                 {tab === 'events' && (
                     <div className="space-y-6">

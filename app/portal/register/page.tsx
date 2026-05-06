@@ -261,7 +261,6 @@ export default function RegisterPage() {
                             status: 'confirmed',
                             payment_id: details.id,
                             payment_method: 'paypal',
-                            created_at: new Date().toISOString(),
                         }));
 
                         const { data: savedRegs, error } = await supabase.from('registrations').insert(entries).select('id');
@@ -315,7 +314,6 @@ export default function RegisterPage() {
                 songs: categoryData[cat] || {},
                 status: 'pending_payment',
                 payment_method: 'stripe',
-                created_at: new Date().toISOString(),
             }));
 
             const { data: savedRegs, error: insertError } = await supabase

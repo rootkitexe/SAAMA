@@ -8,7 +8,8 @@ const ALL_CATEGORIES = ['Geetham', 'Varnam', 'Krithi', 'Thillana', 'Viruttham', 
 type Category = typeof ALL_CATEGORIES[number];
 
 const SUB_JUNIOR_CATEGORIES: Category[] = ['Geetham', 'Varnam', 'Krithi'];
-const JUNIOR_SENIOR_CATEGORIES: Category[] = ['Krithi', 'Thillana', 'Viruttham', 'Alapana', 'Swarams'];
+const JUNIOR_CATEGORIES: Category[] = ['Varnam', 'Krithi', 'Thillana', 'Viruttham', 'Alapana', 'Swarams'];
+const SENIOR_CATEGORIES: Category[] = ['Krithi', 'Thillana', 'Viruttham', 'Alapana', 'Swarams'];
 
 const ENTRY_FEE = 35; // USD per category
 
@@ -32,7 +33,8 @@ function getAgeGroup(age: number | null): string {
 
 function getAvailableCategories(ageGroup: string): Category[] {
     if (ageGroup === 'Sub-Junior') return SUB_JUNIOR_CATEGORIES;
-    if (ageGroup === 'Junior' || ageGroup === 'Senior') return JUNIOR_SENIOR_CATEGORIES;
+    if (ageGroup === 'Junior') return JUNIOR_CATEGORIES;
+    if (ageGroup === 'Senior') return SENIOR_CATEGORIES;
     return [];
 }
 
